@@ -1,38 +1,72 @@
-.App {
-  text-align: center;
+body .container {
+  margin-top: 3%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.navbar {
+  background-color: aqua;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.task-input {
+  margin-bottom: 10px;
+  box-shadow: none !important;
+  border: none;
+  background-color: #eeeeee !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.To-Do-items {
+  line-height: 1.5;
+  padding: 0.375rem 0.75rem;
+  text-align: left;
+  border: none;
+  background-color: #eeeeee !important;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  border-radius: 0.375rem;
+  cursor: auto;
 }
 
-.App-link {
-  color: #61dafb;
+.form-check-input {
+  /* background-color: #eee */
+  margin-right: 10px;
+  border: 0.5px solid rgb(85, 120, 246);
+  border-radius: 50% !important;
+  box-shadow: none !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.task-input:hover,
+.To-Do-items:hover {
+  background-color: #dddddd !important;
+  color: #2c3333;
+}
+
+.form-label {
+  font-weight: 400;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: rgb(117, 117, 249) !important;
+  opacity: 1 !important; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: rgb(50, 50, 250) !important;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: rgb(50, 50, 250) !important;
+}
+
+svg {
+  margin-right: 0.5rem;
+}
+
+svg:hover {
+  color: rgb(117, 117, 249) !important;
+}
+
+.edit-and-delete {
+  right: 0;
+  margin-left: auto;
 }
