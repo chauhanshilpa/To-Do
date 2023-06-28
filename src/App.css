@@ -1,47 +1,81 @@
-body .container {
-  margin-top: 3%;
+body {
+  padding-top: 5.125rem;
+  overflow: hidden;
 }
 
-.navbar {
-  background-color: aqua;
+.task-checkbox {
+  display: flex;
+  align-items: center;
 }
 
 .task-input {
-  margin-bottom: 10px;
+  margin-top: 1%;
+  margin-bottom: 1%;
   box-shadow: none !important;
   border: none;
   background-color: #eeeeee !important;
 }
 
-.To-Do-items {
+.tasks-container {
+  display: flex;
+  margin-top: 2.75rem;
+  overflow-y: auto;
+  max-height: 55vh;
+}
+
+.task-item {
   line-height: 1.5;
   padding: 0.375rem 0.75rem;
   text-align: left;
   border: none;
   background-color: #eeeeee !important;
-  display: flex;
+  display: flex !important;
   border-radius: 0.375rem;
   cursor: auto;
 }
 
-.form-check-input {
-  /* background-color: #eee */
-  margin-right: 10px;
-  border: 0.5px solid rgb(85, 120, 246);
-  border-radius: 50% !important;
-  box-shadow: none !important;
+.taskItem-text {
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  word-break: break-word;
+  flex-wrap: wrap;
+  margin-right: 0.5rem;
 }
 
 .task-input:hover,
-.To-Do-items:hover {
+.task-item:hover {
   background-color: #dddddd !important;
   color: #2c3333;
 }
 
-.form-label {
-  font-weight: 400;
+svg {
+  margin-right: 0.5rem;
 }
 
+.task-item svg:hover {
+  color: rgb(117, 117, 249) !important;
+}
+
+.edit-and-delete-buttons {
+  right: 0;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-header {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar {
+  margin-top: 3.5rem;
+  width: 12.5rem !important;
+}
+
+/* changing color of input's placeholder */
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: rgb(117, 117, 249) !important;
@@ -58,15 +92,22 @@ body .container {
   color: rgb(50, 50, 250) !important;
 }
 
-svg {
-  margin-right: 0.5rem;
+/* scrollbar style */
+/* width */
+::-webkit-scrollbar {
+  width: 12px;
 }
 
-svg:hover {
-  color: rgb(117, 117, 249) !important;
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
 }
 
-.edit-and-delete {
-  right: 0;
-  margin-left: auto;
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #8a8886;
+  border-radius: 10px;
 }
+
+
