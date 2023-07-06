@@ -3,11 +3,6 @@ body {
   overflow: hidden;
 }
 
-.task-checkbox {
-  display: flex;
-  align-items: center;
-}
-
 .task-input {
   margin-top: 1%;
   margin-bottom: 1%;
@@ -17,29 +12,23 @@ body {
 }
 
 .tasks-container {
-  display: flex;
-  margin-top: 2.75rem;
+  margin-top: 1rem;
   overflow-y: auto;
   max-height: 55vh;
+  display: flex !important;
+  flex-direction: column-reverse;
 }
 
 .task-item {
-  line-height: 1.5;
   padding: 0.375rem 0.75rem;
-  text-align: left;
-  border: none;
   background-color: #eeeeee !important;
-  display: flex !important;
   border-radius: 0.375rem;
-  cursor: auto;
+  display: flex;
+  align-items: center;
 }
 
 .taskItem-text {
-  display: flex;
-  flex-direction: column;
-  word-wrap: break-word;
   word-break: break-word;
-  flex-wrap: wrap;
   margin-right: 0.5rem;
 }
 
@@ -58,7 +47,6 @@ svg {
 }
 
 .edit-and-delete-buttons {
-  right: 0;
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -109,5 +97,4 @@ svg {
   background: #8a8886;
   border-radius: 10px;
 }
-
 

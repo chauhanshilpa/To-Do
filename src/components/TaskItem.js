@@ -1,33 +1,43 @@
 import React, { useState } from "react";
 
 const TaskItem = (props) => {
-  const { task, taskList, setTaskList, taskListIndex } = props;
-  const [isTaskDone, setIsTaskDone] = useState(false);
+  const {
+    currentListTask,
+    taskListsJSON,
+    setTaskListsJSON,
+    taskListIndex,
+    currentListName,
+  } = props;
+
+  const [taskDone, setTaskDone] = useState(false);
   const [taskItemEditable, setTaskItemEditable] = useState(false);
-  const [taskItemText, setTaskItemText] = useState(task);
+  const [textOfTaskItem, setTextOfTaskItem] = useState(currentListTask);
 
-  function taskDone() {
-    setIsTaskDone(!isTaskDone);
+  function toggleTaskCompletion() {
+    setTaskDone(!taskDone);
   }
 
-  function deleteTask(idx) {
-    const currentTaskList = taskList.filter((task) => task !== taskList[idx]);
-    setTaskList(currentTaskList);
-    setIsTaskDone(false);
-    setTaskItemEditable(false);
-  }
-
-  function editTask() {
+  function toggleTaskEditStatus() {
     setTaskItemEditable(!taskItemEditable);
   }
 
-  const handleKeypress = (e, taskListIndex) => {
-    let newText = e.target.innerText;
-    let newTaskList = taskList;
-    newTaskList[taskListIndex] = newText;
+  function deleteTask(idx) {
+    let newTaskListsJSON = { ...taskListsJSON };
+    newTaskListsJSON[currentListName] = newTaskListsJSON[
+      currentListName
+    ].filter((task) => task !== taskListsJSON[currentListName][idx]);
+    setTaskListsJSON(newTaskListsJSON);
+    setTaskDone(false);
+    setTaskItemEditable(false);
+  }
+
+  const handleTaskItemKeypress = (e, taskListIndex) => {
+    let newInnerText = e.target.innerText;
+    let newTaskListsJSON = taskListsJSON;
+    newTaskListsJSON[currentListName][taskListIndex] = newInnerText;
     if (e.keyCode === 13) {
-      setTaskItemText(newText);
-      setTaskList(newTaskList);
+      setTextOfTaskItem(newInnerText);
+      setTaskListsJSON(newTaskListsJSON);
       setTaskItemEditable(false);
     }
   };
@@ -37,12 +47,12 @@ const TaskItem = (props) => {
       <div
         className="task-item"
         style={{
-          textDecoration: isTaskDone ? "line-through" : "none",
+          textDecoration: taskDone ? "line-through" : "none",
           border: taskItemEditable && "2px solid grey",
         }}
         contentEditable={taskItemEditable}
         suppressContentEditableWarning={true}
-        onKeyDown={(e) => handleKeypress(e, taskListIndex)}
+        onKeyDown={(e) => handleTaskItemKeypress(e, taskListIndex)}
       >
         <div className="task-checkbox">
           <svg
@@ -51,16 +61,16 @@ const TaskItem = (props) => {
             height="18"
             aria-hidden="true"
             fill="currentColor"
-            class="bi bi-check2-circle"
+            className="bi bi-check2-circle"
             viewBox="0 0 18 18"
             focusable="false"
-            onClick={taskDone}
+            onClick={toggleTaskCompletion}
           >
             <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z" />
             <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z" />
           </svg>
         </div>
-        <div className="taskItem-text">{taskItemText}</div>
+        <div className="taskItem-text">{textOfTaskItem}</div>
         <div className="edit-and-delete-buttons">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +79,7 @@ const TaskItem = (props) => {
             fill="currentColor"
             className="bi bi-pencil-square"
             viewBox="0 0 16 16"
-            onClick={editTask}
+            onClick={toggleTaskEditStatus}
           >
             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
             <path
