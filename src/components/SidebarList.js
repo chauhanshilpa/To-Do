@@ -2,11 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const SidebarList = (props) => {
-  const { listName, onClickingSidebarList } = props;
+  const { listName, index, onClickingSidebarList, sidebarListUuids } = props;
 
   return (
-    <li onClick={() => onClickingSidebarList(listName)}>
-      <Link to={`/${listName}`} className="nav-link link-body-emphasis">
+    <li onClick={() => onClickingSidebarList(index)}>
+      <Link
+        to={`/${sidebarListUuids[index]}`}
+        className="nav-link link-body-emphasis"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

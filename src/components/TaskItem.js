@@ -6,7 +6,7 @@ const TaskItem = (props) => {
     taskListsJSON,
     setTaskListsJSON,
     taskListIndex,
-    currentListName,
+    current_uuid,
   } = props;
 
   const [taskDone, setTaskDone] = useState(false);
@@ -23,9 +23,9 @@ const TaskItem = (props) => {
 
   function deleteTask(idx) {
     let newTaskListsJSON = { ...taskListsJSON };
-    newTaskListsJSON[currentListName] = newTaskListsJSON[
-      currentListName
-    ].filter((task) => task !== taskListsJSON[currentListName][idx]);
+    newTaskListsJSON[current_uuid]["taskList"] = newTaskListsJSON[current_uuid][
+      "taskList"
+    ].filter((task) => task !== taskListsJSON[current_uuid]["taskList"][idx]);
     setTaskListsJSON(newTaskListsJSON);
     setTaskDone(false);
     setTaskItemEditable(false);
@@ -34,7 +34,7 @@ const TaskItem = (props) => {
   const handleTaskItemKeypress = (e, taskListIndex) => {
     let newInnerText = e.target.innerText;
     let newTaskListsJSON = taskListsJSON;
-    newTaskListsJSON[currentListName][taskListIndex] = newInnerText;
+    newTaskListsJSON[current_uuid]['taskList'][taskListIndex] = newInnerText;
     if (e.keyCode === 13) {
       setTextOfTaskItem(newInnerText);
       setTaskListsJSON(newTaskListsJSON);

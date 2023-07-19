@@ -3,16 +3,23 @@ import Sidebar from "./Sidebar";
 
 const Header = (props) => {
   const {
-    handleSidebarListKeypress,
-    handleSidebarListName,
+    handleNewSidebarList,
+    handleSidebarListChange,
     sidebarListName,
     sidebarList,
     onClickingSidebarList,
+    sidebarListUuids,
+    sidebarOpenState,
+    toggleSidebarOpenState,
   } = props;
 
   return (
     <>
-      <div className="container sidebar-header sticky-head">
+      <div
+        className={`container tasksToolbar-heading ${
+          sidebarOpenState && "open-sidebar"
+        }`}
+      >
         <svg
           className="fluentIcon ___12fm75w f1w7gpdv fez10in fg4l7m0"
           fill="currentColor"
@@ -21,25 +28,27 @@ const Header = (props) => {
           height="20"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasWithBothOptions"
-          aria-controls="offcanvasWithBothOptions"
+          onClick={toggleSidebarOpenState}
         >
           <path
             d="M2 4.5c0-.28.22-.5.5-.5h15a.5.5 0 010 1h-15a.5.5 0 01-.5-.5zm0 5c0-.28.22-.5.5-.5h15a.5.5 0 010 1h-15a.5.5 0 01-.5-.5zm.5 4.5a.5.5 0 000 1h15a.5.5 0 000-1h-15z"
             fill="currentColor"
           ></path>
         </svg>
-
         <h4>My Day</h4>
       </div>
-      <Sidebar
-        handleSidebarListName={handleSidebarListName}
-        handleSidebarListKeypress={handleSidebarListKeypress}
-        sidebarListName={sidebarListName}
-        sidebarList={sidebarList}
-        onClickingSidebarList={onClickingSidebarList}
-      />
+      {sidebarOpenState && (
+        <Sidebar
+          handleSidebarListChange={handleSidebarListChange}
+          handleNewSidebarList={handleNewSidebarList}
+          sidebarListName={sidebarListName}
+          sidebarList={sidebarList}
+          onClickingSidebarList={onClickingSidebarList}
+          sidebarListUuids={sidebarListUuids}
+          sidebarOpenState={sidebarOpenState}
+          toggleSidebarOpenState={toggleSidebarOpenState}
+        />
+      )}
     </>
   );
 };

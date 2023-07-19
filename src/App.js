@@ -3,47 +3,72 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
-import InputField from "./components/InputField";
+import TasksInputField from "./components/TasksInputField";
 import TasksContainer from "./components/TasksContainer";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
   const [inputTask, setInputTask] = useState("");
-  const [taskListsJSON, setTaskListsJSON] = useState({ tasks: [] });
   const [sidebarListName, setSidebarListName] = useState("");
   const [sidebarList, setSidebarList] = useState([]);
-  const [currentListName, setCurrentListName] = useState("tasks");
+  const [current_uuid, setCurrent_uuid] = useState("home_tasks");
+  const [sidebarListUuids, setSidebarListUuids] = useState([]);
+  const [taskListsJSON, setTaskListsJSON] = useState({
+    home_tasks: {
+      taskList: [],
+      metadata: {
+        listName: sidebarListName,
+        deletable: true,
+      },
+    },
+  });
+  const [sidebarOpenState, setSidebarOpenState] = useState(false);
 
   function handleInputTaskChange(event) {
     setInputTask(event.target.value);
   }
 
-  const handleInputFieldKeypress = (e) => {
+  function handleInputTaskKeypress(e) {
     if (e.keyCode === 13) {
-      let newTaskListsJSON = taskListsJSON;
-      newTaskListsJSON[currentListName] =
-        newTaskListsJSON[currentListName].concat(inputTask);
+      let newTaskListsJSON = { ...taskListsJSON };
+      newTaskListsJSON[current_uuid]["taskList"] =
+        newTaskListsJSON[current_uuid]["taskList"].concat(inputTask);
       setTaskListsJSON(newTaskListsJSON);
       setInputTask("");
     }
-  };
+  }
 
-  function handleSidebarListName(event) {
+  function handleSidebarListChange(event) {
     setSidebarListName(event.target.value);
   }
 
-  function handleSidebarListKeypress(e) {
+  function handleNewSidebarList(e) {
     if (e.keyCode === 13) {
       setSidebarList(sidebarList.concat(sidebarListName));
       setSidebarListName("");
+
+      const myuuid = uuidv4();
+      let newTaskListsJSON = { ...taskListsJSON };
+      setTaskListsJSON({
+        ...newTaskListsJSON,
+        [myuuid]: {
+          taskList: [],
+          metadata: {
+            listName: sidebarListName,
+            deletable: true,
+          },
+        },
+      });
+      setSidebarListUuids(sidebarListUuids.concat(myuuid));
     }
   }
 
-  function onClickingSidebarList(listName) {
-    setCurrentListName(listName);
-    if (!taskListsJSON.hasOwnProperty(listName)) {
-      let newTaskListsJSON = { ...taskListsJSON, [listName]: [] };
-      setTaskListsJSON(newTaskListsJSON);
-    }
+  function onClickingSidebarList(index) {
+    setCurrent_uuid(sidebarListUuids[index]);
+  }
+
+  function toggleSidebarOpenState() {
+    setSidebarOpenState(!sidebarOpenState);
   }
 
   return (
@@ -53,46 +78,52 @@ function App() {
         <Header
           sidebarListName={sidebarListName}
           sidebarList={sidebarList}
-          handleSidebarListName={handleSidebarListName}
-          handleSidebarListKeypress={handleSidebarListKeypress}
+          handleSidebarListChange={handleSidebarListChange}
+          handleNewSidebarList={handleNewSidebarList}
           onClickingSidebarList={onClickingSidebarList}
+          sidebarListUuids={sidebarListUuids}
+          toggleSidebarOpenState={toggleSidebarOpenState}
+          sidebarOpenState={sidebarOpenState}
         />
         <Routes>
           <Route
-            key="tasks"
             exact
             path="/"
             element={
               <>
-                <InputField
+                <TasksInputField
                   inputTask={inputTask}
                   handleInputTaskChange={handleInputTaskChange}
-                  handleInputFieldKeypress={handleInputFieldKeypress}
+                  handleInputTaskKeypress={handleInputTaskKeypress}
+                  sidebarOpenState={sidebarOpenState}
                 />
                 <TasksContainer
-                  key="tasks"
-                  currentListName="tasks"
+                  key="home_tasks"
+                  current_uuid="home_tasks"
                   taskListsJSON={taskListsJSON}
                   setTaskListsJSON={setTaskListsJSON}
+                  sidebarOpenState={sidebarOpenState}
                 />
               </>
             }
           />
           <Route
             exact
-            path={currentListName}
+            path={current_uuid}
             element={
               <>
-                <InputField
+                <TasksInputField
                   inputTask={inputTask}
                   handleInputTaskChange={handleInputTaskChange}
-                  handleInputFieldKeypress={handleInputFieldKeypress}
+                  handleInputTaskKeypress={handleInputTaskKeypress}
+                  sidebarOpenState={sidebarOpenState}
                 />
                 <TasksContainer
-                  key={currentListName}
-                  currentListName={currentListName}
+                  key={current_uuid}
+                  current_uuid={current_uuid}
                   taskListsJSON={taskListsJSON}
                   setTaskListsJSON={setTaskListsJSON}
+                  sidebarOpenState={sidebarOpenState}
                 />
               </>
             }
