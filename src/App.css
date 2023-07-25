@@ -1,5 +1,7 @@
 body {
-  padding-top: 5.125rem;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
 }
 
@@ -8,26 +10,20 @@ svg {
 }
 
 .tasksToolbar-heading {
-  margin-top: 1rem;
+  margin-top: 5rem;
   display: flex;
   align-items: center;
+  height: 56px;
 }
 
-.tasksToolbar-heading.open-sidebar {
-  margin-left: 12.5rem !important;
+input {
+  box-shadow: none !important;
+  border: none !important;
+  margin: 10px auto;
 }
 
 .task-input {
-  margin-top: 1%;
-  margin-bottom: 1%;
-  box-shadow: none !important;
-  border: none !important;
   background-color: #eeeeee !important;
-}
-
-.task-input-field.open-sidebar {
-  margin-left: 12.5rem !important;
-  width: auto;
 }
 
 .sidebar {
@@ -37,19 +33,17 @@ svg {
   position: fixed;
   height: 100%;
   z-index: 1;
+  background-color: #eeeeee !important;
 }
 
-.sidebar-list{
-  height: 45vh;
+.sidebar-list {
+  position: absolute;
+  top: 160px;
+  bottom: 0;
   overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.sidebar-header {
-  width: 10rem;
-  height: 3rem;
-  position: sticky;
-  top: 0;
+  width: 11.5rem;
+  margin-bottom: 50px;
+  margin-top: 16px;
 }
 
 .close-button {
@@ -58,30 +52,29 @@ svg {
 }
 
 .close-button:hover {
-  color: rgb(59, 59, 65) !important;
+  color: rgb(122, 122, 125) !important;
 }
 
-.sidebar input {
-  box-shadow: none !important;
-  height: 40px;
-  margin: 10px auto;
+.task-container-wrapper {
+  margin-top: 41px;
+  position: absolute;
+  top: 156px;
+  bottom: 0px;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .tasks-container {
-  margin-top: 1rem;
-  overflow-y: auto;
-  max-height: 55vh;
-  display: flex !important;
+  position: unset;
+  display: flex;
   flex-direction: column-reverse;
-}
-
-.tasks-container.open-sidebar {
-  margin-left: 12.5rem !important;
-  width: auto;
 }
 
 .task-item {
   padding: 0.375rem 0.75rem;
+  margin: 5px auto;
+  height: 40px;
+  width: 100%;
   background-color: #eeeeee !important;
   border-radius: 0.375rem;
   display: flex;
@@ -135,4 +128,21 @@ svg {
 ::-webkit-scrollbar-thumb {
   background: #8a8886;
   border-radius: 10px;
+}
+
+@media screen and (min-width: 768px) {
+  .task-input-field.open-sidebar {
+    margin-left: 12.5rem !important;
+    width: auto;
+  }
+
+  .tasksToolbar-heading.open-sidebar {
+    margin-left: 12.5rem !important;
+  }
+
+  .task-container-wrapper.open-sidebar {
+    width: auto;
+    left: 12.5rem;
+    right: 0;
+  }
 }

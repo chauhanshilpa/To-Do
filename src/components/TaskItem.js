@@ -11,7 +11,6 @@ const TaskItem = (props) => {
 
   const [taskDone, setTaskDone] = useState(false);
   const [taskItemEditable, setTaskItemEditable] = useState(false);
-  const [textOfTaskItem, setTextOfTaskItem] = useState(currentListTask);
 
   function toggleTaskCompletion() {
     setTaskDone(!taskDone);
@@ -21,11 +20,15 @@ const TaskItem = (props) => {
     setTaskItemEditable(!taskItemEditable);
   }
 
-  function deleteTask(idx) {
+  function deleteTask(taskListIndex) {
     let newTaskListsJSON = { ...taskListsJSON };
+
     newTaskListsJSON[current_uuid]["taskList"] = newTaskListsJSON[current_uuid][
       "taskList"
-    ].filter((task) => task !== taskListsJSON[current_uuid]["taskList"][idx]);
+    ].filter(
+      (task) => task !== taskListsJSON[current_uuid]["taskList"][taskListIndex]
+    );
+
     setTaskListsJSON(newTaskListsJSON);
     setTaskDone(false);
     setTaskItemEditable(false);
@@ -34,11 +37,11 @@ const TaskItem = (props) => {
   const handleTaskItemKeypress = (e, taskListIndex) => {
     let newInnerText = e.target.innerText;
     let newTaskListsJSON = taskListsJSON;
-    newTaskListsJSON[current_uuid]['taskList'][taskListIndex] = newInnerText;
+    newTaskListsJSON[current_uuid]["taskList"][taskListIndex] = newInnerText;
     if (e.keyCode === 13) {
-      setTextOfTaskItem(newInnerText);
       setTaskListsJSON(newTaskListsJSON);
       setTaskItemEditable(false);
+      console.log(newTaskListsJSON);
     }
   };
 
@@ -70,7 +73,7 @@ const TaskItem = (props) => {
             <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z" />
           </svg>
         </div>
-        <div className="taskItem-text">{textOfTaskItem}</div>
+        <div className="taskItem-text">{currentListTask}</div>
         <div className="edit-and-delete-buttons">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -31,7 +31,7 @@ const Sidebar = (props) => {
               width="20"
               height="20"
               fill="currentColor"
-              class="bi bi-x-lg"
+              className="bi bi-x-lg"
               viewBox="0 0 16 16"
               onClick={toggleSidebarOpenState}
             >
@@ -40,7 +40,7 @@ const Sidebar = (props) => {
           </div>
           <hr />
         </div>
-        <ul className="nav nav-pills flex-column mb-auto">
+        <ul className="nav nav-pills flex-column mb-auto home-list">
           <li>
             <Link to="/" className="nav-link link-body-emphasis">
               <svg
@@ -56,7 +56,7 @@ const Sidebar = (props) => {
               My Day
             </Link>
           </li>
-          <div className="input-group flex-nowrap">
+          <div className="sidebar-input-feild input-group flex-nowrap">
             <input
               type="text"
               className="form-control"

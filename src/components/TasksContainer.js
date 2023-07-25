@@ -6,12 +6,10 @@ const TasksContainer = (props) => {
     props;
 
   return (
-    <>
-      <div
-        className={`container tasks-container d-grid gap-2 ${
-          sidebarOpenState && "open-sidebar"
-        }`}
-      >
+    <div
+      className={`task-container-wrapper ${sidebarOpenState && "open-sidebar"}`}
+    >
+      <div className={`container tasks-container`}>
         {taskListsJSON[current_uuid]["taskList"].map((task, index) => (
           <TaskItem
             key={index}
@@ -23,7 +21,7 @@ const TasksContainer = (props) => {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
