@@ -30,11 +30,13 @@ function App() {
 
   function handleInputTaskKeypress(e) {
     if (e.keyCode === 13) {
-      let newTaskListsJSON = { ...taskListsJSON };
-      newTaskListsJSON[current_uuid]["taskList"] =
-        newTaskListsJSON[current_uuid]["taskList"].concat(inputTask);
-      setTaskListsJSON(newTaskListsJSON);
-      setInputTask("");
+      if (inputTask.trim().length !== 0) {
+        let newTaskListsJSON = { ...taskListsJSON };
+        newTaskListsJSON[current_uuid]["taskList"] =
+          newTaskListsJSON[current_uuid]["taskList"].concat(inputTask);
+        setTaskListsJSON(newTaskListsJSON);
+        setInputTask("");
+      }
     }
   }
 
@@ -44,22 +46,23 @@ function App() {
 
   function handleNewSidebarList(e) {
     if (e.keyCode === 13) {
-      setSidebarList(sidebarList.concat(sidebarListName));
-      setSidebarListName("");
-
-      const myuuid = uuidv4();
-      let newTaskListsJSON = { ...taskListsJSON };
-      setTaskListsJSON({
-        ...newTaskListsJSON,
-        [myuuid]: {
-          taskList: [],
-          metadata: {
-            listName: sidebarListName,
-            deletable: true,
+      if (sidebarListName.trim().length !== 0) {
+        setSidebarList(sidebarList.concat(sidebarListName));
+        setSidebarListName("");
+        const myuuid = uuidv4();
+        let newTaskListsJSON = { ...taskListsJSON };
+        setTaskListsJSON({
+          ...newTaskListsJSON,
+          [myuuid]: {
+            taskList: [],
+            metadata: {
+              listName: sidebarListName,
+              deletable: true,
+            },
           },
-        },
-      });
-      setSidebarListUuids(sidebarListUuids.concat(myuuid));
+        });
+        setSidebarListUuids(sidebarListUuids.concat(myuuid));
+      }
     }
   }
 

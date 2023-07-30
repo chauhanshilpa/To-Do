@@ -30,12 +30,15 @@ const TaskItem = (props) => {
 
   const handleTaskItemKeypress = (e, taskListIndex) => {
     let newInnerText = e.target.innerText;
-    let newTaskListsJSON = taskListsJSON;
+    let newTaskListsJSON = { ...taskListsJSON };
     newTaskListsJSON[current_uuid]["taskList"][taskListIndex] = newInnerText;
     if (e.keyCode === 13) {
-      setTaskListsJSON(newTaskListsJSON);
-      setTaskItemEditable(false);
-      console.log(newTaskListsJSON);
+      if (newInnerText.trim().length === 0) {
+        deleteTask(taskListIndex);
+      } else {
+        setTaskListsJSON(newTaskListsJSON);
+        setTaskItemEditable(false);
+      }
     }
   };
 
