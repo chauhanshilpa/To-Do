@@ -78,6 +78,7 @@ function App() {
         <Header
           sidebarListName={sidebarListName}
           sidebarList={sidebarList}
+          setSidebarList={setSidebarList}
           handleSidebarListChange={handleSidebarListChange}
           handleNewSidebarList={handleNewSidebarList}
           onClickingSidebarList={onClickingSidebarList}

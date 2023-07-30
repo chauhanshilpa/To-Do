@@ -7,6 +7,7 @@ const Header = (props) => {
     handleSidebarListChange,
     sidebarListName,
     sidebarList,
+    setSidebarList,
     onClickingSidebarList,
     sidebarListUuids,
     sidebarOpenState,
@@ -43,6 +44,7 @@ const Header = (props) => {
           handleNewSidebarList={handleNewSidebarList}
           sidebarListName={sidebarListName}
           sidebarList={sidebarList}
+          setSidebarList={setSidebarList}
           onClickingSidebarList={onClickingSidebarList}
           sidebarListUuids={sidebarListUuids}
           sidebarOpenState={sidebarOpenState}

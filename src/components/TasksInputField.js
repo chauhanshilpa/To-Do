@@ -16,7 +16,7 @@ const TasksInputField = (props) => {
     >
       <input
         type="text"
-        className="task-input form-control"
+        className="form-control"
         id="task-input"
         placeholder="&#x2b; Add a task"
         aria-label="Add a task"

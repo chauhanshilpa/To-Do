@@ -22,7 +22,6 @@ const TaskItem = (props) => {
 
   function deleteTask(taskListIndex) {
     let newTaskListsJSON = { ...taskListsJSON };
-
     newTaskListsJSON[current_uuid]["taskList"] = newTaskListsJSON[current_uuid][
       "taskList"
     ].filter(

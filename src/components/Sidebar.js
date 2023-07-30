@@ -8,6 +8,7 @@ const Sidebar = (props) => {
     handleSidebarListChange,
     sidebarListName,
     sidebarList,
+    setSidebarList,
     onClickingSidebarList,
     sidebarListUuids,
     toggleSidebarOpenState,
@@ -68,14 +69,16 @@ const Sidebar = (props) => {
               value={sidebarListName}
             />
           </div>
-          <div className="sidebar-list">
-            {sidebarList.map((listName, index) => (
+          <div className="sortable-lists">
+            {sidebarList.map((listName, listIndex) => (
               <SidebarList
-                key={index}
-                index={index}
+                key={listIndex}
+                listIndex={listIndex}
                 listName={listName}
                 onClickingSidebarList={onClickingSidebarList}
                 sidebarListUuids={sidebarListUuids}
+                sidebarList={sidebarList}
+                setSidebarList={setSidebarList}
               />
             ))}
           </div>

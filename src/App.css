@@ -1,3 +1,4 @@
+html,
 body {
   height: 100%;
   margin: 0;
@@ -13,16 +14,20 @@ svg {
   margin-top: 5rem;
   display: flex;
   align-items: center;
-  height: 56px;
+  height: 3.5rem;
 }
 
 input {
   box-shadow: none !important;
   border: none !important;
-  margin: 10px auto;
+  margin: 0.625rem auto;
+}
+ 
+.task-input-field{
+  z-index: 0;
 }
 
-.task-input {
+.task-input-field input {
   background-color: #eeeeee !important;
 }
 
@@ -34,16 +39,7 @@ input {
   height: 100%;
   z-index: 1;
   background-color: #eeeeee !important;
-}
-
-.sidebar-list {
-  position: absolute;
-  top: 160px;
-  bottom: 0;
-  overflow-y: auto;
-  width: 11.5rem;
-  margin-bottom: 50px;
-  margin-top: 16px;
+  border-right: 2px solid rgb(236, 233, 233);
 }
 
 .close-button {
@@ -55,11 +51,37 @@ input {
   color: rgb(122, 122, 125) !important;
 }
 
-.task-container-wrapper {
-  margin-top: 41px;
+.sidebar li {
+  width: 10.5rem;
+}
+
+.sortable-lists li,
+.sortable-lists li .delete-sidebar-list {
+  margin-left: auto;
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar li:hover {
+  background-color: #dcdedd;
+}
+
+.sortable-lists {
   position: absolute;
-  top: 156px;
-  bottom: 0px;
+  top: 160px;
+  bottom: 0;
+  overflow-y: auto;
+  margin-bottom: 3.125rem;
+  margin-top: 1rem;
+}
+
+
+.task-container-wrapper {
+  margin-top: 2.563rem;
+  position: absolute;
+  top: 9.75rem;
+  bottom: 0;
   overflow-y: auto;
   width: 100%;
 }
@@ -72,8 +94,8 @@ input {
 
 .task-item {
   padding: 0.375rem 0.75rem;
-  margin: 5px auto;
-  height: 40px;
+  margin: 0.313rem auto;
+  height: 2.5rem;
   width: 100%;
   background-color: #eeeeee !important;
   border-radius: 0.375rem;
@@ -85,7 +107,7 @@ input {
   color: rgb(117, 117, 249) !important;
 }
 
-.task-input:hover,
+.task-input-field input:hover,
 .task-item:hover {
   background-color: #dddddd !important;
   color: #2c3333;
@@ -127,7 +149,7 @@ input {
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #8a8886;
-  border-radius: 10px;
+  border-radius: 0.5rem;
 }
 
 @media screen and (min-width: 768px) {
