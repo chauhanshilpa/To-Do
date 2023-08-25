@@ -10,16 +10,18 @@ const TasksContainer = (props) => {
       className={`task-container-wrapper ${sidebarOpenState && "open-sidebar"}`}
     >
       <div className={`container tasks-container`}>
-        {taskListsJSON[current_uuid]["taskList"].map((task, index) => (
-          <TaskItem
-            key={index}
-            currentListTask={task}
-            taskListIndex={index}
-            taskListsJSON={taskListsJSON}
-            setTaskListsJSON={setTaskListsJSON}
-            current_uuid={current_uuid}
-          />
-        ))}
+        {taskListsJSON[current_uuid]["taskList"].map(
+          (innerTextAndTaskUuidObject, taskIndex) => (
+            <TaskItem
+              key={innerTextAndTaskUuidObject.taskUuid}
+              taskIndex={taskIndex}
+              currentListTaskObject={innerTextAndTaskUuidObject}
+              taskListsJSON={taskListsJSON}
+              setTaskListsJSON={setTaskListsJSON}
+              current_uuid={current_uuid}
+            />
+          )
+        )}
       </div>
     </div>
   );

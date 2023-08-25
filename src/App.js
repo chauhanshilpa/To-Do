@@ -1,23 +1,33 @@
 import React, { useState } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import TasksInputField from "./components/TasksInputField";
 import TasksContainer from "./components/TasksContainer";
 import { v4 as uuidv4 } from "uuid";
+import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
 
 function App() {
   const [inputTask, setInputTask] = useState("");
   const [sidebarListName, setSidebarListName] = useState("");
   const [sidebarList, setSidebarList] = useState([]);
-  const [current_uuid, setCurrent_uuid] = useState("home_tasks");
+  const [current_uuid, setCurrent_uuid] = useState("tasks");
   const [sidebarListUuids, setSidebarListUuids] = useState([]);
   const [taskListsJSON, setTaskListsJSON] = useState({
-    home_tasks: {
+    tasks: {
       taskList: [],
       metadata: {
-        listName: sidebarListName,
+        listName: "tasks",
+        pathName: "tasks",
+        deletable: true,
+      },
+    },
+    recycle_bin: {
+      taskList: [],
+      metadata: {
+        listName: "recycle_bin",
+        pathName: "recycle_bin",
         deletable: true,
       },
     },
@@ -31,9 +41,11 @@ function App() {
   function handleInputTaskKeypress(e) {
     if (e.keyCode === 13) {
       if (inputTask.trim().length !== 0) {
+        const taskUuid = uuidv4();
         let newTaskListsJSON = { ...taskListsJSON };
-        newTaskListsJSON[current_uuid]["taskList"] =
-          newTaskListsJSON[current_uuid]["taskList"].concat(inputTask);
+        newTaskListsJSON[current_uuid]["taskList"] = newTaskListsJSON[
+          current_uuid
+        ]["taskList"].concat({ taskUuid: taskUuid, innerText: inputTask });
         setTaskListsJSON(newTaskListsJSON);
         setInputTask("");
       }
@@ -57,6 +69,7 @@ function App() {
             taskList: [],
             metadata: {
               listName: sidebarListName,
+              pathName: myuuid,
               deletable: true,
             },
           },
@@ -74,6 +87,12 @@ function App() {
     setSidebarOpenState(!sidebarOpenState);
   }
 
+  function handlePredefinedListUuid() {
+    let pathname = window.location.pathname;
+    let uuid = pathname.slice(1);
+    setCurrent_uuid(uuid);
+  }
+
   return (
     <>
       <BrowserRouter>
@@ -88,11 +107,13 @@ function App() {
           sidebarListUuids={sidebarListUuids}
           toggleSidebarOpenState={toggleSidebarOpenState}
           sidebarOpenState={sidebarOpenState}
+          handlePredefinedListUuid={handlePredefinedListUuid}
         />
         <Routes>
+          <Route path="/" element={<Navigate to="/tasks" />} />
           <Route
             exact
-            path="/"
+            path="/tasks"
             element={
               <>
                 <TasksInputField
@@ -102,11 +123,25 @@ function App() {
                   sidebarOpenState={sidebarOpenState}
                 />
                 <TasksContainer
-                  key="home_tasks"
-                  current_uuid="home_tasks"
+                  key="tasks"
+                  current_uuid="tasks"
                   taskListsJSON={taskListsJSON}
                   setTaskListsJSON={setTaskListsJSON}
                   sidebarOpenState={sidebarOpenState}
+                />
+              </>
+            }
+          />
+          <Route path="/" element={<Navigate to="/tasks" />} />
+          <Route
+            exact
+            path="/recycle_bin"
+            element={
+              <>
+                <RecycleBinTasksContainer
+                  taskListsJSON={taskListsJSON}
+                  sidebarOpenState={sidebarOpenState}
+                  setTaskListsJSON={setTaskListsJSON}
                 />
               </>
             }

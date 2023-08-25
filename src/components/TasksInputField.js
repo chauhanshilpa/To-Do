@@ -9,22 +9,20 @@ const TasksInputField = (props) => {
   } = props;
 
   return (
-    <div
-      className={`container task-input-field input-group mb-3 ${
-        sidebarOpenState && "open-sidebar"
-      }`}
-    >
-      <input
-        type="text"
-        className="form-control"
-        id="task-input"
-        placeholder="&#x2b; Add a task"
-        aria-label="Add a task"
-        aria-describedby="basic-addon1"
-        value={inputTask}
-        onChange={handleInputTaskChange}
-        onKeyDown={handleInputTaskKeypress}
-      />
+    <div className={`task-input-field ${sidebarOpenState && "open-sidebar"}`}>
+      <div className="container input-group mb-3">
+        <input
+          type="text"
+          className="form-control"
+          id="task-input"
+          placeholder="&#x2b; Add a task"
+          aria-label="Add a task"
+          aria-describedby="basic-addon1"
+          value={inputTask}
+          onChange={handleInputTaskChange}
+          onKeyDown={handleInputTaskKeypress}
+        />
+      </div>
     </div>
   );
 };
