@@ -14,6 +14,7 @@ const TaskItem = (props) => {
 
   function toggleTaskCompletion() {
     setTaskDone(!taskDone);
+    currentListTaskObject.taskDone = !taskDone;
   }
 
   function toggleTaskEditStatus() {
@@ -22,20 +23,16 @@ const TaskItem = (props) => {
 
   function deleteTask(taskIndex) {
     let newTaskListsJSON = { ...taskListsJSON };
-    // deletedTaskObject contains an object which has a innerText key and a taskUuid key which is unique for every single task.
+    // deletedTaskObject contains an object which has a innerText key, a taskUuid key ( unique for every single task), a taskDone key, a date key.
     let deletedTaskObject = newTaskListsJSON[current_uuid]["taskList"].splice(
       taskIndex,
       1
     );
     let pathNameOfList = newTaskListsJSON[current_uuid]["metadata"]["pathName"];
-    //if task is done, the delete will delete this permanently else it will send the deletedTaskObject into recycle_bin.
-    if (!taskDone) {
-      newTaskListsJSON["recycle_bin"]["taskList"] = newTaskListsJSON[
-        "recycle_bin"
-      ]["taskList"].concat({ [pathNameOfList]: deletedTaskObject[0] });
-    }
+    newTaskListsJSON["recycle_bin"]["taskList"] = newTaskListsJSON[
+      "recycle_bin"
+    ]["taskList"].concat({ [pathNameOfList]: deletedTaskObject[0] });
     setTaskListsJSON(newTaskListsJSON);
-    setTaskDone(false);
     setTaskItemEditable(false);
   }
 
@@ -55,7 +52,9 @@ const TaskItem = (props) => {
       <div
         className="task-item"
         style={{
-          textDecoration: taskDone ? "line-through" : "none",
+          textDecoration: currentListTaskObject.taskDone
+            ? "line-through"
+            : "none",
           border: taskItemEditable && "2px solid grey",
         }}
         contentEditable={taskItemEditable}

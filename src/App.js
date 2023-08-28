@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
 
 function App() {
+  const [appBodyTheme, setAppBodyTheme] = useState("light");
   const [inputTask, setInputTask] = useState("");
   const [sidebarListName, setSidebarListName] = useState("");
   const [sidebarList, setSidebarList] = useState([]);
@@ -34,6 +35,16 @@ function App() {
   });
   const [sidebarOpenState, setSidebarOpenState] = useState(false);
 
+  function handleLightAndDarkMode() {
+    if (appBodyTheme === "light") {
+      setAppBodyTheme("dark");
+      document.body.style.backgroundColor = "#343A40";
+    } else {
+      setAppBodyTheme("light");
+      document.body.style.backgroundColor = "#FFFFFF";
+    }
+  }
+
   function handleInputTaskChange(event) {
     setInputTask(event.target.value);
   }
@@ -45,11 +56,20 @@ function App() {
         let newTaskListsJSON = { ...taskListsJSON };
         newTaskListsJSON[current_uuid]["taskList"] = newTaskListsJSON[
           current_uuid
-        ]["taskList"].concat({ taskUuid: taskUuid, innerText: inputTask });
+        ]["taskList"].concat({
+          taskUuid: taskUuid,
+          innerText: inputTask,
+          date: new Date().toDateString(),
+          taskDone: false,
+        });
         setTaskListsJSON(newTaskListsJSON);
         setInputTask("");
       }
     }
+  }
+
+  function toggleSidebarOpenState() {
+    setSidebarOpenState(!sidebarOpenState);
   }
 
   function handleSidebarListChange(event) {
@@ -83,10 +103,6 @@ function App() {
     setCurrent_uuid(sidebarListUuids[index]);
   }
 
-  function toggleSidebarOpenState() {
-    setSidebarOpenState(!sidebarOpenState);
-  }
-
   function handlePredefinedListUuid() {
     let pathname = window.location.pathname;
     let uuid = pathname.slice(1);
@@ -96,8 +112,12 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
+        <Navbar
+          handleLightAndDarkMode={handleLightAndDarkMode}
+          appBodyTheme={appBodyTheme}
+        />
         <Header
+          appBodyTheme={appBodyTheme}
           sidebarListName={sidebarListName}
           sidebarList={sidebarList}
           setSidebarList={setSidebarList}
