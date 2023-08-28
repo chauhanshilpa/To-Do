@@ -37,7 +37,7 @@ input {
   z-index: 0;
 }
 
-.task-input-field input {
+.task-input-field input, .sidebar.theme-dark li {
   background-color: #eeeeee !important;
 }
 
@@ -78,10 +78,13 @@ input {
 
 .predefined-lists {
   margin-top: 0.75rem;
+.predefined-lists {
+  margin-top: 0.75rem;
 }
 
 .dynamic-lists {
   position: absolute;
+  top: 110px;
   top: 110px;
   bottom: 50px;
   overflow-y: auto;
@@ -224,3 +227,5 @@ input {
     right: 0;
   }
 }
+
+

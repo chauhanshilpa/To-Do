@@ -25,6 +25,7 @@ const Header = (props) => {
       >
         <div className="container" onClick={toggleSidebarOpenState}>
           <svg
+            style={{ color: appBodyTheme === "dark" && "#eeeeee" }}
             className="fluentIcon ___12fm75w f1w7gpdv fez10in fg4l7m0"
             fill="currentColor"
             aria-hidden="true"
@@ -39,7 +40,9 @@ const Header = (props) => {
               fill="currentColor"
             ></path>
           </svg>
-          <h4>My Day</h4>
+          <h4 style={{ color: appBodyTheme === "dark" && "#eeeeee" }}>
+            My Day
+          </h4>
         </div>
       </div>
       {sidebarOpenState && (

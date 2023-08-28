@@ -18,6 +18,7 @@ const RecycleBinTaskItem = (props) => {
   function handleTaskRestoration(objectIndex) {
     let newTaskListJSON = { ...taskListsJSON };
     // elementToRestore is a object having path name of current list as key and its value is a object containing metadata of every single task.
+    // elementToRestore is a object having path name of current list as key and its value is a object containing metadata of every single task.
     let elementToRestore = newTaskListJSON["recycle_bin"]["taskList"].splice(
       objectIndex,
       1
