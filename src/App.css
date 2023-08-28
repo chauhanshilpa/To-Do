@@ -15,7 +15,14 @@ svg {
   height: 3rem;
 }
 
-.tasksToolbar-heading > div, .task-checkbox {
+.tasksToolbar-heading.theme-dark,
+.sidebar.theme-dark a,
+.sidebar.theme-dark .delete-list-icon {
+  color: #eeeeee;
+}
+
+.tasksToolbar-heading > div,
+.task-checkbox {
   display: flex;
   align-items: center;
 }
@@ -30,8 +37,12 @@ input {
   z-index: 0;
 }
 
-.task-input-field input, .sidebar.theme-dark li {
+.task-input-field input {
   background-color: #eeeeee !important;
+}
+
+.task-input-field.theme-dark input {
+  background-color: #4c505e !important;
 }
 
 .sidebar {
@@ -45,19 +56,24 @@ input {
   border-right: 2px solid rgb(236, 233, 233);
 }
 
+.sidebar.theme-dark {
+  border-right: 2px solid #212529;
+  background-color: #212529 !important;
+}
+
 .sidebar li {
   width: 10.4rem;
   border-radius: 0.313rem;
   margin-right: 0.5rem;
 }
 
-.sidebar a{
-  width: 10.4rem;
+.sidebar.theme-dark li:hover,
+.sidebar.theme-dark #recycle-bin li:hover {
+  background-color: black !important;
 }
 
-.sidebar.theme-dark {
-  border-right: 2px solid #212529;
-  background-color: #212529 !important;
+.sidebar a {
+  width: 10.4rem;
 }
 
 .predefined-lists {
@@ -73,7 +89,8 @@ input {
   margin-top: 1rem;
 }
 
-.dynamic-lists li, .predefined-lists li,
+.dynamic-lists li,
+.predefined-lists li,
 .dynamic-lists li .delete-list-icon {
   margin-top: 0.625px;
   margin-left: auto;
@@ -89,8 +106,13 @@ input {
   background-color: #dddddd !important;
 }
 
-#recycle-bin li:hover, .sidebar li:hover, .sidebar.theme-dark li:hover {
+#recycle-bin li:hover,
+.sidebar li:hover {
   background-color: #cac9c9 !important;
+}
+
+.sidebar.theme-dark #recycle-bin li {
+  background-color: rgb(27, 25, 25) !important;
 }
 
 .task-container-wrapper,
@@ -123,8 +145,19 @@ input {
   border-radius: 0.375rem;
 }
 
-.task-item svg:hover {
-  color: rgb(117, 117, 249) !important;
+.task-item.theme-dark {
+  background-color: #4c505e !important;
+  color: #eeeeee;
+}
+
+.task-item.theme-dark:hover,
+.task-input-field.theme-dark input:hover {
+  background-color: #42424a !important;
+  color: #eeeeee;
+}
+
+.task-item svg:hover, .delete-list-icon:hover {
+  color: #78bafd !important;
 }
 
 .task-input-field input:hover,
@@ -133,7 +166,8 @@ input {
   color: #2c3333;
 }
 
-.taskItem-text, .sidebar-list-name {
+.taskItem-text,
+.sidebar-list-name {
   word-break: break-word;
   margin-right: 0.5rem;
 }
@@ -148,18 +182,18 @@ input {
 /* changing color of input's placeholder */
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #7575f9 !important;
+  color: #78bafd !important;
   opacity: 1 !important; /* Firefox */
 }
 
 :-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  color: rgb(117, 117, 249) !important;
+  color: #78bafd !important;
 }
 
 ::-ms-input-placeholder {
   /* Microsoft Edge */
-  color: rgb(117, 117, 249) !important;
+  color: #78bafd !important;
 }
 
 /* scrollbar style */
@@ -190,5 +224,3 @@ input {
     right: 0;
   }
 }
-
-

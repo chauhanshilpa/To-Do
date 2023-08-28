@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const TaskItem = (props) => {
   const {
+    appBodyTheme,
     currentListTaskObject,
     taskListsJSON,
     setTaskListsJSON,
@@ -50,7 +51,7 @@ const TaskItem = (props) => {
   return (
     <>
       <div
-        className="task-item"
+        className={`task-item ${appBodyTheme === "dark" && "theme-dark"}`}
         style={{
           textDecoration: currentListTaskObject.taskDone
             ? "line-through"

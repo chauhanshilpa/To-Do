@@ -2,6 +2,7 @@ import React from "react";
 
 const RecycleBinTaskItem = (props) => {
   const {
+    appBodyTheme,
     taskListsJSON,
     setTaskListsJSON,
     taskObjectWithPathName,
@@ -29,7 +30,7 @@ const RecycleBinTaskItem = (props) => {
   }
 
   return (
-    <div className="task-item">
+    <div className={`task-item ${appBodyTheme === "dark" && "theme-dark"}`}>
       <div
         className="taskItem-text"
         style={{

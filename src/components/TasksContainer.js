@@ -2,8 +2,13 @@ import React from "react";
 import TaskItem from "./TaskItem";
 
 const TasksContainer = (props) => {
-  const { taskListsJSON, setTaskListsJSON, current_uuid, sidebarOpenState } =
-    props;
+  const {
+    appBodyTheme,
+    taskListsJSON,
+    setTaskListsJSON,
+    current_uuid,
+    sidebarOpenState,
+  } = props;
 
   return (
     <div
@@ -19,6 +24,7 @@ const TasksContainer = (props) => {
               taskListsJSON={taskListsJSON}
               setTaskListsJSON={setTaskListsJSON}
               current_uuid={current_uuid}
+              appBodyTheme={appBodyTheme}
             />
           )
         )}

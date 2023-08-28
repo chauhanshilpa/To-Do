@@ -137,6 +137,7 @@ function App() {
             element={
               <>
                 <TasksInputField
+                  appBodyTheme={appBodyTheme}
                   inputTask={inputTask}
                   handleInputTaskChange={handleInputTaskChange}
                   handleInputTaskKeypress={handleInputTaskKeypress}
@@ -148,11 +149,11 @@ function App() {
                   taskListsJSON={taskListsJSON}
                   setTaskListsJSON={setTaskListsJSON}
                   sidebarOpenState={sidebarOpenState}
+                  appBodyTheme={appBodyTheme}
                 />
               </>
             }
           />
-          <Route path="/" element={<Navigate to="/tasks" />} />
           <Route
             exact
             path="/recycle_bin"
@@ -162,6 +163,7 @@ function App() {
                   taskListsJSON={taskListsJSON}
                   sidebarOpenState={sidebarOpenState}
                   setTaskListsJSON={setTaskListsJSON}
+                  appBodyTheme={appBodyTheme}
                 />
               </>
             }
@@ -172,6 +174,7 @@ function App() {
             element={
               <>
                 <TasksInputField
+                  appBodyTheme={appBodyTheme}
                   inputTask={inputTask}
                   handleInputTaskChange={handleInputTaskChange}
                   handleInputTaskKeypress={handleInputTaskKeypress}
@@ -183,6 +186,7 @@ function App() {
                   taskListsJSON={taskListsJSON}
                   setTaskListsJSON={setTaskListsJSON}
                   sidebarOpenState={sidebarOpenState}
+                  appBodyTheme={appBodyTheme}
                 />
               </>
             }

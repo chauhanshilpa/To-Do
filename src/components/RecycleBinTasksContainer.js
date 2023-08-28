@@ -2,7 +2,8 @@ import React from "react";
 import RecycleBinTaskItem from "./RecycleBinTaskItem";
 
 const RecycleBinTasks = (props) => {
-  const { taskListsJSON, setTaskListsJSON, sidebarOpenState } = props;
+  const { appBodyTheme, taskListsJSON, setTaskListsJSON, sidebarOpenState } =
+    props;
 
   return (
     <div
@@ -21,11 +22,12 @@ const RecycleBinTasks = (props) => {
                 taskListsJSON={taskListsJSON}
                 setTaskListsJSON={setTaskListsJSON}
                 sidebarOpenState={sidebarOpenState}
+                appBodyTheme={appBodyTheme}
               />
             )
           )
         ) : (
-          <div className="alert alert-secondary fs-5" role="alert">
+          <div className="alert alert-dark fs-5" role="alert">
             Recycle Bin is empty. No tasks to display!
           </div>
         )}
