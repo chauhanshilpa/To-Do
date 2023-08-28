@@ -25,7 +25,7 @@ const RecycleBinTasks = (props) => {
             )
           )
         ) : (
-          <div className="alert alert-info fs-5" role="alert">
+          <div className="alert alert-secondary fs-5" role="alert">
             Recycle Bin is empty. No tasks to display!
           </div>
         )}

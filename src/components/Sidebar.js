@@ -4,6 +4,7 @@ import SidebarList from "./SidebarList";
 
 const Sidebar = (props) => {
   const {
+    appBodyTheme,
     handleNewSidebarList,
     handleSidebarListChange,
     sidebarListName,
@@ -11,7 +12,6 @@ const Sidebar = (props) => {
     setSidebarList,
     onClickingSidebarList,
     sidebarListUuids,
-    toggleSidebarOpenState,
     sidebarOpenState,
     handlePredefinedListUuid,
   } = props;
@@ -21,31 +21,15 @@ const Sidebar = (props) => {
       <div
         className={`sidebar d-flex flex-column p-3 bg-body-tertiary ${
           sidebarOpenState && "open-sidebar"
-        }`}
+        } ${appBodyTheme === "dark" && "theme-dark"}`}
         data-bs-scroll="true"
         id="offcanvasWithBothOptions"
         aria-labelledby="offcanvasWithBothOptionsLabel"
       >
-        <div className="sidebar-header">
-          <div className="close-button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="currentColor"
-              className="bi bi-x-lg"
-              viewBox="0 0 16 16"
-              onClick={toggleSidebarOpenState}
-            >
-              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-            </svg>
-          </div>
-          <hr />
-        </div>
         <ul className="nav nav-pills flex-column mb-auto">
           <div className="predefined-lists" onClick={handlePredefinedListUuid}>
             <li id="home-tasks">
-              <Link to="/tasks" className="nav-link link-body-emphasis">
+              <Link to="/tasks" className="anchors nav-link link-body-emphasis">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -87,7 +71,10 @@ const Sidebar = (props) => {
           </div>
           <div id="recycle-bin">
             <li>
-              <Link to="/recycle_bin" className="nav-link link-body-emphasis">
+              <Link
+                to="/recycle_bin"
+                className="anchors nav-link link-body-emphasis"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"

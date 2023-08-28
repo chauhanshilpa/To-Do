@@ -16,7 +16,7 @@ const RecycleBinTaskItem = (props) => {
 
   function handleTaskRestoration(objectIndex) {
     let newTaskListJSON = { ...taskListsJSON };
-    // elementToRestore is a object having path name of current list as key and its value is a object which contains taskUuid key key and innerText.
+    // elementToRestore is a object having path name of current list as key and its value is a object containing metadata of every single task.
     let elementToRestore = newTaskListJSON["recycle_bin"]["taskList"].splice(
       objectIndex,
       1
@@ -30,7 +30,13 @@ const RecycleBinTaskItem = (props) => {
 
   return (
     <div className="task-item">
-      <div className="taskItem-text">
+      <div
+        className="taskItem-text"
+        style={{
+          textDecoration:
+            Object.values(taskObjectWithPathName)[0].taskDone && "line-through",
+        }}
+      >
         {Object.values(taskObjectWithPathName)[0].innerText}
       </div>
       <div className="restore-and-delete-buttons">
