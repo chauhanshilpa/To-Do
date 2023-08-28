@@ -37,7 +37,7 @@ input {
   z-index: 0;
 }
 
-.task-input-field input, .sidebar.theme-dark li {
+.task-input-field input {
   background-color: #eeeeee !important;
 }
 
@@ -78,8 +78,6 @@ input {
 
 .predefined-lists {
   margin-top: 0.75rem;
-.predefined-lists {
-  margin-top: 0.75rem;
 }
 
 .dynamic-lists {
@@ -109,8 +107,7 @@ input {
   background-color: #dddddd !important;
 }
 
-#recycle-bin li:hover,
-.sidebar li:hover {
+#recycle-bin li:hover {
   background-color: #cac9c9 !important;
 }
 
@@ -159,14 +156,15 @@ input {
   color: #eeeeee;
 }
 
-.task-item svg:hover, .delete-list-icon:hover {
+.task-item svg:hover,
+.delete-list-icon:hover {
   color: #78bafd !important;
 }
 
 .task-input-field input:hover,
-.task-item:hover {
+.task-item:hover,
+.sidebar li:hover {
   background-color: #dddddd !important;
-  color: #2c3333;
 }
 
 .taskItem-text,
@@ -227,5 +225,3 @@ input {
     right: 0;
   }
 }
-
-
