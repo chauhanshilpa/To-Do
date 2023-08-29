@@ -5,15 +5,14 @@ import SidebarList from "./SidebarList";
 const Sidebar = (props) => {
   const {
     appBodyTheme,
-    handleNewSidebarList,
-    handleSidebarListChange,
-    sidebarListName,
-    sidebarList,
-    setSidebarList,
-    onClickingSidebarList,
-    sidebarListUuids,
     sidebarOpenState,
     handlePredefinedListUuid,
+    sidebarTaskListName,
+    handleSidebarListChange,
+    handleNewSidebarList,
+    sidebarDynamicListNameAndUuids,
+    onClickingSidebarList,
+    handleSidebarDynamicListDeletion,
   } = props;
 
   return (
@@ -29,7 +28,10 @@ const Sidebar = (props) => {
         <ul className="nav nav-pills flex-column mb-auto">
           <div className="predefined-lists" onClick={handlePredefinedListUuid}>
             <li id="home-tasks">
-              <Link to="/tasks" className="anchors nav-link link-body-emphasis">
+              <Link
+                to="/my_day"
+                className="anchors nav-link link-body-emphasis"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -53,21 +55,24 @@ const Sidebar = (props) => {
               aria-describedby="addon-wrapping"
               onChange={handleSidebarListChange}
               onKeyDown={handleNewSidebarList}
-              value={sidebarListName}
+              value={sidebarTaskListName}
             />
           </div>
           <div className="dynamic-lists">
-            {sidebarList.map((listName, listIndex) => (
-              <SidebarList
-                key={listIndex}
-                listIndex={listIndex}
-                listName={listName}
-                onClickingSidebarList={onClickingSidebarList}
-                sidebarListUuids={sidebarListUuids}
-                sidebarList={sidebarList}
-                setSidebarList={setSidebarList}
-              />
-            ))}
+            {sidebarDynamicListNameAndUuids.map(
+              (nameAndUuidObject, listIndex) => (
+                <SidebarList
+                  key={listIndex}
+                  listIndex={listIndex}
+                  path={nameAndUuidObject.listUuid}
+                  listName={nameAndUuidObject.sidebarTaskListName}
+                  onClickingSidebarList={onClickingSidebarList}
+                  handleSidebarDynamicListDeletion={
+                    handleSidebarDynamicListDeletion
+                  }
+                />
+              )
+            )}
           </div>
           <div id="recycle-bin">
             <li>

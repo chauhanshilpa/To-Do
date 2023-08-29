@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
 import TasksInputField from "./components/TasksInputField";
 import TasksContainer from "./components/TasksContainer";
 import { v4 as uuidv4 } from "uuid";
@@ -11,16 +12,17 @@ import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
 function App() {
   const [appBodyTheme, setAppBodyTheme] = useState("light");
   const [inputTask, setInputTask] = useState("");
-  const [sidebarListName, setSidebarListName] = useState("");
-  const [sidebarList, setSidebarList] = useState([]);
-  const [current_uuid, setCurrent_uuid] = useState("tasks");
-  const [sidebarListUuids, setSidebarListUuids] = useState([]);
+  const [sidebarOpenState, setSidebarOpenState] = useState(false);
+  const [sidebarTaskListName, setSidebarTaskListName] = useState("");
+  const [current_uuid, setCurrent_uuid] = useState("my_day");
+  const [sidebarDynamicListNameAndUuids, setSidebarDynamicListNameAndUuids] =
+    useState([]);
   const [taskListsJSON, setTaskListsJSON] = useState({
-    tasks: {
+    my_day: {
       taskList: [],
       metadata: {
-        listName: "tasks",
-        pathName: "tasks",
+        listName: "my_day",
+        pathName: "my_day",
         deletable: true,
       },
     },
@@ -33,7 +35,6 @@ function App() {
       },
     },
   });
-  const [sidebarOpenState, setSidebarOpenState] = useState(false);
 
   function handleLightAndDarkMode() {
     if (appBodyTheme === "light") {
@@ -73,40 +74,51 @@ function App() {
   }
 
   function handleSidebarListChange(event) {
-    setSidebarListName(event.target.value);
-  }
-
-  function handleNewSidebarList(e) {
-    if (e.keyCode === 13) {
-      if (sidebarListName.trim().length !== 0) {
-        setSidebarList(sidebarList.concat(sidebarListName));
-        setSidebarListName("");
-        const myuuid = uuidv4();
-        let newTaskListsJSON = { ...taskListsJSON };
-        setTaskListsJSON({
-          ...newTaskListsJSON,
-          [myuuid]: {
-            taskList: [],
-            metadata: {
-              listName: sidebarListName,
-              pathName: myuuid,
-              deletable: true,
-            },
-          },
-        });
-        setSidebarListUuids(sidebarListUuids.concat(myuuid));
-      }
-    }
-  }
-
-  function onClickingSidebarList(index) {
-    setCurrent_uuid(sidebarListUuids[index]);
+    setSidebarTaskListName(event.target.value);
   }
 
   function handlePredefinedListUuid() {
     let pathname = window.location.pathname;
     let uuid = pathname.slice(1);
     setCurrent_uuid(uuid);
+  }
+
+  function handleNewSidebarList(event) {
+    if (event.keyCode === 13) {
+      if (sidebarTaskListName.trim().length !== 0) {
+        setSidebarTaskListName("");
+        const listUuid = uuidv4();
+        let newTaskListsJSON = { ...taskListsJSON };
+        setTaskListsJSON({
+          ...newTaskListsJSON,
+          [listUuid]: {
+            taskList: [],
+            metadata: {
+              listName: sidebarTaskListName,
+              pathName: listUuid,
+              deletable: true,
+            },
+          },
+        });
+        setSidebarDynamicListNameAndUuids(
+          sidebarDynamicListNameAndUuids.concat({
+            listUuid: listUuid,
+            sidebarTaskListName: sidebarTaskListName,
+          })
+        );
+      }
+    }
+  }
+
+  function onClickingSidebarList(listIndex) {
+    let listUuid = sidebarDynamicListNameAndUuids[listIndex].listUuid;
+    setCurrent_uuid(listUuid);
+  }
+
+  function handleSidebarDynamicListDeletion(listIndex) {
+    let newSidebarDynamicListNameAndUuids = [...sidebarDynamicListNameAndUuids];
+    newSidebarDynamicListNameAndUuids.splice(listIndex, 1);
+    setSidebarDynamicListNameAndUuids(newSidebarDynamicListNameAndUuids);
   }
 
   return (
@@ -116,54 +128,36 @@ function App() {
           handleLightAndDarkMode={handleLightAndDarkMode}
           appBodyTheme={appBodyTheme}
         />
+        {sidebarOpenState && (
+          <Sidebar
+            appBodyTheme={appBodyTheme}
+            sidebarOpenState={sidebarOpenState}
+            handlePredefinedListUuid={handlePredefinedListUuid}
+            sidebarTaskListName={sidebarTaskListName}
+            handleSidebarListChange={handleSidebarListChange}
+            handleNewSidebarList={handleNewSidebarList}
+            sidebarDynamicListNameAndUuids={sidebarDynamicListNameAndUuids}
+            onClickingSidebarList={onClickingSidebarList}
+            handleSidebarDynamicListDeletion={handleSidebarDynamicListDeletion}
+          />
+        )}
         <Header
           appBodyTheme={appBodyTheme}
-          sidebarListName={sidebarListName}
-          sidebarList={sidebarList}
-          setSidebarList={setSidebarList}
-          handleSidebarListChange={handleSidebarListChange}
-          handleNewSidebarList={handleNewSidebarList}
-          onClickingSidebarList={onClickingSidebarList}
-          sidebarListUuids={sidebarListUuids}
           toggleSidebarOpenState={toggleSidebarOpenState}
           sidebarOpenState={sidebarOpenState}
-          handlePredefinedListUuid={handlePredefinedListUuid}
         />
         <Routes>
-          <Route path="/" element={<Navigate to="/tasks" />} />
-          <Route
-            exact
-            path="/tasks"
-            element={
-              <>
-                <TasksInputField
-                  appBodyTheme={appBodyTheme}
-                  inputTask={inputTask}
-                  handleInputTaskChange={handleInputTaskChange}
-                  handleInputTaskKeypress={handleInputTaskKeypress}
-                  sidebarOpenState={sidebarOpenState}
-                />
-                <TasksContainer
-                  key="tasks"
-                  current_uuid="tasks"
-                  taskListsJSON={taskListsJSON}
-                  setTaskListsJSON={setTaskListsJSON}
-                  sidebarOpenState={sidebarOpenState}
-                  appBodyTheme={appBodyTheme}
-                />
-              </>
-            }
-          />
+          <Route path="/" element={<Navigate to="/my_day" />} />
           <Route
             exact
             path="/recycle_bin"
             element={
               <>
                 <RecycleBinTasksContainer
-                  taskListsJSON={taskListsJSON}
-                  sidebarOpenState={sidebarOpenState}
-                  setTaskListsJSON={setTaskListsJSON}
                   appBodyTheme={appBodyTheme}
+                  sidebarOpenState={sidebarOpenState}
+                  taskListsJSON={taskListsJSON}
+                  setTaskListsJSON={setTaskListsJSON}
                 />
               </>
             }
@@ -182,11 +176,11 @@ function App() {
                 />
                 <TasksContainer
                   key={current_uuid}
+                  appBodyTheme={appBodyTheme}
+                  sidebarOpenState={sidebarOpenState}
                   current_uuid={current_uuid}
                   taskListsJSON={taskListsJSON}
                   setTaskListsJSON={setTaskListsJSON}
-                  sidebarOpenState={sidebarOpenState}
-                  appBodyTheme={appBodyTheme}
                 />
               </>
             }

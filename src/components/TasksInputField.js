@@ -3,10 +3,10 @@ import React from "react";
 const TasksInputField = (props) => {
   const {
     appBodyTheme,
+    sidebarOpenState,
     inputTask,
     handleInputTaskChange,
     handleInputTaskKeypress,
-    sidebarOpenState,
   } = props;
 
   return (

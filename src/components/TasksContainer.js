@@ -4,10 +4,10 @@ import TaskItem from "./TaskItem";
 const TasksContainer = (props) => {
   const {
     appBodyTheme,
+    sidebarOpenState,
+    current_uuid,
     taskListsJSON,
     setTaskListsJSON,
-    current_uuid,
-    sidebarOpenState,
   } = props;
 
   return (
@@ -20,11 +20,11 @@ const TasksContainer = (props) => {
             <TaskItem
               key={innerTextAndTaskUuidObject.taskUuid}
               taskIndex={taskIndex}
+              appBodyTheme={appBodyTheme}
+              current_uuid={current_uuid}
               currentListTaskObject={innerTextAndTaskUuidObject}
               taskListsJSON={taskListsJSON}
               setTaskListsJSON={setTaskListsJSON}
-              current_uuid={current_uuid}
-              appBodyTheme={appBodyTheme}
             />
           )
         )}

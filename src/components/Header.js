@@ -1,20 +1,7 @@
 import React from "react";
-import Sidebar from "./Sidebar";
 
 const Header = (props) => {
-  const {
-    appBodyTheme,
-    handleNewSidebarList,
-    handleSidebarListChange,
-    sidebarListName,
-    sidebarList,
-    setSidebarList,
-    onClickingSidebarList,
-    sidebarListUuids,
-    sidebarOpenState,
-    toggleSidebarOpenState,
-    handlePredefinedListUuid,
-  } = props;
+  const { appBodyTheme, sidebarOpenState, toggleSidebarOpenState } = props;
 
   return (
     <>
@@ -45,21 +32,6 @@ const Header = (props) => {
           </h4>
         </div>
       </div>
-      {sidebarOpenState && (
-        <Sidebar
-          appBodyTheme={appBodyTheme}
-          handleSidebarListChange={handleSidebarListChange}
-          handleNewSidebarList={handleNewSidebarList}
-          sidebarListName={sidebarListName}
-          sidebarList={sidebarList}
-          setSidebarList={setSidebarList}
-          onClickingSidebarList={onClickingSidebarList}
-          sidebarListUuids={sidebarListUuids}
-          sidebarOpenState={sidebarOpenState}
-          toggleSidebarOpenState={toggleSidebarOpenState}
-          handlePredefinedListUuid={handlePredefinedListUuid}
-        />
-      )}
     </>
   );
 };

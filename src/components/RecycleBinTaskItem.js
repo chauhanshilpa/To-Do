@@ -2,11 +2,11 @@ import React from "react";
 
 const RecycleBinTaskItem = (props) => {
   const {
+    objectIndex,
+    taskObjectWithPathName,
     appBodyTheme,
     taskListsJSON,
     setTaskListsJSON,
-    taskObjectWithPathName,
-    objectIndex,
   } = props;
 
   function handlePermanentDeletion(objectIndex) {

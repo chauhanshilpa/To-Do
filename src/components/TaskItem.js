@@ -2,12 +2,12 @@ import React, { useState } from "react";
 
 const TaskItem = (props) => {
   const {
+    taskIndex,
     appBodyTheme,
+    current_uuid,
     currentListTaskObject,
     taskListsJSON,
     setTaskListsJSON,
-    taskIndex,
-    current_uuid,
   } = props;
 
   const [taskDone, setTaskDone] = useState(false);

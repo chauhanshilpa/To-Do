@@ -2,7 +2,7 @@ import React from "react";
 import RecycleBinTaskItem from "./RecycleBinTaskItem";
 
 const RecycleBinTasks = (props) => {
-  const { appBodyTheme, taskListsJSON, setTaskListsJSON, sidebarOpenState } =
+  const { appBodyTheme, sidebarOpenState, taskListsJSON, setTaskListsJSON } =
     props;
 
   return (
@@ -17,12 +17,11 @@ const RecycleBinTasks = (props) => {
             (taskObjectWithPathName, objectIndex) => (
               <RecycleBinTaskItem
                 key={objectIndex}
-                taskObjectWithPathName={taskObjectWithPathName}
                 objectIndex={objectIndex}
+                taskObjectWithPathName={taskObjectWithPathName}
+                appBodyTheme={appBodyTheme}
                 taskListsJSON={taskListsJSON}
                 setTaskListsJSON={setTaskListsJSON}
-                sidebarOpenState={sidebarOpenState}
-                appBodyTheme={appBodyTheme}
               />
             )
           )
