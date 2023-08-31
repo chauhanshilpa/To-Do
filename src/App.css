@@ -41,7 +41,7 @@ input {
   background-color: #eeeeee !important;
 }
 
-.task-input-field.theme-dark input {
+.task-input-field.theme-dark input, .sidebar.theme-dark input {
   background-color: #4c505e !important;
 }
 
@@ -151,7 +151,7 @@ input {
 }
 
 .task-item.theme-dark:hover,
-.task-input-field.theme-dark input:hover {
+.task-input-field.theme-dark input:hover{
   background-color: #42424a !important;
   color: #eeeeee;
 }

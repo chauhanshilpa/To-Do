@@ -145,6 +145,7 @@ function App() {
           appBodyTheme={appBodyTheme}
           toggleSidebarOpenState={toggleSidebarOpenState}
           sidebarOpenState={sidebarOpenState}
+          listName={taskListsJSON[current_uuid]["metadata"]["listName"]}
         />
         <Routes>
           <Route path="/" element={<Navigate to="/my_day" />} />

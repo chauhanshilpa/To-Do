@@ -1,7 +1,8 @@
 import React from "react";
 
 const Header = (props) => {
-  const { appBodyTheme, sidebarOpenState, toggleSidebarOpenState } = props;
+  const { appBodyTheme, sidebarOpenState, toggleSidebarOpenState, listName } =
+    props;
 
   return (
     <>
@@ -28,7 +29,7 @@ const Header = (props) => {
             ></path>
           </svg>
           <h4 style={{ color: appBodyTheme === "dark" && "#eeeeee" }}>
-            My Day
+            {listName}
           </h4>
         </div>
       </div>
