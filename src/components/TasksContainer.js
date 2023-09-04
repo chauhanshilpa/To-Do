@@ -5,7 +5,7 @@ const TasksContainer = (props) => {
   const {
     appBodyTheme,
     sidebarOpenState,
-    current_uuid,
+    currentList_uuid,
     taskListsJSON,
     setTaskListsJSON,
   } = props;
@@ -15,14 +15,14 @@ const TasksContainer = (props) => {
       className={`task-container-wrapper ${sidebarOpenState && "open-sidebar"}`}
     >
       <div className={`container tasks-container`}>
-        {taskListsJSON[current_uuid]["taskList"].map(
-          (innerTextAndTaskUuidObject, taskIndex) => (
+        {taskListsJSON[currentList_uuid]["list"].map(
+          (task, taskIndex) => (
             <TaskItem
-              key={innerTextAndTaskUuidObject.taskUuid}
+              key={task.uuid}
               taskIndex={taskIndex}
               appBodyTheme={appBodyTheme}
-              current_uuid={current_uuid}
-              currentListTaskObject={innerTextAndTaskUuidObject}
+              currentList_uuid={currentList_uuid}
+              currentListTask={task}
               taskListsJSON={taskListsJSON}
               setTaskListsJSON={setTaskListsJSON}
             />

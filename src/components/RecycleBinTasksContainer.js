@@ -12,8 +12,8 @@ const RecycleBinTasks = (props) => {
       }`}
     >
       <div className="container tasks-container">
-        {taskListsJSON["recycle_bin"]["taskList"].length > 0 ? (
-          taskListsJSON["recycle_bin"]["taskList"].map(
+        {taskListsJSON["recycle_bin"]["list"].length > 0 ? (
+          taskListsJSON["recycle_bin"]["list"].map(
             (taskObjectWithPathName, objectIndex) => (
               <RecycleBinTaskItem
                 key={objectIndex}

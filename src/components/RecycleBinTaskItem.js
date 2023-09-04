@@ -11,22 +11,20 @@ const RecycleBinTaskItem = (props) => {
 
   function handlePermanentDeletion(objectIndex) {
     let newTaskListJSON = { ...taskListsJSON };
-    newTaskListJSON["recycle_bin"]["taskList"].splice(objectIndex, 1);
+    newTaskListJSON["recycle_bin"]["list"].splice(objectIndex, 1);
     setTaskListsJSON(newTaskListJSON);
   }
 
   function handleTaskRestoration(objectIndex) {
     let newTaskListJSON = { ...taskListsJSON };
-    // elementToRestore is a object having path name of current list as key and its value is a object containing metadata of every single task.
-    // elementToRestore is a object having path name of current list as key and its value is a object containing metadata of every single task.
-    let elementToRestore = newTaskListJSON["recycle_bin"]["taskList"].splice(
+    // elementToRestore is a object having a pathName key and a task key which is a object having keys uuid,text,date and done
+    let elementToRestore = newTaskListJSON["recycle_bin"]["list"].splice(
       objectIndex,
       1
     );
-    let pathNameOfList = Object.keys(elementToRestore[0]).toString();
-    let restoredTaskObject = elementToRestore[0][pathNameOfList];
-    newTaskListJSON[pathNameOfList]["taskList"] =
-      newTaskListJSON[pathNameOfList]["taskList"].concat(restoredTaskObject);
+    let pathNameOfList = elementToRestore[0].pathName;
+    let restoredTaskObject = elementToRestore[0].task;
+    newTaskListJSON[pathNameOfList]["list"].push(restoredTaskObject);
     setTaskListsJSON(newTaskListJSON);
   }
 
@@ -35,11 +33,10 @@ const RecycleBinTaskItem = (props) => {
       <div
         className="taskItem-text"
         style={{
-          textDecoration:
-            Object.values(taskObjectWithPathName)[0].taskDone && "line-through",
+          textDecoration: taskObjectWithPathName.task.done && "line-through",
         }}
       >
-        {Object.values(taskObjectWithPathName)[0].innerText}
+        {taskObjectWithPathName.task.text}
       </div>
       <div className="restore-and-delete-buttons">
         <svg

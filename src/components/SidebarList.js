@@ -9,11 +9,11 @@ const SidebarList = (props) => {
     onClickingSidebarList,
     handleSidebarDynamicListDeletion,
   } = props;
-
+  
   return (
     <>
-      <li onClick={() => onClickingSidebarList(listIndex)}>
-        <Link to={`/${path}`} className="anchors nav-link link-body-emphasis">
+      <li>
+        <Link to={`/${path}`} className="anchors nav-link link-body-emphasis" onClick={() => onClickingSidebarList(listIndex)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"

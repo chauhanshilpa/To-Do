@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { DeletedItemDetails } from "./ClassModels";
 
 const TaskItem = (props) => {
   const {
     taskIndex,
     appBodyTheme,
-    current_uuid,
-    currentListTaskObject,
+    currentList_uuid,
+    currentListTask,
     taskListsJSON,
     setTaskListsJSON,
   } = props;
@@ -15,7 +16,7 @@ const TaskItem = (props) => {
 
   function toggleTaskCompletion() {
     setTaskDone(!taskDone);
-    currentListTaskObject.taskDone = !taskDone;
+    currentListTask.done = !taskDone;
   }
 
   function toggleTaskEditStatus() {
@@ -24,15 +25,16 @@ const TaskItem = (props) => {
 
   function deleteTask(taskIndex) {
     let newTaskListsJSON = { ...taskListsJSON };
-    // deletedTaskObject contains an object which has a innerText key, a taskUuid key ( unique for every single task), a taskDone key, a date key.
-    let deletedTaskObject = newTaskListsJSON[current_uuid]["taskList"].splice(
+    // deletedTask contains an object which has a text key, a uuid key ( unique for every single task), a done key and a date key.
+    let deletedTask = newTaskListsJSON[currentList_uuid]["list"].splice(
       taskIndex,
       1
     );
-    let pathNameOfList = newTaskListsJSON[current_uuid]["metadata"]["pathName"];
-    newTaskListsJSON["recycle_bin"]["taskList"] = newTaskListsJSON[
-      "recycle_bin"
-    ]["taskList"].concat({ [pathNameOfList]: deletedTaskObject[0] });
+    let pathNameOfList =
+      newTaskListsJSON[currentList_uuid]["metadata"]["pathName"];
+    newTaskListsJSON["recycle_bin"]["list"].push(
+      new DeletedItemDetails(pathNameOfList, deletedTask[0])
+    );
     setTaskListsJSON(newTaskListsJSON);
     setTaskItemEditable(false);
   }
@@ -42,7 +44,7 @@ const TaskItem = (props) => {
       e.preventDefault();
       let newInnerText = e.target.innerText;
       let newTaskListsJSON = { ...taskListsJSON };
-      currentListTaskObject.innerText = newInnerText; // Updated text
+      currentListTask.text = newInnerText; // Updated text
       setTaskListsJSON(newTaskListsJSON);
       setTaskItemEditable(false);
     }
@@ -53,9 +55,7 @@ const TaskItem = (props) => {
       <div
         className={`task-item ${appBodyTheme === "dark" && "theme-dark"}`}
         style={{
-          textDecoration: currentListTaskObject.taskDone
-            ? "line-through"
-            : "none",
+          textDecoration: currentListTask.done ? "line-through" : "none",
           border: taskItemEditable && "2px solid grey",
         }}
         contentEditable={taskItemEditable}
@@ -79,7 +79,7 @@ const TaskItem = (props) => {
             <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z" />
           </svg>
         </div>
-        <div className="taskItem-text">{currentListTaskObject.innerText}</div>
+        <div className="taskItem-text">{currentListTask.text}</div>
         <div className="edit-and-delete-buttons">
           <svg
             xmlns="http://www.w3.org/2000/svg"

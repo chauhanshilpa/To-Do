@@ -5,6 +5,12 @@ import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import TasksInputField from "./components/TasksInputField";
+import {
+  TasksList,
+  TasksListMetadata,
+  Task,
+  SidebarDynamicList,
+} from "./components/ClassModels";
 import TasksContainer from "./components/TasksContainer";
 import { v4 as uuidv4 } from "uuid";
 import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
@@ -14,26 +20,13 @@ function App() {
   const [inputTask, setInputTask] = useState("");
   const [sidebarOpenState, setSidebarOpenState] = useState(false);
   const [sidebarTaskListName, setSidebarTaskListName] = useState("");
-  const [current_uuid, setCurrent_uuid] = useState("my_day");
-  const [sidebarDynamicListNameAndUuids, setSidebarDynamicListNameAndUuids] =
-    useState([]);
+  const [currentList_uuid, setCurrentList_uuid] = useState("my_day");
+  const [sidebarDynamicList, setSidebarDynamicList] = useState([]);
   const [taskListsJSON, setTaskListsJSON] = useState({
-    my_day: {
-      taskList: [],
-      metadata: {
-        listName: "my_day",
-        pathName: "my_day",
-        deletable: true,
-      },
-    },
-    recycle_bin: {
-      taskList: [],
-      metadata: {
-        listName: "recycle_bin",
-        pathName: "recycle_bin",
-        deletable: true,
-      },
-    },
+    my_day: new TasksList(new TasksListMetadata("My Day", "my_day", false)),
+    recycle_bin: new TasksList(
+      new TasksListMetadata("Recycle Bin", "recycle_bin", false)
+    ),
   });
 
   function handleLightAndDarkMode() {
@@ -55,14 +48,9 @@ function App() {
       if (inputTask.trim().length !== 0) {
         const taskUuid = uuidv4();
         let newTaskListsJSON = { ...taskListsJSON };
-        newTaskListsJSON[current_uuid]["taskList"] = newTaskListsJSON[
-          current_uuid
-        ]["taskList"].concat({
-          taskUuid: taskUuid,
-          innerText: inputTask,
-          date: new Date().toDateString(),
-          taskDone: false,
-        });
+        newTaskListsJSON[currentList_uuid]["list"].push(
+          new Task(taskUuid, inputTask, false)
+        );
         setTaskListsJSON(newTaskListsJSON);
         setInputTask("");
       }
@@ -80,7 +68,7 @@ function App() {
   function handlePredefinedListUuid() {
     let pathname = window.location.pathname;
     let uuid = pathname.slice(1);
-    setCurrent_uuid(uuid);
+    setCurrentList_uuid(uuid);
   }
 
   function handleNewSidebarList(event) {
@@ -89,36 +77,36 @@ function App() {
         setSidebarTaskListName("");
         const listUuid = uuidv4();
         let newTaskListsJSON = { ...taskListsJSON };
-        setTaskListsJSON({
-          ...newTaskListsJSON,
-          [listUuid]: {
-            taskList: [],
-            metadata: {
-              listName: sidebarTaskListName,
-              pathName: listUuid,
-              deletable: true,
-            },
-          },
-        });
-        setSidebarDynamicListNameAndUuids(
-          sidebarDynamicListNameAndUuids.concat({
-            listUuid: listUuid,
-            sidebarTaskListName: sidebarTaskListName,
-          })
+        newTaskListsJSON[listUuid] = new TasksList(
+          new TasksListMetadata(sidebarTaskListName, listUuid, true)
         );
+        setTaskListsJSON(newTaskListsJSON);
+        let newSidebarDynamicList = [...sidebarDynamicList]
+        newSidebarDynamicList.push(
+          new SidebarDynamicList(listUuid, sidebarTaskListName)
+        );
+        setSidebarDynamicList(newSidebarDynamicList);
       }
     }
   }
 
   function onClickingSidebarList(listIndex) {
-    let listUuid = sidebarDynamicListNameAndUuids[listIndex].listUuid;
-    setCurrent_uuid(listUuid);
+    let listUuid = sidebarDynamicList[listIndex].uuid;
+    setCurrentList_uuid(listUuid);
   }
 
   function handleSidebarDynamicListDeletion(listIndex) {
-    let newSidebarDynamicListNameAndUuids = [...sidebarDynamicListNameAndUuids];
-    newSidebarDynamicListNameAndUuids.splice(listIndex, 1);
-    setSidebarDynamicListNameAndUuids(newSidebarDynamicListNameAndUuids);
+    if (listIndex === 0) {
+      setCurrentList_uuid("my_day");
+    } else if (
+      window.location.pathname.slice(1) ===
+      sidebarDynamicList[listIndex].uuid
+    ) {
+      setCurrentList_uuid(sidebarDynamicList[listIndex - 1].uuid);
+    }
+    let newSidebarDynamicList = [...sidebarDynamicList];
+    newSidebarDynamicList.splice(listIndex, 1);
+    setSidebarDynamicList(newSidebarDynamicList);
   }
 
   return (
@@ -136,7 +124,7 @@ function App() {
             sidebarTaskListName={sidebarTaskListName}
             handleSidebarListChange={handleSidebarListChange}
             handleNewSidebarList={handleNewSidebarList}
-            sidebarDynamicListNameAndUuids={sidebarDynamicListNameAndUuids}
+            sidebarDynamicList={sidebarDynamicList}
             onClickingSidebarList={onClickingSidebarList}
             handleSidebarDynamicListDeletion={handleSidebarDynamicListDeletion}
           />
@@ -145,7 +133,7 @@ function App() {
           appBodyTheme={appBodyTheme}
           toggleSidebarOpenState={toggleSidebarOpenState}
           sidebarOpenState={sidebarOpenState}
-          listName={taskListsJSON[current_uuid]["metadata"]["listName"]}
+          listName={taskListsJSON[currentList_uuid]["metadata"]["listName"]}
         />
         <Routes>
           <Route path="/" element={<Navigate to="/my_day" />} />
@@ -165,7 +153,7 @@ function App() {
           />
           <Route
             exact
-            path={current_uuid}
+            path={currentList_uuid}
             element={
               <>
                 <TasksInputField
@@ -176,10 +164,10 @@ function App() {
                   sidebarOpenState={sidebarOpenState}
                 />
                 <TasksContainer
-                  key={current_uuid}
+                  key={currentList_uuid}
                   appBodyTheme={appBodyTheme}
                   sidebarOpenState={sidebarOpenState}
-                  current_uuid={current_uuid}
+                  currentList_uuid={currentList_uuid}
                   taskListsJSON={taskListsJSON}
                   setTaskListsJSON={setTaskListsJSON}
                 />

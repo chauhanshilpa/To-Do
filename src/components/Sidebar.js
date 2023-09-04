@@ -10,7 +10,7 @@ const Sidebar = (props) => {
     sidebarTaskListName,
     handleSidebarListChange,
     handleNewSidebarList,
-    sidebarDynamicListNameAndUuids,
+    sidebarDynamicList,
     onClickingSidebarList,
     handleSidebarDynamicListDeletion,
   } = props;
@@ -81,13 +81,13 @@ const Sidebar = (props) => {
             />
           </div>
           <div className="dynamic-lists">
-            {sidebarDynamicListNameAndUuids.map(
-              (nameAndUuidObject, listIndex) => (
+            {sidebarDynamicList.map(
+              (list, listIndex) => (
                 <SidebarList
                   key={listIndex}
                   listIndex={listIndex}
-                  path={nameAndUuidObject.listUuid}
-                  listName={nameAndUuidObject.sidebarTaskListName}
+                  path={list.uuid}
+                  listName={list.name}
                   onClickingSidebarList={onClickingSidebarList}
                   handleSidebarDynamicListDeletion={
                     handleSidebarDynamicListDeletion
