@@ -81,20 +81,18 @@ const Sidebar = (props) => {
             />
           </div>
           <div className="dynamic-lists">
-            {sidebarDynamicList.map(
-              (list, listIndex) => (
-                <SidebarList
-                  key={listIndex}
-                  listIndex={listIndex}
-                  path={list.uuid}
-                  listName={list.name}
-                  onClickingSidebarList={onClickingSidebarList}
-                  handleSidebarDynamicListDeletion={
-                    handleSidebarDynamicListDeletion
-                  }
-                />
-              )
-            )}
+            {sidebarDynamicList.map((list, listIndex) => (
+              <SidebarList
+                key={listIndex}
+                listIndex={listIndex}
+                path={list.uuid}
+                listName={list.name}
+                onClickingSidebarList={onClickingSidebarList}
+                handleSidebarDynamicListDeletion={
+                  handleSidebarDynamicListDeletion
+                }
+              />
+            ))}
           </div>
         </ul>
         <hr />

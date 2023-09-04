@@ -81,7 +81,7 @@ function App() {
           new TasksListMetadata(sidebarTaskListName, listUuid, true)
         );
         setTaskListsJSON(newTaskListsJSON);
-        let newSidebarDynamicList = [...sidebarDynamicList]
+        let newSidebarDynamicList = [...sidebarDynamicList];
         newSidebarDynamicList.push(
           new SidebarDynamicList(listUuid, sidebarTaskListName)
         );
@@ -99,8 +99,7 @@ function App() {
     if (listIndex === 0) {
       setCurrentList_uuid("my_day");
     } else if (
-      window.location.pathname.slice(1) ===
-      sidebarDynamicList[listIndex].uuid
+      window.location.pathname.slice(1) === sidebarDynamicList[listIndex].uuid
     ) {
       setCurrentList_uuid(sidebarDynamicList[listIndex - 1].uuid);
     }

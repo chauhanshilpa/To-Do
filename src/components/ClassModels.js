@@ -29,9 +29,9 @@ export class SidebarDynamicList {
   }
 }
 
-export class DeletedItemDetails{
- constructor(pathName, task){
-  this.pathName = pathName;
-  this.task = task;
- }
+export class DeletedItemDetails {
+  constructor(pathName, task) {
+    this.pathName = pathName;
+    this.task = task;
+  }
 }
