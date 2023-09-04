@@ -236,3 +236,9 @@ input {
     right: 0;
   }
 }
+
+@media screen and (max-width: 768px) {
+  .task-input-field.open-sidebar {
+    pointer-events: none;
+  }
+}
