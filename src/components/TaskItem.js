@@ -15,9 +15,18 @@ const TaskItem = (props) => {
   const [taskDone, setTaskDone] = useState(false);
   const [taskItemEditable, setTaskItemEditable] = useState(false);
 
-  function toggleTaskCompletion() {
-    setTaskDone(!taskDone);
+  function toggleTaskCompletion(taskIndex) {
     currentListTask.done = !taskDone;
+    setTaskDone(!taskDone);
+    if (currentListTask.done === true) {
+      let newTaskListsJSON = { ...taskListsJSON };
+      let completedTask = newTaskListsJSON[currentList_uuid]["list"].splice(
+        taskIndex,
+        1
+      );
+      newTaskListsJSON[currentList_uuid]["list"].unshift(completedTask[0]);
+      setTaskListsJSON(newTaskListsJSON);
+    }
   }
 
   function toggleTaskEditStatus() {
@@ -31,11 +40,13 @@ const TaskItem = (props) => {
       taskIndex,
       1
     );
-    let pathNameOfList =
-      newTaskListsJSON[currentList_uuid]["metadata"]["pathName"];
-    newTaskListsJSON["recycle_bin"]["list"].push(
-      new DeletedItemDetails(pathNameOfList, deletedTask[0])
-    );
+    if (currentListTask.done === false) {
+      let pathNameOfList =
+        newTaskListsJSON[currentList_uuid]["metadata"]["pathName"];
+      newTaskListsJSON["recycle_bin"]["list"].push(
+        new DeletedItemDetails(pathNameOfList, deletedTask[0])
+      );
+    }
     setTaskListsJSON(newTaskListsJSON);
     setTaskItemEditable(false);
   }
@@ -74,7 +85,7 @@ const TaskItem = (props) => {
             className="bi bi-check2-circle"
             viewBox="0 0 18 18"
             focusable="false"
-            onClick={toggleTaskCompletion}
+            onClick={()=>toggleTaskCompletion(taskIndex)}
             data-tooltip-id="taskDone-checkbox"
             data-tooltip-content="Done"
           >

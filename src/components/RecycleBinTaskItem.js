@@ -31,14 +31,7 @@ const RecycleBinTaskItem = (props) => {
 
   return (
     <div className={`task-item ${appBodyTheme === "dark" && "theme-dark"}`}>
-      <div
-        className="taskItem-text"
-        style={{
-          textDecoration: taskObjectWithPathName.task.done && "line-through",
-        }}
-      >
-        {taskObjectWithPathName.task.text}
-      </div>
+      <div className="taskItem-text">{taskObjectWithPathName.task.text}</div>
       <div className="restore-and-delete-buttons">
         <svg
           xmlns="http://www.w3.org/2000/svg"
