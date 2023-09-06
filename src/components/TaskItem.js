@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { DeletedItemDetails } from "./ClassModels";
 import { Tooltip } from "react-tooltip";
+import sound from "../audio/taskIsDone.wav";
 
 const TaskItem = (props) => {
   const {
@@ -26,6 +27,7 @@ const TaskItem = (props) => {
       );
       newTaskListsJSON[currentList_uuid]["list"].unshift(completedTask[0]);
       setTaskListsJSON(newTaskListsJSON);
+      new Audio(sound).play();
     }
   }
 
@@ -85,7 +87,7 @@ const TaskItem = (props) => {
             className="bi bi-check2-circle"
             viewBox="0 0 18 18"
             focusable="false"
-            onClick={()=>toggleTaskCompletion(taskIndex)}
+            onClick={() => toggleTaskCompletion(taskIndex)}
             data-tooltip-id="taskDone-checkbox"
             data-tooltip-content="Done"
           >
