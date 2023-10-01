@@ -110,6 +110,17 @@ function App() {
         listIndex: JSON.stringify(listIndex),
       },
     });
+    let pathName = window.location.pathname;
+    let pathUUID = pathName.slice(1);
+    if (pathUUID === sidebarDynamicList[listIndex].uuid) {
+      if (listIndex === 0) {
+        pathUUID = "my_day";
+      } else {
+        pathUUID = sidebarDynamicList[listIndex - 1].uuid;
+      }
+      setCurrentList_uuid(pathUUID);
+      getTaskListandMetadata(pathUUID)
+    }
     setSidebarDynamicList(response.data.sidebarDynamicList);
   }
 
@@ -142,7 +153,7 @@ function App() {
         <Routes>
           <Route
             exact
-            path={`/:${currentList_uuid}`}
+            path={"/:currentList_uuid"}
             element={
               <>
                 <TasksInputField
