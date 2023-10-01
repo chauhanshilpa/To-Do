@@ -28,8 +28,8 @@ app.get("/list", (req, res) => {
 app.get("/list/:path", (req, res) => {
   let uuid = req.params["path"];
   let taskList = taskListsJSON[uuid]["list"];
-  let recycleBinTaskList = taskListsJSON["recycle_bin"]["list"];
   let metadata = taskListsJSON[uuid]["metadata"];
+  let recycleBinTaskList = taskListsJSON["recycle_bin"]["list"];
   res.send({ recycleBinTaskList, metadata, taskList });
 });
 
@@ -49,21 +49,10 @@ app.get("/add_list", (req, res) => {
 });
 
 app.get("/delete_list", (req, res) => {
-  let currentList_uuid = JSON.parse(req.query.currentList_uuid);
   const listIndex = JSON.parse(req.query.listIndex);
-  const pathName = JSON.parse(req.query.pathName);
-
-  if (pathName.slice(1) === sidebarDynamicList[listIndex].uuid) {
-    if (listIndex === 0) {
-      currentList_uuid = "my_day";
-    } else {
-      currentList_uuid = sidebarDynamicList[listIndex - 1].uuid;
-    }
-  }
   sidebarDynamicList.splice(listIndex, 1);
   res.send({
     sidebarDynamicList,
-    currentList_uuid,
   });
 });
 

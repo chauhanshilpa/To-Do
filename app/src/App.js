@@ -24,28 +24,33 @@ function App() {
 
   useEffect(() => {
     getSidebarDynamicList();
+    getTaskListandMetadata("my_day");
     // eslint-disable-next-line
   }, []);
+
+  async function getTaskListandMetadata(path) {
+    let response = await axios.get(`${baseURL}/list/${path}`);
+    setCurrentListMetadata(response.data.metadata);
+    setTaskList(response.data.taskList);
+    path === "recycle_bin" &&
+      setRecycleBinTaskList(response.data.recycleBinTaskList);
+    setCurrentList_uuid(path);
+  }
 
   async function getSidebarDynamicList() {
     const response = await axios(`${baseURL}/list`);
     setSidebarDynamicList(response.data.sidebarDynamicList);
   }
 
-  function onListClick() {
-    const pathName = window.location.pathname;
-    setCurrentList_uuid(pathName.slice(1));
-    getTaskListandMetadata(pathName.slice(1));
+  function onPredefinedListClick() {
+    let pathUUID = window.location.pathname.slice(1);
+    setCurrentList_uuid(pathUUID);
+    getTaskListandMetadata(pathUUID);
   }
 
-  async function getTaskListandMetadata(path) {
-    try {
-      let response = await axios.get(`${baseURL}/list/${path}`);
-      setCurrentListMetadata(response.data.metadata);
-      setTaskList(response.data.taskList);
-      path === "recycle_bin" &&
-        setRecycleBinTaskList(response.data.recycleBinTaskList);
-    } catch (error) {}
+  function onDynamicListClick(pathUUID) {
+    setCurrentList_uuid(pathUUID);
+    getTaskListandMetadata(pathUUID);
   }
 
   function handleLightAndDarkMode() {
@@ -100,15 +105,11 @@ function App() {
   }
 
   async function deleteSidebarDynamicList(listIndex) {
-    const pathName = window.location.pathname;
     const response = await axios.get(`${baseURL}/delete_list`, {
       params: {
-        currentList_uuid: JSON.stringify(currentList_uuid),
         listIndex: JSON.stringify(listIndex),
-        pathName: JSON.stringify(pathName),
       },
     });
-    setCurrentList_uuid(response.data.currentList_uuid);
     setSidebarDynamicList(response.data.sidebarDynamicList);
   }
 
@@ -123,7 +124,8 @@ function App() {
           <Sidebar
             appBodyTheme={appBodyTheme}
             sidebarOpenState={sidebarOpenState}
-            onListClick={onListClick}
+            onPredefinedListClick={onPredefinedListClick}
+            onDynamicListClick={onDynamicListClick}
             sidebarTaskListName={sidebarTaskListName}
             handleSidebarListChange={handleSidebarListChange}
             addNewSidebarList={addNewSidebarList}
@@ -138,24 +140,9 @@ function App() {
           listName={currentListMetadata.listName}
         />
         <Routes>
-          <Route path="/" element={<Navigate to="/my_day" />} />
           <Route
             exact
-            path="/recycle_bin"
-            element={
-              <>
-                <RecycleBinTasksContainer
-                  appBodyTheme={appBodyTheme}
-                  sidebarOpenState={sidebarOpenState}
-                  recycleBinTaskList={recycleBinTaskList}
-                  setRecycleBinTaskList={setRecycleBinTaskList}
-                />
-              </>
-            }
-          />
-          <Route
-            exact
-            path={currentList_uuid}
+            path={`/:${currentList_uuid}`}
             element={
               <>
                 <TasksInputField
@@ -172,6 +159,21 @@ function App() {
                   currentList_uuid={currentList_uuid}
                   taskList={taskList}
                   setTaskList={setTaskList}
+                />
+              </>
+            }
+          />
+          <Route path="/" element={<Navigate to="/my_day" />} />
+          <Route
+            exact
+            path="/recycle_bin"
+            element={
+              <>
+                <RecycleBinTasksContainer
+                  appBodyTheme={appBodyTheme}
+                  sidebarOpenState={sidebarOpenState}
+                  recycleBinTaskList={recycleBinTaskList}
+                  setRecycleBinTaskList={setRecycleBinTaskList}
                 />
               </>
             }

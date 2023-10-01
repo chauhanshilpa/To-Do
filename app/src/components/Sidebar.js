@@ -6,7 +6,8 @@ const Sidebar = (props) => {
   const {
     appBodyTheme,
     sidebarOpenState,
-    onListClick,
+    onPredefinedListClick,
+    onDynamicListClick,
     sidebarTaskListName,
     handleSidebarListChange,
     addNewSidebarList,
@@ -24,8 +25,8 @@ const Sidebar = (props) => {
         id="offcanvasWithBothOptions"
         aria-labelledby="offcanvasWithBothOptionsLabel"
       >
-        <ul className="nav nav-pills flex-column mb-auto" onClick={onListClick}>
-          <div className="predefined-lists">
+        <ul className="nav nav-pills flex-column mb-auto">
+          <div className="predefined-lists" onClick={onPredefinedListClick}>
             <div id="home-tasks">
               <li>
                 <Link
@@ -86,6 +87,7 @@ const Sidebar = (props) => {
                 listIndex={listIndex}
                 pathname={list.uuid}
                 listName={list.name}
+                onDynamicListClick={onDynamicListClick}
                 deleteSidebarDynamicList={deleteSidebarDynamicList}
               />
             ))}

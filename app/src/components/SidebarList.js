@@ -3,11 +3,17 @@ import { Link } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 
 const SidebarList = (props) => {
-  const { listIndex, pathname, listName, deleteSidebarDynamicList } = props;
+  const {
+    listIndex,
+    pathname,
+    listName,
+    onDynamicListClick,
+    deleteSidebarDynamicList,
+  } = props;
 
   return (
     <>
-      <li>
+      <li onClick={() => onDynamicListClick(pathname)}>
         <Link
           to={`/${pathname}`}
           className="anchors nav-link link-body-emphasis"
