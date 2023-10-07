@@ -58,50 +58,50 @@ app.get("/delete_list", (req, res) => {
 
 // APIs for creating, updating and deleting task and getting if task is done or not
 app.get("/create_task", (req, res) => {
-  const currentList_uuid = JSON.parse(req.query.currentList_uuid);
+  const currentListUUID = JSON.parse(req.query.currentListUUID);
   const inputTask = req.query.inputTask;
   const taskUuid = uuidv4();
-  taskListsJSON[currentList_uuid]["list"].push(
+  taskListsJSON[currentListUUID]["list"].push(
     new Task(taskUuid, inputTask, false)
   );
-  let taskList = taskListsJSON[currentList_uuid]["list"];
+  let taskList = taskListsJSON[currentListUUID]["list"];
   res.send({ taskList });
 });
 
 app.get("/update_task", (req, res) => {
   const taskIndex = JSON.parse(req.query.taskIndex);
-  const currentList_uuid = JSON.parse(req.query.currentList_uuid);
+  const currentListUUID = JSON.parse(req.query.currentListUUID);
   const newInnerText = req.query.newInnerText;
-  taskListsJSON[currentList_uuid]["list"][taskIndex]["text"] = newInnerText; // Updated text
-  let taskList = taskListsJSON[currentList_uuid]["list"];
+  taskListsJSON[currentListUUID]["list"][taskIndex]["text"] = newInnerText; // Updated text
+  let taskList = taskListsJSON[currentListUUID]["list"];
   res.send({ taskList });
 });
 
 app.get("/delete_task", (req, res) => {
   const taskIndex = JSON.parse(req.query.taskIndex);
-  const currentList_uuid = JSON.parse(req.query.currentList_uuid);
+  const currentListUUID = JSON.parse(req.query.currentListUUID);
   const currentListTask = JSON.parse(req.query.currentListTask);
   // deletedTask contains an object which has a text key, a uuid key ( unique for every single task), a done key and a date key.
-  let deletedTask = taskListsJSON[currentList_uuid]["list"].splice(
+  let deletedTask = taskListsJSON[currentListUUID]["list"].splice(
     taskIndex,
     1
   );
   if (currentListTask.done === false) {
     let pathNameOfList =
-      taskListsJSON[currentList_uuid]["metadata"]["pathName"];
+      taskListsJSON[currentListUUID]["metadata"]["pathName"];
     taskListsJSON["recycle_bin"]["list"].push(
       new DeletedItemDetails(pathNameOfList, deletedTask[0])
     );
   }
-  let taskList = taskListsJSON[currentList_uuid]["list"];
+  let taskList = taskListsJSON[currentListUUID]["list"];
   res.send({ taskList });
 });
 
 app.get("/task_done", (req, res) => {
   const taskIndex = JSON.parse(req.query.taskIndex);
   const currentListTask = JSON.parse(req.query.currentListTask);
-  const currentList_uuid = JSON.parse(req.query.currentList_uuid);
-  let taskList = taskListsJSON[currentList_uuid]["list"];
+  const currentListUUID = JSON.parse(req.query.currentListUUID);
+  let taskList = taskListsJSON[currentListUUID]["list"];
   taskList[taskIndex]["done"] = currentListTask.done;
   let completedTask = taskList.splice(taskIndex, 1);
   if (currentListTask.done === true) {

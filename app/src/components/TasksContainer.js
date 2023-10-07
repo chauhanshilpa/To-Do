@@ -6,7 +6,7 @@ const TasksContainer = (props) => {
   const {
     appBodyTheme,
     sidebarOpenState,
-    currentList_uuid,
+    currentListUUID,
     taskList,
     setTaskList,
   } = props;
@@ -22,7 +22,7 @@ const TasksContainer = (props) => {
               key={uuidv4()}
               taskIndex={taskIndex}
               appBodyTheme={appBodyTheme}
-              currentList_uuid={currentList_uuid}
+              currentListUUID={currentListUUID}
               currentListTask={task}
               setTaskList={setTaskList}
             />

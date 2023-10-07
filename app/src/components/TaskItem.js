@@ -7,7 +7,7 @@ const TaskItem = (props) => {
   const {
     taskIndex,
     appBodyTheme,
-    currentList_uuid,
+    currentListUUID,
     currentListTask,
     setTaskList,
   } = props;
@@ -22,7 +22,7 @@ const TaskItem = (props) => {
       params: {
         taskIndex: JSON.stringify(taskIndex),
         currentListTask: JSON.stringify(currentListTask),
-        currentList_uuid: JSON.stringify(currentList_uuid),
+        currentListUUID: JSON.stringify(currentListUUID),
       },
     });
     setTaskList(response.data.taskList);
@@ -43,7 +43,7 @@ const TaskItem = (props) => {
       let response = await axios.get(`${baseURL}/update_task`, {
         params: {
           taskIndex: JSON.stringify(taskIndex),
-          currentList_uuid: JSON.stringify(currentList_uuid),
+          currentListUUID: JSON.stringify(currentListUUID),
           newInnerText,
         },
       });
@@ -56,7 +56,7 @@ const TaskItem = (props) => {
     let response = await axios.get(`${baseURL}/delete_task`, {
       params: {
         taskIndex: JSON.stringify(taskIndex),
-        currentList_uuid: JSON.stringify(currentList_uuid),
+        currentListUUID: JSON.stringify(currentListUUID),
         currentListTask: JSON.stringify(currentListTask),
       },
     });

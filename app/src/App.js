@@ -14,7 +14,7 @@ function App() {
   const [inputTask, setInputTask] = useState("");
   const [sidebarOpenState, setSidebarOpenState] = useState(false);
   const [sidebarTaskListName, setSidebarTaskListName] = useState("");
-  const [currentList_uuid, setCurrentList_uuid] = useState("my_day");
+  const [currentListUUID, setCurrentListUUID] = useState("my_day");
   const [sidebarDynamicList, setSidebarDynamicList] = useState([]);
   const [currentListMetadata, setCurrentListMetadata] = useState({});
   const [taskList, setTaskList] = useState([]);
@@ -34,7 +34,7 @@ function App() {
     setTaskList(response.data.taskList);
     path === "recycle_bin" &&
       setRecycleBinTaskList(response.data.recycleBinTaskList);
-    setCurrentList_uuid(path);
+    setCurrentListUUID(path);
   }
 
   async function getSidebarDynamicList() {
@@ -44,12 +44,12 @@ function App() {
 
   function onPredefinedListClick() {
     let pathUUID = window.location.pathname.slice(1);
-    setCurrentList_uuid(pathUUID);
+    setCurrentListUUID(pathUUID);
     getTaskListandMetadata(pathUUID);
   }
 
   function onDynamicListClick(pathUUID) {
-    setCurrentList_uuid(pathUUID);
+    setCurrentListUUID(pathUUID);
     getTaskListandMetadata(pathUUID);
   }
 
@@ -76,7 +76,7 @@ function App() {
       if (inputTask.trim().length !== 0) {
         const response = await axios.get(`${baseURL}/create_task`, {
           params: {
-            currentList_uuid: JSON.stringify(currentList_uuid),
+            currentListUUID: JSON.stringify(currentListUUID),
             inputTask,
           },
         });
@@ -118,7 +118,7 @@ function App() {
       } else {
         pathUUID = sidebarDynamicList[listIndex - 1].uuid;
       }
-      setCurrentList_uuid(pathUUID);
+      setCurrentListUUID(pathUUID);
       getTaskListandMetadata(pathUUID)
     }
     setSidebarDynamicList(response.data.sidebarDynamicList);
@@ -153,7 +153,7 @@ function App() {
         <Routes>
           <Route
             exact
-            path={"/:currentList_uuid"}
+            path={"/:currentListUUID"}
             element={
               <>
                 <TasksInputField
@@ -164,10 +164,10 @@ function App() {
                   sidebarOpenState={sidebarOpenState}
                 />
                 <TasksContainer
-                  key={currentList_uuid}
+                  key={currentListUUID}
                   appBodyTheme={appBodyTheme}
                   sidebarOpenState={sidebarOpenState}
-                  currentList_uuid={currentList_uuid}
+                  currentListUUID={currentListUUID}
                   taskList={taskList}
                   setTaskList={setTaskList}
                 />
