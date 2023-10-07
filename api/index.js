@@ -5,7 +5,7 @@ import {
   TasksList,
   TasksListMetadata,
   Task,
-  SidebarDynamicList,
+  SidebarList,
   DeletedItemDetails,
 } from "./ApiClassModels.js";
 
@@ -13,7 +13,7 @@ const port = 4002;
 const app = express();
 app.use(cors());
 
-let sidebarDynamicList = [];
+let sidebarUserGeneratedList = [];
 let taskListsJSON = {
   my_day: new TasksList(new TasksListMetadata("My Day", "my_day", false)),
   recycle_bin: new TasksList(
@@ -22,14 +22,19 @@ let taskListsJSON = {
 };
 
 app.get("/list", (req, res) => {
-  res.send({ sidebarDynamicList });
+  res.send({ sidebarUserGeneratedList });
 });
 
-app.get("/list/:path", (req, res) => {
-  let uuid = req.params["path"];
-  let taskList = taskListsJSON[uuid]["list"];
-  let metadata = taskListsJSON[uuid]["metadata"];
-  let recycleBinTaskList = taskListsJSON["recycle_bin"]["list"];
+app.get("/list/:listUUID", (req, res) => {
+  let listUUID = req.params["listUUID"];
+  let metadata = taskListsJSON[listUUID]["metadata"];
+  let taskList; 
+  let recycleBinTaskList;
+  if (listUUID === "recycle_bin") {
+    recycleBinTaskList = taskListsJSON["recycle_bin"]["list"];
+  } else {
+    taskList = taskListsJSON[listUUID]["list"];
+  }
   res.send({ recycleBinTaskList, metadata, taskList });
 });
 
@@ -40,19 +45,17 @@ app.get("/add_list", (req, res) => {
   taskListsJSON[listUuid] = new TasksList(
     new TasksListMetadata(sidebarTaskListName, listUuid, true)
   );
-  sidebarDynamicList.push(
-    new SidebarDynamicList(listUuid, sidebarTaskListName)
-  );
+  sidebarUserGeneratedList.push(new SidebarList(listUuid, sidebarTaskListName));
   res.send({
-    sidebarDynamicList,
+    sidebarUserGeneratedList,
   });
 });
 
 app.get("/delete_list", (req, res) => {
   const listIndex = JSON.parse(req.query.listIndex);
-  sidebarDynamicList.splice(listIndex, 1);
+  sidebarUserGeneratedList.splice(listIndex, 1);
   res.send({
-    sidebarDynamicList,
+    sidebarUserGeneratedList,
   });
 });
 
@@ -82,15 +85,11 @@ app.get("/delete_task", (req, res) => {
   const currentListUUID = JSON.parse(req.query.currentListUUID);
   const currentListTask = JSON.parse(req.query.currentListTask);
   // deletedTask contains an object which has a text key, a uuid key ( unique for every single task), a done key and a date key.
-  let deletedTask = taskListsJSON[currentListUUID]["list"].splice(
-    taskIndex,
-    1
-  );
+  let deletedTask = taskListsJSON[currentListUUID]["list"].splice(taskIndex, 1);
   if (currentListTask.done === false) {
-    let pathNameOfList =
-      taskListsJSON[currentListUUID]["metadata"]["pathName"];
+    let listUUID = taskListsJSON[currentListUUID]["metadata"]["pathName"];
     taskListsJSON["recycle_bin"]["list"].push(
-      new DeletedItemDetails(pathNameOfList, deletedTask[0])
+      new DeletedItemDetails(listUUID, deletedTask[0])
     );
   }
   let taskList = taskListsJSON[currentListUUID]["list"];
@@ -127,9 +126,9 @@ app.get("/restore_task", (req, res) => {
     objectIndex,
     1
   );
-  let pathNameOfList = elementToRestore[0].pathName;
+  let listUUID = elementToRestore[0].pathName;
   let restoredTaskObject = elementToRestore[0].task;
-  taskListsJSON[pathNameOfList]["list"].push(restoredTaskObject);
+  taskListsJSON[listUUID]["list"].push(restoredTaskObject);
   let recycleBinTaskList = taskListsJSON["recycle_bin"]["list"];
   res.send({ recycleBinTaskList });
 });

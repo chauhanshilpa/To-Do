@@ -6,7 +6,7 @@ const TasksInputField = (props) => {
     sidebarOpenState,
     inputTask,
     handleInputTaskChange,
-    addTask,
+    handleNewTask,
   } = props;
 
   return (
@@ -24,7 +24,7 @@ const TasksInputField = (props) => {
           aria-describedby="basic-addon1"
           value={inputTask}
           onChange={handleInputTaskChange}
-          onKeyDown={addTask}
+          onKeyDown={handleNewTask}
         />
       </div>
     </div>

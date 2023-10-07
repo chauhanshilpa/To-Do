@@ -18,11 +18,11 @@ const RecycleBinTasks = (props) => {
     >
       <div className="container tasks-container">
         {recycleBinTaskList.length > 0 ? (
-          recycleBinTaskList.map((taskObjectWithPathName, objectIndex) => (
+          recycleBinTaskList.map((listItemInfo, index) => (
             <RecycleBinTaskItem
               key={uuidv4()}
-              objectIndex={objectIndex}
-              taskObjectWithPathName={taskObjectWithPathName}
+              objectIndex={index}
+              listItemInfo={listItemInfo}
               appBodyTheme={appBodyTheme}
               setRecycleBinTaskList={setRecycleBinTaskList}
             />

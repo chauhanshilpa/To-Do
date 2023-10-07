@@ -22,7 +22,7 @@ export class TasksList {
     }
   }
   
-  export class SidebarDynamicList {
+  export class SidebarList {
     constructor(uuid, name) {
       this.uuid = uuid;
       this.name = name;
@@ -30,8 +30,8 @@ export class TasksList {
   }
   
   export class DeletedItemDetails {
-    constructor(pathName, task) {
-      this.pathName = pathName;
+    constructor(listUUID, task) {
+      this.pathName = listUUID;
       this.task = task;
     }
   }

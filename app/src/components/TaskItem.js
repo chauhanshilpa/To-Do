@@ -12,7 +12,7 @@ const TaskItem = (props) => {
     setTaskList,
   } = props;
 
-  const [taskItemEditable, setTaskItemEditable] = useState(false);
+  const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
 
   const baseURL = process.env.REACT_APP_API_BASIC_URL;
 
@@ -28,15 +28,15 @@ const TaskItem = (props) => {
     setTaskList(response.data.taskList);
     if (currentListTask.done) {
       new Audio(sound).play();
-      setTaskItemEditable(false);
+      setIsTaskItemEditable(false);
     }
   }
 
   function toggleTaskEditStatus() {
-    setTaskItemEditable(!taskItemEditable);
+    setIsTaskItemEditable(!isTaskItemEditable);
   }
 
-  async function updateTask(event, taskIndex) {
+  async function handleTaskUpdation(event, taskIndex) {
     if (event.keyCode === 13) {
       event.preventDefault();
       let newInnerText = event.target.innerText;
@@ -48,11 +48,11 @@ const TaskItem = (props) => {
         },
       });
       setTaskList(response.data.taskList);
-      setTaskItemEditable(false);
+      setIsTaskItemEditable(false);
     }
   }
 
-  async function deleteTask(taskIndex) {
+  async function handleTaskDeletion(taskIndex) {
     let response = await axios.get(`${baseURL}/delete_task`, {
       params: {
         taskIndex: JSON.stringify(taskIndex),
@@ -61,7 +61,7 @@ const TaskItem = (props) => {
       },
     });
     setTaskList(response.data.taskList);
-    setTaskItemEditable(false);
+    setIsTaskItemEditable(false);
   }
 
   return (
@@ -70,11 +70,11 @@ const TaskItem = (props) => {
         className={`task-item ${appBodyTheme === "dark" && "theme-dark"}`}
         style={{
           textDecoration: currentListTask.done ? "line-through" : "none",
-          border: taskItemEditable && "2px solid grey",
+          border: isTaskItemEditable && "2px solid grey",
         }}
-        contentEditable={taskItemEditable}
+        contentEditable={isTaskItemEditable}
         suppressContentEditableWarning={true}
-        onKeyDown={(event) => updateTask(event, taskIndex)}
+        onKeyDown={(event) => handleTaskUpdation(event, taskIndex)}
         onDoubleClick={toggleTaskEditStatus}
       >
         <div className="task-checkbox">
@@ -123,7 +123,7 @@ const TaskItem = (props) => {
             fill="currentColor"
             className="bi bi-trash3"
             viewBox="0 0 16 16"
-            onClick={() => deleteTask(taskIndex)}
+            onClick={() => handleTaskDeletion(taskIndex)}
             data-tooltip-id="delete-task"
             data-tooltip-content="Delete"
           >

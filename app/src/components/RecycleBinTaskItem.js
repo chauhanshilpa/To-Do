@@ -5,7 +5,7 @@ import axios from "axios";
 const RecycleBinTaskItem = (props) => {
   const {
     objectIndex,
-    taskObjectWithPathName,
+    listItemInfo,
     appBodyTheme,
     setRecycleBinTaskList,
   } = props;
@@ -21,7 +21,7 @@ const RecycleBinTaskItem = (props) => {
     setRecycleBinTaskList(response.data.recycleBinTaskList);
   }
 
-  async function handlePermanentDeletion(objectIndex) {
+  async function handleTaskPermanentDeletion(objectIndex) {
     let response = await axios.get(`${baseURL}/permanent_deletion`, {
       params: {
         objectIndex: JSON.stringify(objectIndex),
@@ -32,7 +32,7 @@ const RecycleBinTaskItem = (props) => {
 
   return (
     <div className={`task-item ${appBodyTheme === "dark" && "theme-dark"}`}>
-      <div className="taskItem-text">{taskObjectWithPathName.task.text}</div>
+      <div className="taskItem-text">{listItemInfo.task.text}</div>
       <div className="restore-and-delete-buttons">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +59,7 @@ const RecycleBinTaskItem = (props) => {
           fill="currentColor"
           className="bi bi-trash3"
           viewBox="0 0 16 16"
-          onClick={() => handlePermanentDeletion(objectIndex)}
+          onClick={() => handleTaskPermanentDeletion(objectIndex)}
           data-tooltip-id="permanent-delete"
           data-tooltip-content="Delete"
         >

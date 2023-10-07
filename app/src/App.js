@@ -15,7 +15,7 @@ function App() {
   const [sidebarOpenState, setSidebarOpenState] = useState(false);
   const [sidebarTaskListName, setSidebarTaskListName] = useState("");
   const [currentListUUID, setCurrentListUUID] = useState("my_day");
-  const [sidebarDynamicList, setSidebarDynamicList] = useState([]);
+  const [sidebarUserGeneratedList, setSidebarUserGeneratedList] = useState([]);
   const [currentListMetadata, setCurrentListMetadata] = useState({});
   const [taskList, setTaskList] = useState([]);
   const [recycleBinTaskList, setRecycleBinTaskList] = useState([]);
@@ -23,34 +23,30 @@ function App() {
   const baseURL = process.env.REACT_APP_API_BASIC_URL;
 
   useEffect(() => {
-    getSidebarDynamicList();
+    getSidebarList();
     getTaskListandMetadata("my_day");
     // eslint-disable-next-line
   }, []);
 
-  async function getTaskListandMetadata(path) {
-    let response = await axios.get(`${baseURL}/list/${path}`);
+  async function getTaskListandMetadata(listUUID) {
+    let response = await axios.get(`${baseURL}/list/${listUUID}`);
     setCurrentListMetadata(response.data.metadata);
-    setTaskList(response.data.taskList);
-    path === "recycle_bin" &&
+    if (listUUID === "recycle_bin") {
       setRecycleBinTaskList(response.data.recycleBinTaskList);
-    setCurrentListUUID(path);
+    } else {
+      setTaskList(response.data.taskList);
+    }
+    setCurrentListUUID(listUUID);
   }
 
-  async function getSidebarDynamicList() {
+  async function getSidebarList() {
     const response = await axios(`${baseURL}/list`);
-    setSidebarDynamicList(response.data.sidebarDynamicList);
+    setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
   }
 
-  function onPredefinedListClick() {
-    let pathUUID = window.location.pathname.slice(1);
-    setCurrentListUUID(pathUUID);
-    getTaskListandMetadata(pathUUID);
-  }
-
-  function onDynamicListClick(pathUUID) {
-    setCurrentListUUID(pathUUID);
-    getTaskListandMetadata(pathUUID);
+  function onListClick(listUUID) {
+    setCurrentListUUID(listUUID);
+    getTaskListandMetadata(listUUID);
   }
 
   function handleLightAndDarkMode() {
@@ -71,7 +67,7 @@ function App() {
     setInputTask(event.target.value);
   }
 
-  async function addTask(event) {
+  async function handleNewTask(event) {
     if (event.keyCode === 13) {
       if (inputTask.trim().length !== 0) {
         const response = await axios.get(`${baseURL}/create_task`, {
@@ -90,7 +86,7 @@ function App() {
     setSidebarTaskListName(event.target.value);
   }
 
-  async function addNewSidebarList(event) {
+  async function handleNewSidebarList(event) {
     if (event.keyCode === 13) {
       if (sidebarTaskListName.trim().length !== 0) {
         const response = await axios.get(`${baseURL}/add_list`, {
@@ -99,29 +95,28 @@ function App() {
           },
         });
         setSidebarTaskListName("");
-        setSidebarDynamicList(response.data.sidebarDynamicList);
+        setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
       }
     }
   }
 
-  async function deleteSidebarDynamicList(listIndex) {
+  async function handleSidebarListDeletion(listIndex) {
     const response = await axios.get(`${baseURL}/delete_list`, {
       params: {
         listIndex: JSON.stringify(listIndex),
       },
     });
-    let pathName = window.location.pathname;
-    let pathUUID = pathName.slice(1);
-    if (pathUUID === sidebarDynamicList[listIndex].uuid) {
+    let listUUID = window.location.pathname.slice(1);
+    if (listUUID === sidebarUserGeneratedList[listIndex].uuid) {
       if (listIndex === 0) {
-        pathUUID = "my_day";
+        listUUID = "my_day";
       } else {
-        pathUUID = sidebarDynamicList[listIndex - 1].uuid;
+        listUUID = sidebarUserGeneratedList[listIndex - 1].uuid;
       }
-      setCurrentListUUID(pathUUID);
-      getTaskListandMetadata(pathUUID)
+      setCurrentListUUID(listUUID);
+      getTaskListandMetadata(listUUID);
     }
-    setSidebarDynamicList(response.data.sidebarDynamicList);
+    setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
   }
 
   return (
@@ -135,13 +130,12 @@ function App() {
           <Sidebar
             appBodyTheme={appBodyTheme}
             sidebarOpenState={sidebarOpenState}
-            onPredefinedListClick={onPredefinedListClick}
-            onDynamicListClick={onDynamicListClick}
+            onListClick={onListClick}
             sidebarTaskListName={sidebarTaskListName}
             handleSidebarListChange={handleSidebarListChange}
-            addNewSidebarList={addNewSidebarList}
-            sidebarDynamicList={sidebarDynamicList}
-            deleteSidebarDynamicList={deleteSidebarDynamicList}
+            handleNewSidebarList={handleNewSidebarList}
+            sidebarUserGeneratedList={sidebarUserGeneratedList}
+            handleSidebarListDeletion={handleSidebarListDeletion}
           />
         )}
         <Header
@@ -160,7 +154,7 @@ function App() {
                   appBodyTheme={appBodyTheme}
                   inputTask={inputTask}
                   handleInputTaskChange={handleInputTaskChange}
-                  addTask={addTask}
+                  handleNewTask={handleNewTask}
                   sidebarOpenState={sidebarOpenState}
                 />
                 <TasksContainer
@@ -174,7 +168,6 @@ function App() {
               </>
             }
           />
-          <Route path="/" element={<Navigate to="/my_day" />} />
           <Route
             exact
             path="/recycle_bin"
@@ -189,6 +182,7 @@ function App() {
               </>
             }
           />
+          <Route path="/" element={<Navigate to="/my_day" />} />
         </Routes>
       </BrowserRouter>
     </>

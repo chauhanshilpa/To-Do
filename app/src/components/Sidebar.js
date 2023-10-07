@@ -6,13 +6,12 @@ const Sidebar = (props) => {
   const {
     appBodyTheme,
     sidebarOpenState,
-    onPredefinedListClick,
-    onDynamicListClick,
+    onListClick,
     sidebarTaskListName,
     handleSidebarListChange,
-    addNewSidebarList,
-    sidebarDynamicList,
-    deleteSidebarDynamicList,
+    handleNewSidebarList,
+    sidebarUserGeneratedList,
+    handleSidebarListDeletion,
   } = props;
 
   return (
@@ -26,7 +25,10 @@ const Sidebar = (props) => {
         aria-labelledby="offcanvasWithBothOptionsLabel"
       >
         <ul className="nav nav-pills flex-column mb-auto">
-          <div className="predefined-lists" onClick={onPredefinedListClick}>
+          <div
+            className="predefined-lists"
+            onClick={() => onListClick(window.location.pathname.slice(1))}
+          >
             <div id="home-tasks">
               <li>
                 <Link
@@ -76,19 +78,19 @@ const Sidebar = (props) => {
               aria-label="Add List"
               aria-describedby="addon-wrapping"
               onChange={handleSidebarListChange}
-              onKeyDown={addNewSidebarList}
+              onKeyDown={handleNewSidebarList}
               value={sidebarTaskListName}
             />
           </div>
           <div className="dynamic-lists">
-            {sidebarDynamicList.map((list, listIndex) => (
+            {sidebarUserGeneratedList.map((list, listIndex) => (
               <SidebarList
                 key={listIndex}
                 listIndex={listIndex}
-                pathname={list.uuid}
+                listUUID={list.uuid}
                 listName={list.name}
-                onDynamicListClick={onDynamicListClick}
-                deleteSidebarDynamicList={deleteSidebarDynamicList}
+                onListClick={onListClick}
+                handleSidebarListDeletion={handleSidebarListDeletion}
               />
             ))}
           </div>

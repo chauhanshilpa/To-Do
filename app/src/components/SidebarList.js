@@ -5,17 +5,17 @@ import { Tooltip } from "react-tooltip";
 const SidebarList = (props) => {
   const {
     listIndex,
-    pathname,
+    listUUID,
     listName,
-    onDynamicListClick,
-    deleteSidebarDynamicList,
+    onListClick,
+    handleSidebarListDeletion,
   } = props;
 
   return (
     <>
-      <li onClick={() => onDynamicListClick(pathname)}>
+      <li onClick={() => onListClick(listUUID)}>
         <Link
-          to={`/${pathname}`}
+          to={`/${listUUID}`}
           className="anchors nav-link link-body-emphasis"
         >
           <svg
@@ -41,7 +41,7 @@ const SidebarList = (props) => {
             fill="currentColor"
             className="bi bi-trash3"
             viewBox="0 0 16 16"
-            onClick={() => deleteSidebarDynamicList(listIndex)}
+            onClick={() => handleSidebarListDeletion(listIndex)}
             data-tooltip-id="delete-list"
             data-tooltip-content="Delete"
           >
