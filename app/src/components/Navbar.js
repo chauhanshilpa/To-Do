@@ -1,4 +1,5 @@
 import React from "react";
+import { theme } from "../Constants";
 import { Link } from "react-router-dom";
 
 const Navbar = (props) => {
@@ -23,7 +24,7 @@ const Navbar = (props) => {
               className="form-check-label text-white fw-light"
               htmlFor="flexSwitchCheckChecked"
             >
-              {appBodyTheme === "dark" ? "Light Mode" : "Dark Mode"}
+              {appBodyTheme === theme.dark.name ? "Light Mode" : "Dark Mode"}
             </label>
           </div>
         </div>

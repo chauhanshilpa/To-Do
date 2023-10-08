@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { theme, baseURL, enterKeyCode } from "../Constants";
 import { Tooltip } from "react-tooltip";
 import sound from "../audio/taskIsDone.wav";
 import axios from "axios";
@@ -8,25 +9,23 @@ const TaskItem = (props) => {
     taskIndex,
     appBodyTheme,
     currentListUUID,
-    currentListTask,
+    taskInfo,
     setTaskList,
   } = props;
 
   const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
 
-  const baseURL = process.env.REACT_APP_API_BASIC_URL;
-
   async function toggleTaskCompletion(taskIndex) {
-    currentListTask.done = !currentListTask.done;
+    taskInfo.done = !taskInfo.done;
     let response = await axios.get(`${baseURL}/task_done`, {
       params: {
         taskIndex: JSON.stringify(taskIndex),
-        currentListTask: JSON.stringify(currentListTask),
+        taskInfo: JSON.stringify(taskInfo),
         currentListUUID: JSON.stringify(currentListUUID),
       },
     });
     setTaskList(response.data.taskList);
-    if (currentListTask.done) {
+    if (taskInfo.done) {
       new Audio(sound).play();
       setIsTaskItemEditable(false);
     }
@@ -37,7 +36,7 @@ const TaskItem = (props) => {
   }
 
   async function handleTaskUpdation(event, taskIndex) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === enterKeyCode) {
       event.preventDefault();
       let newInnerText = event.target.innerText;
       let response = await axios.get(`${baseURL}/update_task`, {
@@ -57,7 +56,7 @@ const TaskItem = (props) => {
       params: {
         taskIndex: JSON.stringify(taskIndex),
         currentListUUID: JSON.stringify(currentListUUID),
-        currentListTask: JSON.stringify(currentListTask),
+        taskInfo: JSON.stringify(taskInfo),
       },
     });
     setTaskList(response.data.taskList);
@@ -67,9 +66,9 @@ const TaskItem = (props) => {
   return (
     <>
       <div
-        className={`task-item ${appBodyTheme === "dark" && "theme-dark"}`}
+        className={`task-item ${appBodyTheme === theme.dark.name && theme.dark.className}`}
         style={{
-          textDecoration: currentListTask.done ? "line-through" : "none",
+          textDecoration: taskInfo.done ? "line-through" : "none",
           border: isTaskItemEditable && "2px solid grey",
         }}
         contentEditable={isTaskItemEditable}
@@ -96,7 +95,7 @@ const TaskItem = (props) => {
           </svg>
           <Tooltip className="tooltip" id="taskDone-checkbox" />
         </div>
-        <div className="taskItem-text">{currentListTask.text}</div>
+        <div className="taskItem-text">{taskInfo.text}</div>
         <div className="edit-and-delete-buttons">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import { theme, baseURL, enterKeyCode, defaultList, sidebarState } from "./Constants";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
@@ -10,21 +11,19 @@ import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
 import axios from "axios";
 
 function App() {
-  const [appBodyTheme, setAppBodyTheme] = useState("light");
+  const [appBodyTheme, setAppBodyTheme] = useState(theme.light.name);
   const [inputTask, setInputTask] = useState("");
   const [sidebarOpenState, setSidebarOpenState] = useState(false);
   const [sidebarTaskListName, setSidebarTaskListName] = useState("");
-  const [currentListUUID, setCurrentListUUID] = useState("my_day");
+  const [currentListUUID, setCurrentListUUID] = useState(defaultList.pathName);
   const [sidebarUserGeneratedList, setSidebarUserGeneratedList] = useState([]);
   const [currentListMetadata, setCurrentListMetadata] = useState({});
   const [taskList, setTaskList] = useState([]);
   const [recycleBinTaskList, setRecycleBinTaskList] = useState([]);
 
-  const baseURL = process.env.REACT_APP_API_BASIC_URL;
-
   useEffect(() => {
     getSidebarList();
-    getTaskListandMetadata("my_day");
+    getTaskListandMetadata(defaultList.pathName);
     // eslint-disable-next-line
   }, []);
 
@@ -50,11 +49,11 @@ function App() {
   }
 
   function handleLightAndDarkMode() {
-    if (appBodyTheme === "light") {
-      setAppBodyTheme("dark");
+    if (appBodyTheme === theme.light.name) {
+      setAppBodyTheme(theme.dark.name);
       document.body.style.backgroundColor = "#343A40";
     } else {
-      setAppBodyTheme("light");
+      setAppBodyTheme(theme.light.name);
       document.body.style.backgroundColor = "#FFFFFF";
     }
   }
@@ -68,7 +67,7 @@ function App() {
   }
 
   async function handleNewTask(event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === enterKeyCode) {
       if (inputTask.trim().length !== 0) {
         const response = await axios.get(`${baseURL}/create_task`, {
           params: {
@@ -87,7 +86,7 @@ function App() {
   }
 
   async function handleNewSidebarList(event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === enterKeyCode) {
       if (sidebarTaskListName.trim().length !== 0) {
         const response = await axios.get(`${baseURL}/add_list`, {
           params: {
@@ -109,7 +108,7 @@ function App() {
     let listUUID = window.location.pathname.slice(1);
     if (listUUID === sidebarUserGeneratedList[listIndex].uuid) {
       if (listIndex === 0) {
-        listUUID = "my_day";
+        listUUID = defaultList.pathName;
       } else {
         listUUID = sidebarUserGeneratedList[listIndex - 1].uuid;
       }
@@ -182,7 +181,7 @@ function App() {
               </>
             }
           />
-          <Route path="/" element={<Navigate to="/my_day" />} />
+          <Route path="/" element={<Navigate to={defaultList.pathName} />} />
         </Routes>
       </BrowserRouter>
     </>

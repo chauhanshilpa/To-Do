@@ -83,10 +83,10 @@ app.get("/update_task", (req, res) => {
 app.get("/delete_task", (req, res) => {
   const taskIndex = JSON.parse(req.query.taskIndex);
   const currentListUUID = JSON.parse(req.query.currentListUUID);
-  const currentListTask = JSON.parse(req.query.currentListTask);
+  const taskInfo = JSON.parse(req.query.taskInfo);
   // deletedTask contains an object which has a text key, a uuid key ( unique for every single task), a done key and a date key.
   let deletedTask = taskListsJSON[currentListUUID]["list"].splice(taskIndex, 1);
-  if (currentListTask.done === false) {
+  if (taskInfo.done === false) {
     let listUUID = taskListsJSON[currentListUUID]["metadata"]["pathName"];
     taskListsJSON["recycle_bin"]["list"].push(
       new DeletedItemDetails(listUUID, deletedTask[0])
@@ -98,16 +98,16 @@ app.get("/delete_task", (req, res) => {
 
 app.get("/task_done", (req, res) => {
   const taskIndex = JSON.parse(req.query.taskIndex);
-  const currentListTask = JSON.parse(req.query.currentListTask);
+  const taskInfo = JSON.parse(req.query.taskInfo);
   const currentListUUID = JSON.parse(req.query.currentListUUID);
   let taskList = taskListsJSON[currentListUUID]["list"];
-  taskList[taskIndex]["done"] = currentListTask.done;
+  taskList[taskIndex]["done"] = taskInfo.done;
   let completedTask = taskList.splice(taskIndex, 1);
-  if (currentListTask.done === true) {
+  if (taskInfo.done === true) {
     taskList.unshift(completedTask[0]);
   } else {
     taskList.push(completedTask[0]);
-    currentListTask.done = false;
+    taskInfo.done = false;
   }
   res.send({ taskList });
 });

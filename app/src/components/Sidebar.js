@@ -1,4 +1,5 @@
 import React from "react";
+import { theme } from "../Constants";
 import { Link } from "react-router-dom";
 import SidebarList from "./SidebarList";
 
@@ -19,7 +20,7 @@ const Sidebar = (props) => {
       <div
         className={`sidebar d-flex flex-column p-3 bg-body-tertiary ${
           sidebarOpenState && "open-sidebar"
-        } ${appBodyTheme === "dark" && "theme-dark"}`}
+        } ${appBodyTheme === theme.dark.name && theme.dark.className}`}
         data-bs-scroll="true"
         id="offcanvasWithBothOptions"
         aria-labelledby="offcanvasWithBothOptionsLabel"
@@ -82,10 +83,10 @@ const Sidebar = (props) => {
               value={sidebarTaskListName}
             />
           </div>
-          <div className="dynamic-lists">
+          <div className="user-generated-lists">
             {sidebarUserGeneratedList.map((list, listIndex) => (
               <SidebarList
-                key={listIndex}
+                key={list.uuid}
                 listIndex={listIndex}
                 listUUID={list.uuid}
                 listName={list.name}

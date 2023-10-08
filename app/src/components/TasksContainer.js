@@ -17,13 +17,13 @@ const TasksContainer = (props) => {
     >
       <div className={`container tasks-container`}>
         {taskList.length > 0 &&
-          taskList.map((task, taskIndex) => (
+          taskList.map((taskInfo, taskIndex) => (
             <TaskItem
               key={uuidv4()}
               taskIndex={taskIndex}
               appBodyTheme={appBodyTheme}
               currentListUUID={currentListUUID}
-              currentListTask={task}
+              taskInfo={taskInfo}
               setTaskList={setTaskList}
             />
           ))}

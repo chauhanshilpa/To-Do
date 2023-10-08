@@ -92,7 +92,7 @@ input {
   margin-top: 0.75rem;
 }
 
-.dynamic-lists {
+.user-generated-lists {
   position: absolute;
   top: 110px;
   top: 110px;
@@ -102,9 +102,9 @@ input {
   margin-top: 1rem;
 }
 
-.dynamic-lists li,
+.user-generated-lists li,
 .predefined-lists li,
-.dynamic-lists li .delete-list-icon {
+.user-generated-lists li .delete-list-icon {
   margin-top: 0.625px;
   margin-left: auto;
   display: flex;

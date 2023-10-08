@@ -1,4 +1,5 @@
 import React from "react";
+import { theme } from "../Constants";
 
 const Header = (props) => {
   const { appBodyTheme, sidebarOpenState, toggleSidebarOpenState, listName } =
@@ -9,11 +10,10 @@ const Header = (props) => {
       <div
         className={`tasksToolbar-heading ${
           sidebarOpenState && "open-sidebar"
-        } ${appBodyTheme === "dark" && "theme-dark"}`}
+        } ${appBodyTheme === theme.dark.name && theme.dark.className}`}
       >
         <div className="container" onClick={toggleSidebarOpenState}>
           <svg
-            style={{ color: appBodyTheme === "dark" && "#eeeeee" }}
             className="fluentIcon ___12fm75w f1w7gpdv fez10in fg4l7m0"
             fill="currentColor"
             aria-hidden="true"
@@ -28,7 +28,7 @@ const Header = (props) => {
               fill="currentColor"
             ></path>
           </svg>
-          <h4 style={{ color: appBodyTheme === "dark" && "#eeeeee" }}>
+          <h4>
             {listName}
           </h4>
         </div>

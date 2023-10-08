@@ -1,4 +1,5 @@
 import React from "react";
+import { theme, baseURL } from "../Constants";
 import { Tooltip } from "react-tooltip";
 import axios from "axios";
 
@@ -9,8 +10,6 @@ const RecycleBinTaskItem = (props) => {
     appBodyTheme,
     setRecycleBinTaskList,
   } = props;
-
-  const baseURL = process.env.REACT_APP_API_BASIC_URL;
 
   async function handleTaskRestoration(objectIndex) {
     let response = await axios(`${baseURL}/restore_task`, {
@@ -31,7 +30,7 @@ const RecycleBinTaskItem = (props) => {
   }
 
   return (
-    <div className={`task-item ${appBodyTheme === "dark" && "theme-dark"}`}>
+    <div className={`task-item ${appBodyTheme === theme.dark.name && theme.dark.className}`}>
       <div className="taskItem-text">{listItemInfo.task.text}</div>
       <div className="restore-and-delete-buttons">
         <svg

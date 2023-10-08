@@ -1,4 +1,5 @@
 import React from "react";
+import { theme } from "../Constants";
 
 const TasksInputField = (props) => {
   const {
@@ -12,7 +13,7 @@ const TasksInputField = (props) => {
   return (
     <div
       className={`task-input-field ${sidebarOpenState && "open-sidebar"} ${
-        appBodyTheme === "dark" && "theme-dark"
+        appBodyTheme === theme.dark.name && theme.dark.className
       }`}
     >
       <div className="container input-group mb-3">
