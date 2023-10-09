@@ -16,6 +16,10 @@ const TaskItem = (props) => {
 
   const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
 
+  /**
+   * changes undone task to done and vice versa.If task is done then a audio plays and changes the text decoration of that task
+   * @param {Number} taskIndex
+   */
   async function toggleTaskCompletion(taskIndex) {
     try {
       taskInfo.done = !taskInfo.done;
@@ -34,6 +38,11 @@ const TaskItem = (props) => {
     setIsTaskItemEditable(!isTaskItemEditable);
   }
 
+  /**
+   * update the text and the taskList
+   * @param {*} event 
+   * @param {Number} taskIndex 
+   */
   async function handleTaskUpdation(event, taskIndex) {
     try {
       if (event.keyCode === enterKeyCode) {
@@ -51,6 +60,10 @@ const TaskItem = (props) => {
     }
   }
 
+/**
+ * delete selected task and update taskList
+ * @param {Number} taskIndex 
+ */
   async function handleTaskDeletion(taskIndex) {
     try {
       const response = await deleteTask(taskIndex, currentListUUID, taskInfo);

@@ -12,6 +12,10 @@ const RecycleBinTaskItem = (props) => {
     setRecycleBinTaskList,
   } = props;
 
+  /**
+   * Restore the selected task to the same list it came from and updates the recycleBinTaskList
+   * @param {Number} objectIndex
+   */
   async function handleTaskRestoration(objectIndex) {
     try {
       const response = await restoreTaskFromRecycleBin(objectIndex);
@@ -21,6 +25,10 @@ const RecycleBinTaskItem = (props) => {
     }
   }
 
+  /**
+   * Delete selected task and update recycleBinTaskList
+   * @param {Number} objectIndex 
+   */
   async function handleTaskPermanentDeletion(objectIndex) {
     try {
       const response = await deleteTaskFromRecycleBin(objectIndex);

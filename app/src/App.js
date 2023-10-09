@@ -36,6 +36,20 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
+  async function getSidebarList() {
+    try {
+      const response = await getList();
+      setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
+    } catch (error) {
+      modalButtonRef.current.click();
+    }
+  }
+
+  /**
+   *
+   * Returns list metadata(which containes listName, pathName of list, and if list is deleteable or not) and sets value of currentUUID.
+   * @param {String} listUUID          pathName of list
+   */
   async function getTaskListandMetadata(listUUID) {
     try {
       const response = await getListData(listUUID);
@@ -50,16 +64,11 @@ function App() {
       modalButtonRef.current.click();
     }
   }
-
-  async function getSidebarList() {
-    try {
-      const response = await getList();
-      setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
-    } catch (error) {
-      modalButtonRef.current.click();
-    }
-  }
-
+ 
+  /**
+   * This function runs while a sidebar list is clicked
+   * @param {String} listUUID          pathName of list
+   */
   function onListClick(listUUID) {
     setCurrentListUUID(listUUID);
     getTaskListandMetadata(listUUID);
@@ -83,6 +92,10 @@ function App() {
     setInputTask(event.target.value);
   }
 
+  /**
+   * Add task in selected list and update taskList(list of all tasks)
+   * @param {*} event 
+   */
   async function handleNewTask(event) {
     if (event.keyCode === enterKeyCode) {
       if (inputTask.trim().length !== 0) {
@@ -101,6 +114,10 @@ function App() {
     setSidebarTaskListName(event.target.value);
   }
 
+  /**
+   * Add a list and its metadata to the main json data (main json has listName, tasks in that list(this includes details of a paticular task)  and metadata about list)
+   * @param {*} event 
+   */
   async function handleNewSidebarList(event) {
     if (event.keyCode === enterKeyCode) {
       if (sidebarTaskListName.trim().length !== 0) {
@@ -115,6 +132,10 @@ function App() {
     }
   }
 
+  /**
+   * Deletes selected list and path moves to its previous list.
+   * @param {Number} listIndex    
+   */
   async function handleSidebarListDeletion(listIndex) {
     try {
       const response = await deleteSidebarList(listIndex);
