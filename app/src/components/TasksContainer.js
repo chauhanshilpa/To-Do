@@ -5,6 +5,7 @@ import TaskItem from "./TaskItem";
 const TasksContainer = (props) => {
   const {
     appBodyTheme,
+    modalButtonRef,
     sidebarOpenState,
     currentListUUID,
     taskList,
@@ -22,6 +23,7 @@ const TasksContainer = (props) => {
               key={uuidv4()}
               taskIndex={taskIndex}
               appBodyTheme={appBodyTheme}
+              modalButtonRef={modalButtonRef}
               currentListUUID={currentListUUID}
               taskInfo={taskInfo}
               setTaskList={setTaskList}

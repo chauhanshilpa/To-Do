@@ -1,36 +1,41 @@
 import React from "react";
-import { theme, baseURL } from "../Constants";
+import { theme } from "../Constants";
+import { restoreTaskFromRecycleBin, deleteTaskFromRecycleBin } from "../api";
 import { Tooltip } from "react-tooltip";
-import axios from "axios";
 
 const RecycleBinTaskItem = (props) => {
   const {
     objectIndex,
     listItemInfo,
+    modalButtonRef,
     appBodyTheme,
     setRecycleBinTaskList,
   } = props;
 
   async function handleTaskRestoration(objectIndex) {
-    let response = await axios(`${baseURL}/restore_task`, {
-      params: {
-        objectIndex: JSON.stringify(objectIndex),
-      },
-    });
-    setRecycleBinTaskList(response.data.recycleBinTaskList);
+    try {
+      const response = await restoreTaskFromRecycleBin(objectIndex);
+      setRecycleBinTaskList(response.data.recycleBinTaskList);
+    } catch (error) {
+      modalButtonRef.current.click();
+    }
   }
 
   async function handleTaskPermanentDeletion(objectIndex) {
-    let response = await axios.get(`${baseURL}/permanent_deletion`, {
-      params: {
-        objectIndex: JSON.stringify(objectIndex),
-      },
-    });
-    setRecycleBinTaskList(response.data.recycleBinTaskList);
+    try {
+      const response = await deleteTaskFromRecycleBin(objectIndex);
+      setRecycleBinTaskList(response.data.recycleBinTaskList);
+    } catch (error) {
+      modalButtonRef.current.click();
+    }
   }
 
   return (
-    <div className={`task-item ${appBodyTheme === theme.dark.name && theme.dark.className}`}>
+    <div
+      className={`task-item ${
+        appBodyTheme === theme.dark.name && theme.dark.className
+      }`}
+    >
       <div className="taskItem-text">{listItemInfo.task.text}</div>
       <div className="restore-and-delete-buttons">
         <svg

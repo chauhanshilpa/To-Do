@@ -6,6 +6,7 @@ const RecycleBinTasks = (props) => {
   const {
     appBodyTheme,
     sidebarOpenState,
+    modalButtonRef,
     recycleBinTaskList,
     setRecycleBinTaskList,
   } = props;
@@ -24,6 +25,7 @@ const RecycleBinTasks = (props) => {
               objectIndex={index}
               listItemInfo={listItemInfo}
               appBodyTheme={appBodyTheme}
+              modalButtonRef={modalButtonRef}
               setRecycleBinTaskList={setRecycleBinTaskList}
             />
           ))

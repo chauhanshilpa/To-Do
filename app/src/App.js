@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { theme, baseURL, enterKeyCode, defaultList, sidebarState } from "./Constants";
+import { theme, enterKeyCode, defaultList } from "./Constants";
+import {
+  addSidebarList,
+  deleteSidebarList,
+  addTask,
+  getList,
+  getListData,
+} from "./api";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
@@ -8,7 +15,7 @@ import Sidebar from "./components/Sidebar";
 import TasksInputField from "./components/TasksInputField";
 import TasksContainer from "./components/TasksContainer";
 import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
-import axios from "axios";
+import Modal from "./components/Modal";
 
 function App() {
   const [appBodyTheme, setAppBodyTheme] = useState(theme.light.name);
@@ -21,6 +28,8 @@ function App() {
   const [taskList, setTaskList] = useState([]);
   const [recycleBinTaskList, setRecycleBinTaskList] = useState([]);
 
+  let modalButtonRef = useRef();
+
   useEffect(() => {
     getSidebarList();
     getTaskListandMetadata(defaultList.pathName);
@@ -28,19 +37,27 @@ function App() {
   }, []);
 
   async function getTaskListandMetadata(listUUID) {
-    let response = await axios.get(`${baseURL}/list/${listUUID}`);
-    setCurrentListMetadata(response.data.metadata);
-    if (listUUID === "recycle_bin") {
-      setRecycleBinTaskList(response.data.recycleBinTaskList);
-    } else {
-      setTaskList(response.data.taskList);
+    try {
+      const response = await getListData(listUUID);
+      setCurrentListMetadata(response.data.metadata);
+      if (listUUID === "recycle_bin") {
+        setRecycleBinTaskList(response.data.recycleBinTaskList);
+      } else {
+        setTaskList(response.data.taskList);
+      }
+      setCurrentListUUID(listUUID);
+    } catch (error) {
+      modalButtonRef.current.click();
     }
-    setCurrentListUUID(listUUID);
   }
 
   async function getSidebarList() {
-    const response = await axios(`${baseURL}/list`);
-    setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
+    try {
+      const response = await getList();
+      setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
+    } catch (error) {
+      modalButtonRef.current.click();
+    }
   }
 
   function onListClick(listUUID) {
@@ -51,10 +68,10 @@ function App() {
   function handleLightAndDarkMode() {
     if (appBodyTheme === theme.light.name) {
       setAppBodyTheme(theme.dark.name);
-      document.body.style.backgroundColor = "#343A40";
+      document.body.style.backgroundColor = theme.dark.backgroundColor;
     } else {
       setAppBodyTheme(theme.light.name);
-      document.body.style.backgroundColor = "#FFFFFF";
+      document.body.style.backgroundColor = theme.light.backgroundColor;
     }
   }
 
@@ -69,13 +86,12 @@ function App() {
   async function handleNewTask(event) {
     if (event.keyCode === enterKeyCode) {
       if (inputTask.trim().length !== 0) {
-        const response = await axios.get(`${baseURL}/create_task`, {
-          params: {
-            currentListUUID: JSON.stringify(currentListUUID),
-            inputTask,
-          },
-        });
-        setTaskList(response.data.taskList);
+        try {
+          const response = await addTask(inputTask, currentListUUID);
+          setTaskList(response.data.taskList);
+        } catch (error) {
+          modalButtonRef.current.click();
+        }
         setInputTask("");
       }
     }
@@ -88,34 +104,34 @@ function App() {
   async function handleNewSidebarList(event) {
     if (event.keyCode === enterKeyCode) {
       if (sidebarTaskListName.trim().length !== 0) {
-        const response = await axios.get(`${baseURL}/add_list`, {
-          params: {
-            sidebarTaskListName,
-          },
-        });
+        try {
+          const response = await addSidebarList(sidebarTaskListName);
+          setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
+        } catch (error) {
+          modalButtonRef.current.click();
+        }
         setSidebarTaskListName("");
-        setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
       }
     }
   }
 
   async function handleSidebarListDeletion(listIndex) {
-    const response = await axios.get(`${baseURL}/delete_list`, {
-      params: {
-        listIndex: JSON.stringify(listIndex),
-      },
-    });
-    let listUUID = window.location.pathname.slice(1);
-    if (listUUID === sidebarUserGeneratedList[listIndex].uuid) {
-      if (listIndex === 0) {
-        listUUID = defaultList.pathName;
-      } else {
-        listUUID = sidebarUserGeneratedList[listIndex - 1].uuid;
+    try {
+      const response = await deleteSidebarList(listIndex);
+      setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
+      let listUUID = window.location.pathname.slice(1);
+      if (listUUID === sidebarUserGeneratedList[listIndex].uuid) {
+        if (listIndex === 0) {
+          listUUID = defaultList.pathName;
+        } else {
+          listUUID = sidebarUserGeneratedList[listIndex - 1].uuid;
+        }
+        setCurrentListUUID(listUUID);
+        getTaskListandMetadata(listUUID);
       }
-      setCurrentListUUID(listUUID);
-      getTaskListandMetadata(listUUID);
+    } catch (error) {
+      modalButtonRef.current.click();
     }
-    setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
   }
 
   return (
@@ -143,6 +159,7 @@ function App() {
           sidebarOpenState={sidebarOpenState}
           listName={currentListMetadata.listName}
         />
+        <Modal modalButtonRef={modalButtonRef} />
         <Routes>
           <Route
             exact
@@ -163,6 +180,7 @@ function App() {
                   currentListUUID={currentListUUID}
                   taskList={taskList}
                   setTaskList={setTaskList}
+                  modalButtonRef={modalButtonRef}
                 />
               </>
             }
@@ -175,6 +193,7 @@ function App() {
                 <RecycleBinTasksContainer
                   appBodyTheme={appBodyTheme}
                   sidebarOpenState={sidebarOpenState}
+                  modalButtonRef={modalButtonRef}
                   recycleBinTaskList={recycleBinTaskList}
                   setRecycleBinTaskList={setRecycleBinTaskList}
                 />

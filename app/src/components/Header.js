@@ -28,9 +28,7 @@ const Header = (props) => {
               fill="currentColor"
             ></path>
           </svg>
-          <h4>
-            {listName}
-          </h4>
+          <h4>{listName}</h4>
         </div>
       </div>
     </>

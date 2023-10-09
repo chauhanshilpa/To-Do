@@ -6,6 +6,19 @@ body {
   overflow: hidden;
 }
 
+.modal {
+  top: 30vh;
+  right: 5vw;
+}
+
+.modal-title {
+  font-weight: 500;
+}
+
+.modal .btn-close {
+  box-shadow: none !important;
+}
+
 svg {
   margin-right: 0.5rem;
 }
@@ -54,7 +67,7 @@ input {
 .task-input-field.theme-dark input,
 .sidebar.theme-dark input {
   background-color: #4c505e !important;
-  color:#eeeeee;
+  color: #eeeeee;
 }
 
 .sidebar {

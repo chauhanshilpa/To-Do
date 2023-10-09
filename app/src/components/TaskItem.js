@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { theme, baseURL, enterKeyCode } from "../Constants";
+import { theme, enterKeyCode } from "../Constants";
+import { updateTask, deleteTask, setTaskDone } from "../api";
 import { Tooltip } from "react-tooltip";
 import sound from "../audio/taskIsDone.wav";
-import axios from "axios";
 
 const TaskItem = (props) => {
   const {
     taskIndex,
     appBodyTheme,
+    modalButtonRef,
     currentListUUID,
     taskInfo,
     setTaskList,
@@ -16,18 +17,16 @@ const TaskItem = (props) => {
   const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
 
   async function toggleTaskCompletion(taskIndex) {
-    taskInfo.done = !taskInfo.done;
-    let response = await axios.get(`${baseURL}/task_done`, {
-      params: {
-        taskIndex: JSON.stringify(taskIndex),
-        taskInfo: JSON.stringify(taskInfo),
-        currentListUUID: JSON.stringify(currentListUUID),
-      },
-    });
-    setTaskList(response.data.taskList);
-    if (taskInfo.done) {
-      new Audio(sound).play();
-      setIsTaskItemEditable(false);
+    try {
+      taskInfo.done = !taskInfo.done;
+      const response = await setTaskDone(taskIndex, taskInfo, currentListUUID);
+      setTaskList(response.data.taskList);
+      if (taskInfo.done) {
+        new Audio(sound).play();
+        setIsTaskItemEditable(false);
+      }
+    } catch (error) {
+      modalButtonRef.current.click();
     }
   }
 
@@ -36,37 +35,39 @@ const TaskItem = (props) => {
   }
 
   async function handleTaskUpdation(event, taskIndex) {
-    if (event.keyCode === enterKeyCode) {
-      event.preventDefault();
-      let newInnerText = event.target.innerText;
-      let response = await axios.get(`${baseURL}/update_task`, {
-        params: {
-          taskIndex: JSON.stringify(taskIndex),
-          currentListUUID: JSON.stringify(currentListUUID),
-          newInnerText,
-        },
-      });
-      setTaskList(response.data.taskList);
-      setIsTaskItemEditable(false);
+    try {
+      if (event.keyCode === enterKeyCode) {
+        let newInnerText = event.target.innerText;
+        const response = await updateTask(
+          taskIndex,
+          currentListUUID,
+          newInnerText
+        );
+        setTaskList(response.data.taskList);
+        setIsTaskItemEditable(false);
+      }
+    } catch (error) {
+      modalButtonRef.current.click();
     }
   }
 
   async function handleTaskDeletion(taskIndex) {
-    let response = await axios.get(`${baseURL}/delete_task`, {
-      params: {
-        taskIndex: JSON.stringify(taskIndex),
-        currentListUUID: JSON.stringify(currentListUUID),
-        taskInfo: JSON.stringify(taskInfo),
-      },
-    });
-    setTaskList(response.data.taskList);
+    try {
+      const response = await deleteTask(taskIndex, currentListUUID, taskInfo);
+      setTaskList(response.data.taskList);
+    } catch (error) {
+      console.log("in catch");
+      modalButtonRef.current.click();
+    }
     setIsTaskItemEditable(false);
   }
 
   return (
     <>
       <div
-        className={`task-item ${appBodyTheme === theme.dark.name && theme.dark.className}`}
+        className={`task-item ${
+          appBodyTheme === theme.dark.name && theme.dark.className
+        }`}
         style={{
           textDecoration: taskInfo.done ? "line-through" : "none",
           border: isTaskItemEditable && "2px solid grey",

@@ -10,7 +10,7 @@ const SidebarList = (props) => {
     onListClick,
     handleSidebarListDeletion,
   } = props;
-  
+
   return (
     <>
       <li onClick={() => onListClick(listUUID)}>
