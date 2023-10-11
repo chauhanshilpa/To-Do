@@ -4,6 +4,11 @@ import { updateTask, deleteTask, setTaskDone } from "../api";
 import { Tooltip } from "react-tooltip";
 import sound from "../audio/taskIsDone.wav";
 
+/**
+ * 
+ * @param {*} props 
+ * @returns task items of respective list
+ */
 const TaskItem = (props) => {
   const {
     taskIndex,
@@ -13,14 +18,13 @@ const TaskItem = (props) => {
     taskInfo,
     setTaskList,
   } = props;
-
+  
   const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
 
   /**
    * changes undone task to done and vice versa.If task is done then a audio plays and changes the text decoration of that task
-   * @param {Number} taskIndex
    */
-  async function toggleTaskCompletion(taskIndex) {
+  async function toggleTaskCompletion() {
     try {
       taskInfo.done = !taskInfo.done;
       const response = await setTaskDone(taskIndex, taskInfo, currentListUUID);
@@ -41,9 +45,8 @@ const TaskItem = (props) => {
   /**
    * update the text and the taskList
    * @param {*} event 
-   * @param {Number} taskIndex 
    */
-  async function handleTaskUpdation(event, taskIndex) {
+  async function handleTaskUpdate(event) {
     try {
       if (event.keyCode === enterKeyCode) {
         let newInnerText = event.target.innerText;
@@ -62,9 +65,8 @@ const TaskItem = (props) => {
 
 /**
  * delete selected task and update taskList
- * @param {Number} taskIndex 
  */
-  async function handleTaskDeletion(taskIndex) {
+  async function handleTaskDeletion() {
     try {
       const response = await deleteTask(taskIndex, currentListUUID, taskInfo);
       setTaskList(response.data.taskList);
@@ -75,6 +77,7 @@ const TaskItem = (props) => {
     setIsTaskItemEditable(false);
   }
 
+  // taskInfo contains unique id of task, text value, creation date and done property.
   return (
     <>
       <div
@@ -87,7 +90,7 @@ const TaskItem = (props) => {
         }}
         contentEditable={isTaskItemEditable}
         suppressContentEditableWarning={true}
-        onKeyDown={(event) => handleTaskUpdation(event, taskIndex)}
+        onKeyDown={handleTaskUpdate}
         onDoubleClick={toggleTaskEditStatus}
       >
         <div className="task-checkbox">
@@ -100,7 +103,7 @@ const TaskItem = (props) => {
             className="bi bi-check2-circle"
             viewBox="0 0 18 18"
             focusable="false"
-            onClick={() => toggleTaskCompletion(taskIndex)}
+            onClick={toggleTaskCompletion}
             data-tooltip-id="taskDone-checkbox"
             data-tooltip-content="Done"
           >
@@ -136,7 +139,7 @@ const TaskItem = (props) => {
             fill="currentColor"
             className="bi bi-trash3"
             viewBox="0 0 16 16"
-            onClick={() => handleTaskDeletion(taskIndex)}
+            onClick={handleTaskDeletion}
             data-tooltip-id="delete-task"
             data-tooltip-content="Delete"
           >

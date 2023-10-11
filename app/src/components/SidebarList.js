@@ -2,20 +2,25 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 
+/**
+ *
+ * @param {*} props
+ * @returns list having sidebar list names and unique Id or pathName which comes from user generated list
+ */
 const SidebarList = (props) => {
   const {
     listIndex,
-    listUUID,
-    listName,
+    list,
     onListClick,
     handleSidebarListDeletion,
   } = props;
 
+  // list contains list uuid and list name
   return (
     <>
-      <li onClick={() => onListClick(listUUID)}>
+      <li onClick={() => onListClick(list.uuid)}>
         <Link
-          to={`/${listUUID}`}
+          to={`/${list.uuid}`}
           className="anchors nav-link link-body-emphasis"
         >
           <svg
@@ -31,7 +36,7 @@ const SidebarList = (props) => {
               d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
             />
           </svg>
-          <span className="sidebar-list-name">{listName}</span>
+          <span className="sidebar-list-name">{list.name}</span>
         </Link>
         <div className="delete-list-icon">
           <svg

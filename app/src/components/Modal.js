@@ -1,7 +1,13 @@
 import React from "react";
 
+/**
+ *
+ * @param {*} props
+ * @returns a popup component when there is unsuccessful api call
+ */
 const Modal = (props) => {
   const { modalButtonRef } = props;
+  
   return (
     <div>
       <button

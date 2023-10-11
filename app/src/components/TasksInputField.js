@@ -1,6 +1,11 @@
 import React from "react";
 import { theme } from "../Constants";
 
+/**
+ * 
+ * @param {*} props 
+ * @returns a input in which task will be entered
+ */
 const TasksInputField = (props) => {
   const {
     appBodyTheme,

@@ -32,10 +32,13 @@ function App() {
 
   useEffect(() => {
     getSidebarList();
-    getTaskListandMetadata(defaultList.pathName);
+    getTaskListAndMetadata(defaultList.pathName);
     // eslint-disable-next-line
   }, []);
 
+  /**
+   * calls getList function defined in api.js which fetches all lists of sidebar.
+   */
   async function getSidebarList() {
     try {
       const response = await getList();
@@ -47,10 +50,10 @@ function App() {
 
   /**
    *
-   * Returns list metadata(which containes listName, pathName of list, and if list is deleteable or not) and sets value of currentUUID.
-   * @param {String} listUUID          pathName of list
+   * calls getListData function defined in api.js and passes listUUID which fetches list metadata(which includes listName, pathName, and deletable property) and all tasks of this list.
+   * @param {String} listUUID   It is the pathName of list (unique identity)
    */
-  async function getTaskListandMetadata(listUUID) {
+  async function getTaskListAndMetadata(listUUID) {
     try {
       const response = await getListData(listUUID);
       setCurrentListMetadata(response.data.metadata);
@@ -64,14 +67,14 @@ function App() {
       modalButtonRef.current.click();
     }
   }
- 
+
   /**
-   * This function runs while a sidebar list is clicked
-   * @param {String} listUUID          pathName of list
+   * This function runs while a sidebar list is clicked and shows all the data of that list only.
+   * @param {String} listUUID   It is the pathName of list (unique identity)
    */
   function onListClick(listUUID) {
     setCurrentListUUID(listUUID);
-    getTaskListandMetadata(listUUID);
+    getTaskListAndMetadata(listUUID);
   }
 
   function handleLightAndDarkMode() {
@@ -93,8 +96,9 @@ function App() {
   }
 
   /**
-   * Add task in selected list and update taskList(list of all tasks)
-   * @param {*} event 
+   * calls a function addTask defined in api.js which fetches tasks of a list.It catches the error and shows a pop up if there is a failure in api call.
+   * @param {*} event
+   * enterKeyCode is the keyCode of enter key. Task will be added on pressing enter key. If task has all spaces then it will not be added into the list.
    */
   async function handleNewTask(event) {
     if (event.keyCode === enterKeyCode) {
@@ -115,8 +119,10 @@ function App() {
   }
 
   /**
-   * Add a list and its metadata to the main json data (main json has listName, tasks in that list(this includes details of a paticular task)  and metadata about list)
-   * @param {*} event 
+   * calls a function addSidebarList defined in api.js which add new sidebar 
+  list and its metadata to the main json data (main json has listName, tasks in that list(this includes details of a particular task) and metadata about list) and shows the new list on sidebar. It catches the error and shows a pop up if there is a failure in api call.
+   * @param {*} event
+    enterKeyCode is the keyCode of enter key. List name will be added on pressing enter key. If name has all spaces then it will not be added into the list.
    */
   async function handleNewSidebarList(event) {
     if (event.keyCode === enterKeyCode) {
@@ -133,8 +139,9 @@ function App() {
   }
 
   /**
-   * Deletes selected list and path moves to its previous list.
-   * @param {Number} listIndex    
+   * calls deleteSidebarList defined in api.js
+   * @param {Number} listIndex   It is the index of list present in array of sidebar user generated list with which list is removed from main json data(main json has listName, tasks in that list(this includes details of a particular task) and sidebar.
+   * 
    */
   async function handleSidebarListDeletion(listIndex) {
     try {
@@ -148,13 +155,18 @@ function App() {
           listUUID = sidebarUserGeneratedList[listIndex - 1].uuid;
         }
         setCurrentListUUID(listUUID);
-        getTaskListandMetadata(listUUID);
+        getTaskListAndMetadata(listUUID);
       }
     } catch (error) {
       modalButtonRef.current.click();
     }
   }
 
+  /**
+   * Every page has common Navbar, Sidebar and Header.
+   * There is a route set for Recycle Bin separately. All other routes are dynamic which changes on the basis of list unique Id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
+   * @return different components inside a router.
+   */
   return (
     <>
       <BrowserRouter>

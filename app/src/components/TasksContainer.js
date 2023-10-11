@@ -1,7 +1,11 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 import TaskItem from "./TaskItem";
 
+/**
+ * 
+ * @param {*} props 
+ * @returns a container which contains list of tasks
+ */
 const TasksContainer = (props) => {
   const {
     appBodyTheme,
@@ -20,7 +24,7 @@ const TasksContainer = (props) => {
         {taskList.length > 0 &&
           taskList.map((taskInfo, taskIndex) => (
             <TaskItem
-              key={uuidv4()}
+              key={taskInfo.uuid}
               taskIndex={taskIndex}
               appBodyTheme={appBodyTheme}
               modalButtonRef={modalButtonRef}

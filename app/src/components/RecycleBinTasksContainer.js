@@ -2,6 +2,11 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import RecycleBinTaskItem from "./RecycleBinTaskItem";
 
+/**
+ * 
+ * @param {*} props 
+ * @returns a container which contains list of task in Recycle Bin. If there is no task, a alert will be displayed
+ */
 const RecycleBinTasks = (props) => {
   const {
     appBodyTheme,

@@ -2,9 +2,14 @@ import React from "react";
 import { theme } from "../Constants";
 import { Link } from "react-router-dom";
 
+/**
+ *
+ * @param {*} props
+ * @returns navbar having a home screen link and a switch to switch between dark and light mode
+ */
 const Navbar = (props) => {
   const { handleLightAndDarkMode, appBodyTheme } = props;
-
+  
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">

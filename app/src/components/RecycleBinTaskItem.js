@@ -3,6 +3,11 @@ import { theme } from "../Constants";
 import { restoreTaskFromRecycleBin, deleteTaskFromRecycleBin } from "../api";
 import { Tooltip } from "react-tooltip";
 
+/**
+ *
+ * @param {*} props
+ * @returns task items which present in Recycle Bin
+ */
 const RecycleBinTaskItem = (props) => {
   const {
     objectIndex,
@@ -14,9 +19,8 @@ const RecycleBinTaskItem = (props) => {
 
   /**
    * Restore the selected task to the same list it came from and updates the recycleBinTaskList
-   * @param {Number} objectIndex
    */
-  async function handleTaskRestoration(objectIndex) {
+  async function handleTaskRestoration() {
     try {
       const response = await restoreTaskFromRecycleBin(objectIndex);
       setRecycleBinTaskList(response.data.recycleBinTaskList);
@@ -27,9 +31,8 @@ const RecycleBinTaskItem = (props) => {
 
   /**
    * Delete selected task and update recycleBinTaskList
-   * @param {Number} objectIndex 
    */
-  async function handleTaskPermanentDeletion(objectIndex) {
+  async function handleTaskPermanentDeletion() {
     try {
       const response = await deleteTaskFromRecycleBin(objectIndex);
       setRecycleBinTaskList(response.data.recycleBinTaskList);
@@ -38,6 +41,7 @@ const RecycleBinTaskItem = (props) => {
     }
   }
 
+  // listItemInfo contains the pathName of the list it came from and the task metadata which itself is a object.
   return (
     <div
       className={`task-item ${

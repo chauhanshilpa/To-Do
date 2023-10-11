@@ -3,6 +3,11 @@ import { theme } from "../Constants";
 import { Link } from "react-router-dom";
 import SidebarList from "./SidebarList";
 
+/**
+ * 
+ * @param {*} props 
+ * @returns a sidebar component which have list of task items linked to unique paths(there are predefined list and user generated list) and a input in which list name will be entered.
+ */
 const Sidebar = (props) => {
   const {
     appBodyTheme,
@@ -88,8 +93,7 @@ const Sidebar = (props) => {
               <SidebarList
                 key={list.uuid}
                 listIndex={listIndex}
-                listUUID={list.uuid}
-                listName={list.name}
+                list={list}
                 onListClick={onListClick}
                 handleSidebarListDeletion={handleSidebarListDeletion}
               />
