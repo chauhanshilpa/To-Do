@@ -2,8 +2,8 @@ import React from "react";
 import TaskItem from "./TaskItem";
 
 /**
- * 
- * @param {*} props 
+ *
+ * @param {*} props
  * @returns a container which contains list of tasks
  */
 const TasksContainer = (props) => {

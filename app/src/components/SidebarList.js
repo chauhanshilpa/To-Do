@@ -8,12 +8,7 @@ import { Tooltip } from "react-tooltip";
  * @returns list having sidebar list names and unique Id or pathName which comes from user generated list
  */
 const SidebarList = (props) => {
-  const {
-    listIndex,
-    list,
-    onListClick,
-    handleSidebarListDeletion,
-  } = props;
+  const { listIndex, list, onListClick, handleSidebarListDeletion } = props;
 
   // list contains list uuid and list name
   return (

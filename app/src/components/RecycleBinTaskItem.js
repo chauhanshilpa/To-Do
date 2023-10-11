@@ -1,5 +1,5 @@
 import React from "react";
-import { theme } from "../Constants";
+import { THEME } from "../Constants";
 import { restoreTaskFromRecycleBin, deleteTaskFromRecycleBin } from "../api";
 import { Tooltip } from "react-tooltip";
 
@@ -16,7 +16,7 @@ const RecycleBinTaskItem = (props) => {
     appBodyTheme,
     setRecycleBinTaskList,
   } = props;
-
+ 
   /**
    * Restore the selected task to the same list it came from and updates the recycleBinTaskList
    */
@@ -45,7 +45,7 @@ const RecycleBinTaskItem = (props) => {
   return (
     <div
       className={`task-item ${
-        appBodyTheme === theme.dark.name && theme.dark.className
+        appBodyTheme === THEME.DARK.name && THEME.DARK.className
       }`}
     >
       <div className="taskItem-text">{listItemInfo.task.text}</div>

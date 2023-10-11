@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { theme, enterKeyCode } from "../Constants";
+import { THEME, ENTER_KEY_CODE } from "../Constants";
 import { updateTask, deleteTask, setTaskDone } from "../api";
 import { Tooltip } from "react-tooltip";
 import sound from "../audio/taskIsDone.wav";
 
 /**
- * 
- * @param {*} props 
+ *
+ * @param {*} props
  * @returns task items of respective list
  */
 const TaskItem = (props) => {
@@ -18,7 +18,7 @@ const TaskItem = (props) => {
     taskInfo,
     setTaskList,
   } = props;
-  
+
   const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
 
   /**
@@ -44,11 +44,11 @@ const TaskItem = (props) => {
 
   /**
    * update the text and the taskList
-   * @param {*} event 
+   * @param {*} event
    */
   async function handleTaskUpdate(event) {
     try {
-      if (event.keyCode === enterKeyCode) {
+      if (event.keyCode === ENTER_KEY_CODE) {
         let newInnerText = event.target.innerText;
         const response = await updateTask(
           taskIndex,
@@ -63,9 +63,9 @@ const TaskItem = (props) => {
     }
   }
 
-/**
- * delete selected task and update taskList
- */
+  /**
+   * delete selected task and update taskList
+   */
   async function handleTaskDeletion() {
     try {
       const response = await deleteTask(taskIndex, currentListUUID, taskInfo);
@@ -82,7 +82,7 @@ const TaskItem = (props) => {
     <>
       <div
         className={`task-item ${
-          appBodyTheme === theme.dark.name && theme.dark.className
+          appBodyTheme === THEME.DARK.name && THEME.DARK.className
         }`}
         style={{
           textDecoration: taskInfo.done ? "line-through" : "none",

@@ -7,7 +7,7 @@ import React from "react";
  */
 const Modal = (props) => {
   const { modalButtonRef } = props;
-  
+
   return (
     <div>
       <button

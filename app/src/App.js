@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { theme, enterKeyCode, defaultList } from "./Constants";
+import {
+  THEME,
+  ENTER_KEY_CODE,
+  DEFAULT_LIST,
+  RECYCLE_BIN_LIST,
+} from "./Constants";
 import {
   addSidebarList,
   deleteSidebarList,
@@ -18,11 +23,11 @@ import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
 import Modal from "./components/Modal";
 
 function App() {
-  const [appBodyTheme, setAppBodyTheme] = useState(theme.light.name);
+  const [appBodyTheme, setAppBodyTheme] = useState(THEME.LIGHT.name);
   const [inputTask, setInputTask] = useState("");
   const [sidebarOpenState, setSidebarOpenState] = useState(false);
   const [sidebarTaskListName, setSidebarTaskListName] = useState("");
-  const [currentListUUID, setCurrentListUUID] = useState(defaultList.pathName);
+  const [currentListUUID, setCurrentListUUID] = useState(DEFAULT_LIST.pathName);
   const [sidebarUserGeneratedList, setSidebarUserGeneratedList] = useState([]);
   const [currentListMetadata, setCurrentListMetadata] = useState({});
   const [taskList, setTaskList] = useState([]);
@@ -32,7 +37,7 @@ function App() {
 
   useEffect(() => {
     getSidebarList();
-    getTaskListAndMetadata(defaultList.pathName);
+    getTaskListAndMetadata(DEFAULT_LIST.pathName);
     // eslint-disable-next-line
   }, []);
 
@@ -78,12 +83,12 @@ function App() {
   }
 
   function handleLightAndDarkMode() {
-    if (appBodyTheme === theme.light.name) {
-      setAppBodyTheme(theme.dark.name);
-      document.body.style.backgroundColor = theme.dark.backgroundColor;
+    if (appBodyTheme === THEME.LIGHT.name) {
+      setAppBodyTheme(THEME.DARK.name);
+      document.body.style.backgroundColor = THEME.DARK.backgroundColor;
     } else {
-      setAppBodyTheme(theme.light.name);
-      document.body.style.backgroundColor = theme.light.backgroundColor;
+      setAppBodyTheme(THEME.DARK.name);
+      document.body.style.backgroundColor = THEME.LIGHT.backgroundColor;
     }
   }
 
@@ -98,10 +103,10 @@ function App() {
   /**
    * calls a function addTask defined in api.js which fetches tasks of a list.It catches the error and shows a pop up if there is a failure in api call.
    * @param {*} event
-   * enterKeyCode is the keyCode of enter key. Task will be added on pressing enter key. If task has all spaces then it will not be added into the list.
+   * ENTER_KEY_CODE is the keyCode of enter key. Task will be added on pressing enter key. If task has all spaces then it will not be added into the list.
    */
   async function handleNewTask(event) {
-    if (event.keyCode === enterKeyCode) {
+    if (event.keyCode === ENTER_KEY_CODE) {
       if (inputTask.trim().length !== 0) {
         try {
           const response = await addTask(inputTask, currentListUUID);
@@ -122,10 +127,10 @@ function App() {
    * calls a function addSidebarList defined in api.js which add new sidebar 
   list and its metadata to the main json data (main json has listName, tasks in that list(this includes details of a particular task) and metadata about list) and shows the new list on sidebar. It catches the error and shows a pop up if there is a failure in api call.
    * @param {*} event
-    enterKeyCode is the keyCode of enter key. List name will be added on pressing enter key. If name has all spaces then it will not be added into the list.
+    ENTER_KEY_CODE is the keyCode of enter key. List name will be added on pressing enter key. If name has all spaces then it will not be added into the list.
    */
   async function handleNewSidebarList(event) {
-    if (event.keyCode === enterKeyCode) {
+    if (event.keyCode === ENTER_KEY_CODE) {
       if (sidebarTaskListName.trim().length !== 0) {
         try {
           const response = await addSidebarList(sidebarTaskListName);
@@ -141,7 +146,7 @@ function App() {
   /**
    * calls deleteSidebarList defined in api.js
    * @param {Number} listIndex   It is the index of list present in array of sidebar user generated list with which list is removed from main json data(main json has listName, tasks in that list(this includes details of a particular task) and sidebar.
-   * 
+   *
    */
   async function handleSidebarListDeletion(listIndex) {
     try {
@@ -150,7 +155,7 @@ function App() {
       let listUUID = window.location.pathname.slice(1);
       if (listUUID === sidebarUserGeneratedList[listIndex].uuid) {
         if (listIndex === 0) {
-          listUUID = defaultList.pathName;
+          listUUID = DEFAULT_LIST.pathName;
         } else {
           listUUID = sidebarUserGeneratedList[listIndex - 1].uuid;
         }
@@ -220,7 +225,7 @@ function App() {
           />
           <Route
             exact
-            path="/recycle_bin"
+            path={RECYCLE_BIN_LIST.pathName}
             element={
               <>
                 <RecycleBinTasksContainer
@@ -233,7 +238,7 @@ function App() {
               </>
             }
           />
-          <Route path="/" element={<Navigate to={defaultList.pathName} />} />
+          <Route path="/" element={<Navigate to={DEFAULT_LIST.pathName} />} />
         </Routes>
       </BrowserRouter>
     </>

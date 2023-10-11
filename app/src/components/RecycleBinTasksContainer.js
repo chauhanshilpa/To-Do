@@ -1,10 +1,9 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 import RecycleBinTaskItem from "./RecycleBinTaskItem";
 
 /**
- * 
- * @param {*} props 
+ *
+ * @param {*} props
  * @returns a container which contains list of task in Recycle Bin. If there is no task, a alert will be displayed
  */
 const RecycleBinTasks = (props) => {
@@ -26,7 +25,7 @@ const RecycleBinTasks = (props) => {
         {recycleBinTaskList.length > 0 ? (
           recycleBinTaskList.map((listItemInfo, index) => (
             <RecycleBinTaskItem
-              key={uuidv4()}
+              key={listItemInfo.task.uuid}
               objectIndex={index}
               listItemInfo={listItemInfo}
               appBodyTheme={appBodyTheme}

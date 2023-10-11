@@ -1,5 +1,5 @@
 import React from "react";
-import { theme } from "../Constants";
+import { THEME } from "../Constants";
 
 /**
  *
@@ -9,13 +9,13 @@ import { theme } from "../Constants";
 const Header = (props) => {
   const { appBodyTheme, sidebarOpenState, toggleSidebarOpenState, listName } =
     props;
-    
+
   return (
     <>
       <div
         className={`tasksToolbar-heading ${
           sidebarOpenState && "open-sidebar"
-        } ${appBodyTheme === theme.dark.name && theme.dark.className}`}
+        } ${appBodyTheme === THEME.DARK.name && THEME.DARK.className}`}
       >
         <div className="container" onClick={toggleSidebarOpenState}>
           <svg

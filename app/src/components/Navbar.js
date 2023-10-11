@@ -1,5 +1,5 @@
 import React from "react";
-import { theme } from "../Constants";
+import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 
 /**
@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
  */
 const Navbar = (props) => {
   const { handleLightAndDarkMode, appBodyTheme } = props;
-  
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -29,7 +29,7 @@ const Navbar = (props) => {
               className="form-check-label text-white fw-light"
               htmlFor="flexSwitchCheckChecked"
             >
-              {appBodyTheme === theme.dark.name ? "Light Mode" : "Dark Mode"}
+              {appBodyTheme === THEME.DARK.name ? "Light Mode" : "Dark Mode"}
             </label>
           </div>
         </div>
