@@ -3,10 +3,10 @@ import React from "react";
 /**
  *
  * @param {*} props
- * @returns a popup component when there is unsuccessful api call
+ * @returns a popup box
  */
 const Modal = (props) => {
-  const { modalButtonRef } = props;
+  const { modalButtonRef, modalTitle, modalBody } = props;
 
   return (
     <div>
@@ -18,7 +18,7 @@ const Modal = (props) => {
         ref={modalButtonRef}
         style={{ display: "none" }}
       >
-        Launch demo modal
+        click me to see modal
       </button>
 
       <div
@@ -32,7 +32,7 @@ const Modal = (props) => {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
-                Error
+                {modalTitle}
               </h1>
               <button
                 type="button"
@@ -41,9 +41,7 @@ const Modal = (props) => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">
-              Oops, something went wrong. Please try again later.
-            </div>
+            <div className="modal-body">{modalBody}</div>
           </div>
         </div>
       </div>

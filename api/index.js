@@ -1,140 +1,128 @@
 import express from "express";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
+import pg from "pg";
+import bodyParser from "body-parser";
 import {
-  TasksList,
-  TasksListMetadata,
-  Task,
-  SidebarList,
-  DeletedItemDetails,
-} from "./ApiClassModels.js";
+  getSidebarList,
+  getTaskList,
+  getListName,
+  addSidebarList,
+  deleteSidebarList,
+  addTask,
+  updateTask,
+  reverseIsDone,
+  addTaskToRecycleBin,
+  deleteTask,
+  moveTaskToRootList,
+  MoveTaskFromRecycleBin,
+  deleteTaskPermanently,
+} from "./db.js";
 
 const port = 4002;
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 
-let sidebarUserGeneratedList = [];
-let taskListsJSON = {
-  my_day: new TasksList(new TasksListMetadata("My Day", "my_day", false)),
-  recycle_bin: new TasksList(
-    new TasksListMetadata("Recycle Bin", "recycle_bin", false)
-  ),
-};
+const connectionString = "postgressql://postgres:password@localhost:5432/To Do";
 
-// send all the list in sidebarUserGeneratedList (My Day and Recycle Bin are predefined list)
-app.get("/list", (req, res) => {
+export const client = new pg.Client({
+  connectionString: connectionString,
+});
+
+client.connect();
+
+/******** As for now user_id and recycle_bin_list_id is hard coded ******************/
+//
+export const user_id = "557e1292-e14f-43d4-a466-448923440365";
+export const recycle_bin_list_id = "557e1292-e14f-43d4-a466-548923480335";
+//
+/****************************************************************************** */
+
+// gets all user generated list and sends to frontend
+app.get("/list", async (req, res) => {
+  const sidebarUserGeneratedList = await getSidebarList();
   res.send({ sidebarUserGeneratedList });
 });
 
-// send metadata of list when its unique Id (i.e. pathName) is passed.
-app.get("/list/:listUUID", (req, res) => {
-  let listUUID = req.params["listUUID"];
-  let metadata = taskListsJSON[listUUID]["metadata"];
+// get the name and task list of a particular list based on its unique id and sends them to frontend. For getting name, getListName function(Defined in db.js) is called which gets name of list and for getting tasks, getTaskList(Defined in db.js) is called which gets list of tasks from database.
+app.get("/list/:list_id", async (req, res) => {
+  let { list_id } = req.params;
+  let listName;
   let taskList;
   let recycleBinTaskList;
-  if (listUUID === "recycle_bin") {
-    recycleBinTaskList = taskListsJSON["recycle_bin"]["list"];
+  if (list_id === recycle_bin_list_id) {
+    recycleBinTaskList = await getTaskList(recycle_bin_list_id);
+    listName = await getListName(recycle_bin_list_id);
   } else {
-    taskList = taskListsJSON[listUUID]["list"];
+    taskList = await getTaskList(list_id);
+    listName = await getListName(list_id);
   }
-  res.send({ recycleBinTaskList, metadata, taskList });
+  res.send({ recycleBinTaskList, listName, taskList });
 });
 
-// APIs for adding list, deleting list and getting sidebar list uuid
-app.get("/add_list", (req, res) => {
-  const sidebarTaskListName = req.query.sidebarTaskListName;
-  const listUUID = uuidv4();
-  taskListsJSON[listUUID] = new TasksList(
-    new TasksListMetadata(sidebarTaskListName, listUUID, true)
-  );
-  sidebarUserGeneratedList.push(new SidebarList(listUUID, sidebarTaskListName));
-  res.send({
-    sidebarUserGeneratedList,
-  });
+// calls addSidebarList defined in db.js which queries to post new list into database
+app.post("/add_list", async (req, res) => {
+  const { sidebarTaskListName } = req.body;
+  const list_id = uuidv4();
+  await addSidebarList(list_id, user_id, sidebarTaskListName);
+  res.send();
 });
 
-app.get("/delete_list", (req, res) => {
-  const listIndex = JSON.parse(req.query.listIndex);
-  sidebarUserGeneratedList.splice(listIndex, 1);
-  res.send({
-    sidebarUserGeneratedList,
-  });
+// calls deleteSidebarList defined in db.js which queries to delete a list
+app.delete("/delete_list", async (req, res) => {
+  const { list_id } = req.query;
+  await deleteSidebarList(list_id);
+  res.send();
 });
 
-// APIs for creating, updating and deleting task and getting if task is done or not
-app.get("/create_task", (req, res) => {
-  const currentListUUID = req.query.currentListUUID;
-  const inputTask = req.query.inputTask;
-  const taskUUID = uuidv4();
-  taskListsJSON[currentListUUID]["list"].push(
-    new Task(taskUUID, inputTask, false)
-  );
-  let taskList = taskListsJSON[currentListUUID]["list"];
-  res.send({ taskList });
+// calls addTask defined in db.js which queries to post a new task into database
+app.post("/create_task", async (req, res) => {
+  const { inputTask, currentListUUID } = req.body;
+  const task_id = uuidv4();
+  await addTask(currentListUUID, inputTask, task_id);
+  res.send();
 });
 
-app.get("/update_task", (req, res) => {
-  const taskIndex = JSON.parse(req.query.taskIndex);
-  const currentListUUID = req.query.currentListUUID;
-  const newInnerText = req.query.newInnerText;
-  taskListsJSON[currentListUUID]["list"][taskIndex]["text"] = newInnerText; // Updated text
-  let taskList = taskListsJSON[currentListUUID]["list"];
-  res.send({ taskList });
+// calls updateTask defined in db.js which queries to update the text of task
+app.patch("/update_task", async (req, res) => {
+  const { task_id, newInnerText } = req.body;
+  await updateTask(task_id, newInnerText);
+  res.send();
 });
 
-app.get("/delete_task", (req, res) => {
-  const taskIndex = JSON.parse(req.query.taskIndex);
-  const taskInfo = JSON.parse(req.query.taskInfo);
-  const currentListUUID = req.query.currentListUUID;
-  // deletedTask contains an object which has a text key, a uuid key ( unique for every single task), a done key and a date key.
-  let deletedTask = taskListsJSON[currentListUUID]["list"].splice(taskIndex, 1);
-  if (taskInfo.done === false) {
-    let listUUID = taskListsJSON[currentListUUID]["metadata"]["pathName"];
-    taskListsJSON["recycle_bin"]["list"].push(
-      new DeletedItemDetails(listUUID, deletedTask[0])
-    );
-  }
-  let taskList = taskListsJSON[currentListUUID]["list"];
-  res.send({ taskList });
+// calls addTaskToRecycleBin defined in db.js to add a task to recycle bin then calls deleteTask defined in db.js to delete the task from that list
+app.delete("/delete_task", async (req, res) => {
+  const { task_id } = req.query;
+  await addTaskToRecycleBin(task_id, recycle_bin_list_id);
+  await deleteTask(task_id);
+  res.send();
 });
 
-app.get("/task_done", (req, res) => {
-  const taskIndex = JSON.parse(req.query.taskIndex);
-  const taskInfo = JSON.parse(req.query.taskInfo);
-  const currentListUUID = req.query.currentListUUID;
-  let taskList = taskListsJSON[currentListUUID]["list"];
-  taskList[taskIndex]["done"] = taskInfo.done;
-  let completedTask = taskList.splice(taskIndex, 1);
-  // If task is done then it will go to the end of the list and if it is undone again then it will be shown on top of the list
-  if (taskInfo.done === true) {
-    taskList.unshift(completedTask[0]);
-  } else {
-    taskList.push(completedTask[0]);
-    taskInfo.done = false;
-  }
-  res.send({ taskList });
+// calls reverseIsDone defined in db.js to reverse is_done property of task
+app.patch("/task_done", async (req, res) => {
+  const { task_id, currentIsDone } = req.body;
+  await reverseIsDone(task_id, currentIsDone);
+  res.send();
 });
 
-// APIs for restoration and permanent deletion of task from Recycle Bin
-app.get("/restore_task", (req, res) => {
-  const objectIndex = JSON.parse(req.query.objectIndex);
-  let elementToRestore = taskListsJSON["recycle_bin"]["list"].splice(
-    objectIndex,
-    1
-  );
-  // task will be restored to the list it came from. listUUID is that list pathName.
-  let listUUID = elementToRestore[0].pathName;
-  let restoredTaskObject = elementToRestore[0].task;
-  taskListsJSON[listUUID]["list"].push(restoredTaskObject);
-  let recycleBinTaskList = taskListsJSON["recycle_bin"]["list"];
-  res.send({ recycleBinTaskList });
+// calls moveTaskToRootList defined in db.js to move a task to its originated list then calls restoreTask defined in db.js which remove task from recycle bin
+app.post("/restore_task", async (req, res) => {
+  const { task_id, root_list_id } = req.body;
+  await moveTaskToRootList(root_list_id);
+  await MoveTaskFromRecycleBin(task_id);
+  res.send();
 });
 
-app.get("/permanent_deletion", (req, res) => {
-  const objectIndex = JSON.parse(req.query.objectIndex);
-  taskListsJSON["recycle_bin"]["list"].splice(objectIndex, 1);
-  let recycleBinTaskList = taskListsJSON["recycle_bin"]["list"];
-  res.send({ recycleBinTaskList });
+//  calls deleteTaskPermanently defined in db.js which deleted task data from database
+app.delete("/permanent_deletion", async (req, res) => {
+  const { task_id } = req.query;
+  await deleteTaskPermanently(task_id);
+  res.send();
 });
 
 app.listen(port, console.log(`App is listening on port ${port}`));
+
+process.on("exit", async () => {
+  await client.end();
+});

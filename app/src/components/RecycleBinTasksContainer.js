@@ -4,7 +4,7 @@ import RecycleBinTaskItem from "./RecycleBinTaskItem";
 /**
  *
  * @param {*} props
- * @returns a container which contains list of task in Recycle Bin. If there is no task, a alert will be displayed
+ * @returns a container which contains list of tasks in Recycle Bin. If there is no task, a alert will be displayed
  */
 const RecycleBinTasks = (props) => {
   const {
@@ -12,7 +12,7 @@ const RecycleBinTasks = (props) => {
     sidebarOpenState,
     modalButtonRef,
     recycleBinTaskList,
-    setRecycleBinTaskList,
+    getTaskListAndListName,
   } = props;
 
   return (
@@ -23,14 +23,13 @@ const RecycleBinTasks = (props) => {
     >
       <div className="container tasks-container">
         {recycleBinTaskList.length > 0 ? (
-          recycleBinTaskList.map((listItemInfo, index) => (
+          recycleBinTaskList.map((taskInfo, index) => (
             <RecycleBinTaskItem
-              key={listItemInfo.task.uuid}
-              objectIndex={index}
-              listItemInfo={listItemInfo}
+              key={taskInfo.task_id}
+              taskInfo={taskInfo}
               appBodyTheme={appBodyTheme}
               modalButtonRef={modalButtonRef}
-              setRecycleBinTaskList={setRecycleBinTaskList}
+              getTaskListAndListName={getTaskListAndListName}
             />
           ))
         ) : (

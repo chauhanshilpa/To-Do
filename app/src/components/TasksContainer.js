@@ -4,7 +4,7 @@ import TaskItem from "./TaskItem";
 /**
  *
  * @param {*} props
- * @returns a container which contains list of tasks
+ * @returns a container containing list of tasks
  */
 const TasksContainer = (props) => {
   const {
@@ -13,7 +13,7 @@ const TasksContainer = (props) => {
     sidebarOpenState,
     currentListUUID,
     taskList,
-    setTaskList,
+    getTaskListAndListName,
   } = props;
 
   return (
@@ -24,13 +24,12 @@ const TasksContainer = (props) => {
         {taskList.length > 0 &&
           taskList.map((taskInfo, taskIndex) => (
             <TaskItem
-              key={taskInfo.uuid}
-              taskIndex={taskIndex}
+              key={taskInfo.task_id}
               appBodyTheme={appBodyTheme}
               modalButtonRef={modalButtonRef}
               currentListUUID={currentListUUID}
               taskInfo={taskInfo}
-              setTaskList={setTaskList}
+              getTaskListAndListName={getTaskListAndListName}
             />
           ))}
       </div>

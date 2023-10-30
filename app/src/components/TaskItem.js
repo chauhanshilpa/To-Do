@@ -1,35 +1,37 @@
 import React, { useState } from "react";
 import { THEME, ENTER_KEY_CODE } from "../Constants";
-import { updateTask, deleteTask, setTaskDone } from "../api";
+import { updateTask, deleteTask, reverseTaskDone } from "../api";
 import { Tooltip } from "react-tooltip";
 import sound from "../audio/taskIsDone.wav";
 
 /**
  *
  * @param {*} props
- * @returns task items of respective list
+ * @returns task item of respective list
  */
 const TaskItem = (props) => {
   const {
-    taskIndex,
     appBodyTheme,
     modalButtonRef,
     currentListUUID,
     taskInfo,
-    setTaskList,
+    getTaskListAndListName,
   } = props;
 
   const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
-
+  const { task_id } = taskInfo;
+  const { text } = taskInfo.metadata;
   /**
-   * changes undone task to done and vice versa.If task is done then a audio plays and changes the text decoration of that task
+   *
+   * calls reverseTaskDone defined in api.js then calls getTaskListAndListName function defined in app.js to get task list and name with updated value of is_done property.
+   * if task is done, a done audio is played and text decoration of text will be changed to line-through
    */
   async function toggleTaskCompletion() {
     try {
-      taskInfo.done = !taskInfo.done;
-      const response = await setTaskDone(taskIndex, taskInfo, currentListUUID);
-      setTaskList(response.data.taskList);
-      if (taskInfo.done) {
+      const currentIsDone = taskInfo.is_done;
+      await reverseTaskDone(task_id, currentIsDone);
+      await getTaskListAndListName(currentListUUID);
+      if (!currentIsDone === true) {
         new Audio(sound).play();
         setIsTaskItemEditable(false);
       }
@@ -43,19 +45,16 @@ const TaskItem = (props) => {
   }
 
   /**
-   * update the text and the taskList
+   *
+   * calls updateTask defined in db.js then it calls getTaskListAndListName defined in app.js which gets all the tasks and name of a particular list
    * @param {*} event
    */
   async function handleTaskUpdate(event) {
     try {
       if (event.keyCode === ENTER_KEY_CODE) {
         let newInnerText = event.target.innerText;
-        const response = await updateTask(
-          taskIndex,
-          currentListUUID,
-          newInnerText
-        );
-        setTaskList(response.data.taskList);
+        await updateTask(task_id, newInnerText);
+        await getTaskListAndListName(currentListUUID);
         setIsTaskItemEditable(false);
       }
     } catch (error) {
@@ -64,20 +63,25 @@ const TaskItem = (props) => {
   }
 
   /**
-   * delete selected task and update taskList
+   *
+   * calls deleteTask defined in db.js then calls getTaskListAndListName defined in app.js which gets all the tasks and name of a particular list
    */
   async function handleTaskDeletion() {
+    const task_id = taskInfo.task_id;
     try {
-      const response = await deleteTask(taskIndex, currentListUUID, taskInfo);
-      setTaskList(response.data.taskList);
+      await deleteTask(task_id);
+      await getTaskListAndListName(currentListUUID);
     } catch (error) {
-      console.log("in catch");
       modalButtonRef.current.click();
     }
     setIsTaskItemEditable(false);
   }
 
-  // taskInfo contains unique id of task, text value, creation date and done property.
+  /**
+   *
+   * taskInfo contains unique id of task, id of list it belongs to, is_done property, metadata which contains text of task and id of list it belongs to initially, date of creation and deleted property to see whether it is deleted or not.
+   */
+
   return (
     <>
       <div
@@ -85,7 +89,7 @@ const TaskItem = (props) => {
           appBodyTheme === THEME.DARK.name && THEME.DARK.className
         }`}
         style={{
-          textDecoration: taskInfo.done ? "line-through" : "none",
+          textDecoration: taskInfo.is_done === true ? "line-through" : "none",
           border: isTaskItemEditable && "2px solid grey",
         }}
         contentEditable={isTaskItemEditable}
@@ -112,7 +116,7 @@ const TaskItem = (props) => {
           </svg>
           <Tooltip className="tooltip" id="taskDone-checkbox" />
         </div>
-        <div className="taskItem-text">{taskInfo.text}</div>
+        <div className="taskItem-text">{text}</div>
         <div className="edit-and-delete-buttons">
           <svg
             xmlns="http://www.w3.org/2000/svg"

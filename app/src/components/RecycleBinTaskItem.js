@@ -2,53 +2,58 @@ import React from "react";
 import { THEME } from "../Constants";
 import { restoreTaskFromRecycleBin, deleteTaskFromRecycleBin } from "../api";
 import { Tooltip } from "react-tooltip";
+import { RECYCLE_BIN_LIST } from "../Constants";
 
 /**
  *
  * @param {*} props
- * @returns task items which present in Recycle Bin
+ * @returns task items which presents in Recycle Bin
  */
 const RecycleBinTaskItem = (props) => {
-  const {
-    objectIndex,
-    listItemInfo,
-    modalButtonRef,
-    appBodyTheme,
-    setRecycleBinTaskList,
-  } = props;
- 
+  const { taskInfo, modalButtonRef, appBodyTheme, getTaskListAndListName } =
+    props;
+
+  const { task_id } = taskInfo;
+  const { text } = taskInfo.metadata;
+
   /**
-   * Restore the selected task to the same list it came from and updates the recycleBinTaskList
+   *
+   *calls restoreTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated task list of recycle bin
    */
   async function handleTaskRestoration() {
+    const root_list_id = taskInfo.metadata.root_list_id;
     try {
-      const response = await restoreTaskFromRecycleBin(objectIndex);
-      setRecycleBinTaskList(response.data.recycleBinTaskList);
+      await restoreTaskFromRecycleBin(task_id, root_list_id);
+      await getTaskListAndListName(RECYCLE_BIN_LIST.id);
     } catch (error) {
       modalButtonRef.current.click();
     }
   }
 
   /**
-   * Delete selected task and update recycleBinTaskList
+   *
+   * calls deleteTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated task list of recycle bin
    */
   async function handleTaskPermanentDeletion() {
     try {
-      const response = await deleteTaskFromRecycleBin(objectIndex);
-      setRecycleBinTaskList(response.data.recycleBinTaskList);
+      await deleteTaskFromRecycleBin(task_id);
+      await getTaskListAndListName(RECYCLE_BIN_LIST.id);
     } catch (error) {
       modalButtonRef.current.click();
     }
   }
 
-  // listItemInfo contains the pathName of the list it came from and the task metadata which itself is a object.
+  /**
+   *
+   * taskInfo contains unique id of task, id of list it belongs to, is_done property, metadata which contains text of task and id of list it belongs to initially, date of creation and deleted property to see whether it is deleted or not.
+   */
   return (
     <div
       className={`task-item ${
         appBodyTheme === THEME.DARK.name && THEME.DARK.className
       }`}
     >
-      <div className="taskItem-text">{listItemInfo.task.text}</div>
+      <div className="taskItem-text">{text}</div>
       <div className="restore-and-delete-buttons">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +62,7 @@ const RecycleBinTaskItem = (props) => {
           fill="currentColor"
           className="bi bi-arrow-counterclockwise"
           viewBox="0 0 16 16"
-          onClick={() => handleTaskRestoration(objectIndex)}
+          onClick={handleTaskRestoration}
           data-tooltip-id="restore-task"
           data-tooltip-content="Restore"
         >
@@ -75,7 +80,7 @@ const RecycleBinTaskItem = (props) => {
           fill="currentColor"
           className="bi bi-trash3"
           viewBox="0 0 16 16"
-          onClick={() => handleTaskPermanentDeletion(objectIndex)}
+          onClick={handleTaskPermanentDeletion}
           data-tooltip-id="permanent-delete"
           data-tooltip-content="Delete"
         >
