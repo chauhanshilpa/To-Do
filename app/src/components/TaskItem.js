@@ -81,7 +81,7 @@ const TaskItem = (props) => {
    *
    * taskInfo contains unique id of task, id of list it belongs to, is_done property, metadata which contains text of task and id of list it belongs to initially, date of creation and deleted property to see whether it is deleted or not.
    */
-
+  
   return (
     <>
       <div

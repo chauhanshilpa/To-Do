@@ -128,8 +128,8 @@ export async function updateTask(task_id, updated_text) {
 export async function addTaskToRecycleBin(task_id, recycle_bin_list_id) {
   let new_task_id = uuidv4();
   const query = {
-    text: "INSERT INTO tasks(task_id, list_id, is_done, metadata, created, deleted) SELECT  $1, $2, is_done, metadata, created, deleted from tasks where task_id = $3",
-    values: [new_task_id, recycle_bin_list_id, task_id],
+    text: "INSERT INTO tasks(task_id, list_id, is_done, metadata, created, deleted) SELECT  $1, $2, is_done, metadata, created, deleted from tasks WHERE task_id = $3 AND is_done = $4",
+    values: [new_task_id, recycle_bin_list_id, task_id, false],
   };
   await client.query(query);
   return;

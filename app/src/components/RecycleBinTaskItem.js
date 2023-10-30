@@ -1,8 +1,7 @@
 import React from "react";
-import { THEME } from "../Constants";
+import { THEME, RECYCLE_BIN_LIST } from "../Constants";
 import { restoreTaskFromRecycleBin, deleteTaskFromRecycleBin } from "../api";
 import { Tooltip } from "react-tooltip";
-import { RECYCLE_BIN_LIST } from "../Constants";
 
 /**
  *

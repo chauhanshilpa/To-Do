@@ -91,7 +91,7 @@ function App() {
       setAppBodyTheme(THEME.DARK.name);
       document.body.style.backgroundColor = THEME.DARK.backgroundColor;
     } else {
-      setAppBodyTheme(THEME.DARK.name);
+      setAppBodyTheme(THEME.LIGHT.name);
       document.body.style.backgroundColor = THEME.LIGHT.backgroundColor;
     }
   }
