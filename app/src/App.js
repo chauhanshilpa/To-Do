@@ -8,6 +8,8 @@ import TasksInputField from "./components/TasksInputField";
 import TasksContainer from "./components/TasksContainer";
 import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
 import Modal from "./components/Modal";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 import {
   THEME,
   ENTER_KEY_CODE,
@@ -209,6 +211,16 @@ function App() {
           modalBody="Oops, something went wrong. Please try again later."
         />
         <Routes>
+          <Route
+            exact
+            path="/login"
+            element={<Login appBodyTheme={appBodyTheme} />}
+          />
+          <Route
+            exact
+            path="/login"
+            element={<Signup appBodyTheme={appBodyTheme} />}
+          />
           <Route
             exact
             path="/:currentListUUID"

@@ -14,9 +14,17 @@ const Navbar = (props) => {
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div className="container-fluid">
-          <Link className="navbar-brand " to="/">
-            To Do
-          </Link>
+          <div className="nav-items">
+            <Link className="navbar-brand" to="/">
+              To Do
+            </Link>
+            <Link className="mx-2" to="/login">
+              Log in
+            </Link>
+            <Link className="mx-2" to="/signup">
+              Sign up
+            </Link>
+          </div>
           <div className="form-check form-switch">
             <input
               className="form-check-input"

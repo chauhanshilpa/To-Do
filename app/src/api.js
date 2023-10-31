@@ -8,7 +8,7 @@ import { BASE_URL } from "./Constants";
  * @returns lists of sidebar
  */
 export async function getList() {
-  const response = await axios(`${BASE_URL}/list`);
+  const response = await axios.get(`${BASE_URL}/list`);
   return response;
 }
 

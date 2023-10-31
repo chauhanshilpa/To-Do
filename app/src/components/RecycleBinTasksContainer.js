@@ -6,7 +6,7 @@ import RecycleBinTaskItem from "./RecycleBinTaskItem";
  * @param {*} props
  * @returns a container which contains list of tasks in Recycle Bin. If there is no task, a alert will be displayed
  */
-const RecycleBinTasks = (props) => {
+const RecycleBinTasksContainer = (props) => {
   const {
     appBodyTheme,
     sidebarOpenState,
@@ -42,4 +42,4 @@ const RecycleBinTasks = (props) => {
   );
 };
 
-export default RecycleBinTasks;
+export default RecycleBinTasksContainer;

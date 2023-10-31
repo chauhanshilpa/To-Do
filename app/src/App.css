@@ -6,6 +6,30 @@ body {
   overflow: hidden;
 }
 
+.register {
+  margin: 30vh auto 0;
+  width: 80vh;
+  border-radius: 15px;
+  background-color: rgb(193, 191, 191);
+  padding: 10px;
+}
+
+.register.theme-dark {
+  background-color: #212529;
+  color: #eeeeee;
+}
+
+.register.theme-dark input,
+.task-input-field.theme-dark input,
+.sidebar.theme-dark input {
+  background-color: #4c505e !important;
+  color: #eeeeee;
+}
+
+.register input {
+  background-color: #eeeeee;
+}
+
 .modal {
   top: 30vh;
   right: 5vw;
@@ -64,12 +88,6 @@ input {
   background-color: #eeeeee !important;
 }
 
-.task-input-field.theme-dark input,
-.sidebar.theme-dark input {
-  background-color: #4c505e !important;
-  color: #eeeeee;
-}
-
 .sidebar {
   top: 0;
   margin-top: 3.5rem;
@@ -107,7 +125,6 @@ input {
 
 .user-generated-lists {
   position: absolute;
-  top: 110px;
   top: 110px;
   bottom: 50px;
   overflow-y: auto;
