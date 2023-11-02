@@ -1,5 +1,5 @@
 import React from "react";
-import { THEME, RECYCLE_BIN_LIST } from "../Constants";
+import { THEME } from "../Constants";
 import { restoreTaskFromRecycleBin, deleteTaskFromRecycleBin } from "../api";
 import { Tooltip } from "react-tooltip";
 
@@ -9,20 +9,25 @@ import { Tooltip } from "react-tooltip";
  * @returns task items which presents in Recycle Bin
  */
 const RecycleBinTaskItem = (props) => {
-  const { taskInfo, modalButtonRef, appBodyTheme, getTaskListAndListName } =
-    props;
+  const {
+    predefinedList,
+    taskInfo,
+    modalButtonRef,
+    appBodyTheme,
+    getTaskListAndListName,
+  } = props;
 
   const { task_id } = taskInfo;
-  const { text } = taskInfo.metadata;
+  const { root_list_task_id, text } = taskInfo.metadata;
+  const { RECYCLE_BIN_LIST } = predefinedList;
 
   /**
    *
    *calls restoreTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated task list of recycle bin
    */
   async function handleTaskRestoration() {
-    const root_list_id = taskInfo.metadata.root_list_id;
     try {
-      await restoreTaskFromRecycleBin(task_id, root_list_id);
+      await restoreTaskFromRecycleBin(task_id, root_list_task_id);
       await getTaskListAndListName(RECYCLE_BIN_LIST.id);
     } catch (error) {
       modalButtonRef.current.click();

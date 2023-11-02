@@ -8,14 +8,14 @@ import { Tooltip } from "react-tooltip";
  * @returns all list having sidebar list names and unique id or pathName which comes from user generated list
  */
 const SidebarList = (props) => {
-  const { list, listIndex, onListClick, handleSidebarListDeletion } = props;
+  const { listData, listIndex, onListClick, handleSidebarListDeletion } = props;
 
   // list contains list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation), deleted(exists or not)
   return (
     <>
-      <li onClick={() => onListClick(list.list_id)}>
+      <li onClick={() => onListClick(listData.list_id)}>
         <Link
-          to={`/${list.list_id}`}
+          to={`/${listData.list_id}`}
           className="anchors nav-link link-body-emphasis"
         >
           <svg
@@ -31,7 +31,7 @@ const SidebarList = (props) => {
               d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
             />
           </svg>
-          <span className="sidebar-list-name">{list.list_name}</span>
+          <span className="sidebar-list-name">{listData.list_name}</span>
         </Link>
         <div className="delete-list-icon">
           <svg
@@ -42,7 +42,7 @@ const SidebarList = (props) => {
             className="bi bi-trash3"
             viewBox="0 0 16 16"
             onClick={(event) =>
-              handleSidebarListDeletion(event, list.list_id, listIndex)
+              handleSidebarListDeletion(event, listData.list_id, listIndex)
             }
             data-tooltip-id="delete-list"
             data-tooltip-content="Delete"

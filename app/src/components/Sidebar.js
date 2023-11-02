@@ -1,5 +1,5 @@
 import React from "react";
-import { THEME, DEFAULT_LIST, RECYCLE_BIN_LIST } from "../Constants";
+import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 import SidebarList from "./SidebarList";
 
@@ -12,6 +12,7 @@ const Sidebar = (props) => {
   const {
     appBodyTheme,
     sidebarOpenState,
+    predefinedList,
     onListClick,
     sidebarTaskListName,
     handleSidebarListChange,
@@ -20,6 +21,7 @@ const Sidebar = (props) => {
     handleSidebarListDeletion,
   } = props;
 
+  const { DEFAULT_LIST, RECYCLE_BIN_LIST } = predefinedList;
   return (
     <>
       <div
@@ -89,15 +91,15 @@ const Sidebar = (props) => {
             />
           </div>
           <div className="user-generated-lists">
-            {sidebarUserGeneratedList.map((list, listIndex) => (
+            {sidebarUserGeneratedList.map((listData, listIndex) => (
               <SidebarList
                 listIndex={listIndex}
-                key={list.list_id}
-                list={list}
+                key={listData.list_id}
+                listData={listData}
                 onListClick={onListClick}
                 handleSidebarListDeletion={handleSidebarListDeletion}
               />
-            ))}
+            ))} 
           </div>
         </ul>
         <hr />

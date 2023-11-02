@@ -3,7 +3,15 @@ import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 
 const Signup = (props) => {
-  const { appBodyTheme } = props;
+  const {
+    appBodyTheme,
+    credentials,
+    handleUsernameChange,
+    handleMailChange,
+    handlePasswordChange,
+    handleConfirmPasswordChange,
+    handleUserSignUp,
+  } = props;
   return (
     <>
       <form
@@ -12,6 +20,7 @@ const Signup = (props) => {
             ? THEME.DARK.className
             : THEME.LIGHT.className
         }`}
+        onSubmit={handleUserSignUp}
       >
         <div className="mb-3">
           <input
@@ -20,6 +29,8 @@ const Signup = (props) => {
             id="email"
             aria-describedby="emailHelp"
             placeholder="Email address"
+            value={credentials.email}
+            onChange={handleMailChange}
             required
           />
         </div>
@@ -29,6 +40,8 @@ const Signup = (props) => {
             className="form-control"
             id="name"
             placeholder="Username"
+            value={credentials.username}
+            onChange={handleUsernameChange}
             required
           />
         </div>
@@ -38,6 +51,8 @@ const Signup = (props) => {
             className="form-control"
             id="password"
             placeholder="Password"
+            value={credentials.password}
+            onChange={handlePasswordChange}
             required
             minLength={6}
           />
@@ -49,6 +64,8 @@ const Signup = (props) => {
             id="confirm-password"
             name="confirm-password"
             placeholder="Confirm password"
+            value={credentials.confirmPassword}
+            onChange={handleConfirmPasswordChange}
           />
         </div>
         <p>
@@ -56,7 +73,7 @@ const Signup = (props) => {
           <Link to="/login">log in</Link>
         </p>
         <button type="submit" className="btn btn-primary">
-          Submit
+          Register
         </button>
       </form>
     </>

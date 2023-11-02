@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -10,17 +10,16 @@ import RecycleBinTasksContainer from "./components/RecycleBinTasksContainer";
 import Modal from "./components/Modal";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import { THEME, ENTER_KEY_CODE } from "./Constants";
 import {
-  THEME,
-  ENTER_KEY_CODE,
-  DEFAULT_LIST,
-  RECYCLE_BIN_LIST,
-} from "./Constants";
-import {
+  userRegistered,
+  addNewUser,
+  getUserId,
+  checkUserValidity,
+  getList,
   addSidebarList,
   deleteSidebarList,
   addTask,
-  getList,
   getListData,
 } from "./api";
 
@@ -31,9 +30,23 @@ import {
 function App() {
   const [appBodyTheme, setAppBodyTheme] = useState(THEME.LIGHT.name);
   const [inputTask, setInputTask] = useState("");
+
+  const [credentials, setCredentials] = useState({
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [userId, setUserId] = useState("");
+  const [isUserValid, setIsUserValid] = useState(false);
+  const [predefinedList, setPredefinedList] = useState({
+    DEFAULT_LIST: { id: "", name: "" },
+    RECYCLE_BIN_LIST: { id: "", name: "" },
+  });
+
   const [sidebarOpenState, setSidebarOpenState] = useState(false);
   const [sidebarTaskListName, setSidebarTaskListName] = useState("");
-  const [currentListUUID, setCurrentListUUID] = useState(DEFAULT_LIST.id);
+  const [currentListUUID, setCurrentListUUID] = useState();
   const [sidebarUserGeneratedList, setSidebarUserGeneratedList] = useState([]);
   const [currentListName, setCurrentListName] = useState("");
   const [taskList, setTaskList] = useState([]);
@@ -41,19 +54,89 @@ function App() {
 
   let modalButtonRef = useRef();
 
-  useEffect(() => {
-    getSidebarList();
-    getTaskListAndListName(DEFAULT_LIST.id);
-    // eslint-disable-next-line
-  }, []);
+  const { DEFAULT_LIST, RECYCLE_BIN_LIST } = predefinedList;
+
+  function handleUsernameChange(event) {
+    setCredentials({ ...credentials, username: event.target.value });
+  }
+
+  function handleMailChange(event) {
+    setCredentials({ ...credentials, email: event.target.value });
+  }
+
+  function handlePasswordChange(event) {
+    setCredentials({ ...credentials, password: event.target.value });
+  }
+
+  function handleConfirmPasswordChange(event) {
+    setCredentials({ ...credentials, confirmPassword: event.target.value });
+  }
+
+  async function handleUserSignUp(event) {
+    event.preventDefault();
+    const { email, username, password, confirmPassword } = credentials;
+    const response = await userRegistered(email);
+    const isUserRegistered = response.data.registered;
+    if (password === confirmPassword) {
+      if (isUserRegistered === false) {
+        await addNewUser(email, username, password);
+        const response = await getUserId(email, username, password);
+        setUserId(response.data.userId);
+        await sidebarAllLists(response.data.userId);
+        setIsUserValid(true);
+        // setCurrentListUUID(DEFAULT_LIST.id)
+        // getTaskListAndListName(DEFAULT_LIST.id);
+      } else {
+        alert("User with this email already exists.");
+      }
+      setCredentials({
+        email: "",
+        username: "",
+        password: "",
+        confirmPassword: "",
+      });
+    } else {
+      alert("Confirm password is different from password. Please check it again.");
+    }
+  }
+
+  async function handleUserLogin(event) {
+    event.preventDefault();
+    const { email, username, password } = credentials;
+    const response = await checkUserValidity(email, username, password);
+    setIsUserValid(response.data.isValid);
+    if (response.data.isValid) {
+      const response = await getUserId(email, username, password);
+      setUserId(response.data.userId);
+      await sidebarAllLists(response.data.userId);
+      // setCurrentListUUID(DEFAULT_LIST.id)
+      // getTaskListAndListName(DEFAULT_LIST.id);
+    } else {
+      alert("Wrong user details.");
+    }
+    setCredentials({ email: "", username: "", password: "" });
+  }
 
   /**
    * calls getList function defined in api.js which fetches all lists of sidebar from backend and shows on UI.
    */
-  async function getSidebarList() {
+  async function sidebarAllLists(userId) {
     try {
-      const response = await getList();
-      setSidebarUserGeneratedList(response.data.sidebarUserGeneratedList);
+      const response = await getList(userId);
+      const lists = response.data.lists;
+      const predefinedLists = lists.slice(0, 2);
+      setPredefinedList({
+        DEFAULT_LIST: {
+          id: predefinedLists[0].list_id,
+          name: predefinedLists[0].list_name,
+        },
+        RECYCLE_BIN_LIST: {
+          id: predefinedLists[1].list_id,
+          name: predefinedLists[1].list_name,
+        },
+      });
+      const userGeneratedLists = lists.slice(2);
+      setSidebarUserGeneratedList(userGeneratedLists);
     } catch (error) {
       modalButtonRef.current.click();
     }
@@ -64,16 +147,16 @@ function App() {
    * calls getListData function defined in api.js and passes list_id which fetches listName and all tasks of this list from backend.
    * @param {String} list_id   It is unique id of list
    */
-  async function getTaskListAndListName(list_id) {
+  async function getTaskListAndListName(listId) {
     try {
-      const response = await getListData(list_id);
+      const response = await getListData(listId);
       setCurrentListName(response.data.listName);
-      if (list_id === RECYCLE_BIN_LIST.id) {
-        setRecycleBinTaskList(response.data.recycleBinTaskList);
+      if (listId === RECYCLE_BIN_LIST.id) {
+        setRecycleBinTaskList(response.data.taskList);
       } else {
         setTaskList(response.data.taskList);
       }
-      setCurrentListUUID(list_id);
+      setCurrentListUUID(listId);
     } catch (error) {
       modalButtonRef.current.click();
     }
@@ -83,9 +166,9 @@ function App() {
    * This function runs while a sidebar list is clicked, sets it as current list and shows all the data of that list only(its task list and name of list).
    * @param {String} list_id   It is unique id of list
    */
-  function onListClick(list_id) {
-    setCurrentListUUID(list_id);
-    getTaskListAndListName(list_id);
+  function onListClick(listId) {
+    setCurrentListUUID(listId);
+    getTaskListAndListName(listId);
   }
 
   function handleLightAndDarkMode() {
@@ -139,8 +222,8 @@ function App() {
     if (event.keyCode === ENTER_KEY_CODE) {
       if (sidebarTaskListName.trim().length !== 0) {
         try {
-          await addSidebarList(sidebarTaskListName);
-          await getSidebarList();
+          await addSidebarList(userId, sidebarTaskListName);
+          await sidebarAllLists(userId);
         } catch (error) {
           modalButtonRef.current.click();
         }
@@ -155,21 +238,22 @@ function App() {
    * @param {String} list_id   It is unique id of list
    * if a current list is deleted, we will move to previous list as current list if current list is the first list, we will move to default list path.
    */
-  async function handleSidebarListDeletion(event, list_id, list_index) {
+  async function handleSidebarListDeletion(event, listId, listIndex) {
     event.stopPropagation();
     try {
-      let new_list_id;
-      if (currentListUUID === sidebarUserGeneratedList[list_index].list_id) {
-        if (list_index === 0) {
-          new_list_id = DEFAULT_LIST.id;
-        } else {
-          new_list_id = sidebarUserGeneratedList[list_index - 1].list_id;
-        }
-        setCurrentListUUID(new_list_id);
-        await getTaskListAndListName(new_list_id);
-      }
-      await deleteSidebarList(list_id);
-      await getSidebarList();
+      // let newListId;
+      // if (currentListUUID === sidebarUserGeneratedList[listIndex].listId) {
+      //   if (listIndex === 0) {
+      //     newListId = DEFAULT_LIST.id;
+      //   } else {
+      //     newListId = sidebarUserGeneratedList[listIndex - 1].listId;
+      //   }
+      //   setCurrentListUUID(newListId);
+      //   await getTaskListAndListName(newListId);
+      // }
+
+      await deleteSidebarList(listId, userId);
+      await sidebarAllLists(userId);
     } catch (error) {
       modalButtonRef.current.click();
     }
@@ -187,11 +271,103 @@ function App() {
           handleLightAndDarkMode={handleLightAndDarkMode}
           appBodyTheme={appBodyTheme}
         />
+        <Modal
+          modalButtonRef={modalButtonRef}
+          modalTitle="Error"
+          modalBody="Oops, something went wrong. Please try again later."
+        />
+        {isUserValid === false ? (
+          <Routes>
+            <Route path="/" element={<Navigate to="/signup" />} />
+            <Route
+              exact
+              path="/login"
+              element={
+                <Login
+                  appBodyTheme={appBodyTheme}
+                  handleUserLogin={handleUserLogin}
+                  credentials={credentials}
+                  handleUsernameChange={handleUsernameChange}
+                  handleMailChange={handleMailChange}
+                  handlePasswordChange={handlePasswordChange}
+                />
+              }
+            />
+            <Route
+              exact
+              path="/signup"
+              element={
+                <Signup
+                  appBodyTheme={appBodyTheme}
+                  handleUserSignUp={handleUserSignUp}
+                  credentials={credentials}
+                  handleUsernameChange={handleUsernameChange}
+                  handleMailChange={handleMailChange}
+                  handlePasswordChange={handlePasswordChange}
+                  handleConfirmPasswordChange={handleConfirmPasswordChange}
+                />
+              }
+            />
+          </Routes>
+        ) : (
+          <>
+            <Header
+              appBodyTheme={appBodyTheme}
+              toggleSidebarOpenState={toggleSidebarOpenState}
+              sidebarOpenState={sidebarOpenState}
+              listName={currentListName}
+            />
+            <Routes>
+              <Route
+                exact
+                path="/:currentListUUID"
+                element={
+                  <>
+                    <TasksInputField
+                      appBodyTheme={appBodyTheme}
+                      inputTask={inputTask}
+                      handleInputTaskChange={handleInputTaskChange}
+                      handleNewTask={handleNewTask}
+                      sidebarOpenState={sidebarOpenState}
+                    />
+                    <TasksContainer
+                      key={currentListUUID}
+                      appBodyTheme={appBodyTheme}
+                      sidebarOpenState={sidebarOpenState}
+                      predefinedList={predefinedList}
+                      currentListUUID={currentListUUID}
+                      taskList={taskList}
+                      modalButtonRef={modalButtonRef}
+                      getTaskListAndListName={getTaskListAndListName}
+                    />
+                  </>
+                }
+              />
+              <Route
+                exact
+                path={RECYCLE_BIN_LIST.id}
+                element={
+                  <>
+                    <RecycleBinTasksContainer
+                      appBodyTheme={appBodyTheme}
+                      sidebarOpenState={sidebarOpenState}
+                      predefinedList={predefinedList}
+                      modalButtonRef={modalButtonRef}
+                      recycleBinTaskList={recycleBinTaskList}
+                      getTaskListAndListName={getTaskListAndListName}
+                    />
+                  </>
+                }
+              />
+            </Routes>
+          </>
+        )}
         {sidebarOpenState && (
           <Sidebar
             appBodyTheme={appBodyTheme}
             sidebarOpenState={sidebarOpenState}
             onListClick={onListClick}
+            predefinedList={predefinedList}
             sidebarTaskListName={sidebarTaskListName}
             handleSidebarListChange={handleSidebarListChange}
             handleNewSidebarList={handleNewSidebarList}
@@ -199,69 +375,6 @@ function App() {
             handleSidebarListDeletion={handleSidebarListDeletion}
           />
         )}
-        <Header
-          appBodyTheme={appBodyTheme}
-          toggleSidebarOpenState={toggleSidebarOpenState}
-          sidebarOpenState={sidebarOpenState}
-          listName={currentListName}
-        />
-        <Modal
-          modalButtonRef={modalButtonRef}
-          modalTitle="Error"
-          modalBody="Oops, something went wrong. Please try again later."
-        />
-        <Routes>
-          <Route
-            exact
-            path="/login"
-            element={<Login appBodyTheme={appBodyTheme} />}
-          />
-          <Route
-            exact
-            path="/login"
-            element={<Signup appBodyTheme={appBodyTheme} />}
-          />
-          <Route
-            exact
-            path="/:currentListUUID"
-            element={
-              <>
-                <TasksInputField
-                  appBodyTheme={appBodyTheme}
-                  inputTask={inputTask}
-                  handleInputTaskChange={handleInputTaskChange}
-                  handleNewTask={handleNewTask}
-                  sidebarOpenState={sidebarOpenState}
-                />
-                <TasksContainer
-                  key={currentListUUID}
-                  appBodyTheme={appBodyTheme}
-                  sidebarOpenState={sidebarOpenState}
-                  currentListUUID={currentListUUID}
-                  taskList={taskList}
-                  modalButtonRef={modalButtonRef}
-                  getTaskListAndListName={getTaskListAndListName}
-                />
-              </>
-            }
-          />
-          <Route
-            exact
-            path={RECYCLE_BIN_LIST.id}
-            element={
-              <>
-                <RecycleBinTasksContainer
-                  appBodyTheme={appBodyTheme}
-                  sidebarOpenState={sidebarOpenState}
-                  modalButtonRef={modalButtonRef}
-                  recycleBinTaskList={recycleBinTaskList}
-                  getTaskListAndListName={getTaskListAndListName}
-                />
-              </>
-            }
-          />
-          <Route path="/" element={<Navigate to={DEFAULT_LIST.id} />} />
-        </Routes>
       </BrowserRouter>
     </>
   );

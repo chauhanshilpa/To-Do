@@ -2,15 +2,79 @@ import axios from "axios";
 import { BASE_URL } from "./Constants";
 // This file contains all api calls from frontend to backend
 
+
+export async function userRegistered(email){
+  const response = await axios.get(`${BASE_URL}/user_registered`, {
+    params: {
+    email
+    }
+  })
+  return response;
+}
+
+export async function addNewUser(email, username, password) {
+  await axios.post(`${BASE_URL}/sign_up`, {
+    email,
+    username,
+    password,
+  });
+  return;
+}
+
+export async function getUserId(email, username, password) {
+  const response = await axios.get(`${BASE_URL}/user_id`, {
+    params: {
+      email,
+      username,
+      password,
+    },
+  });
+  return response;
+}
+
+export async function checkUserValidity(email, username, password) {
+  const response = await axios.get(`${BASE_URL}/valid_user`, {
+    params: {
+      email,
+      username,
+      password,
+    },
+  });
+  return response;
+}
+
+
+
+
+
 /**
  *
  * sends a get request to backend to get all list of sidebar
  * @returns lists of sidebar
  */
-export async function getList() {
-  const response = await axios.get(`${BASE_URL}/list`);
+export async function getList(userId) {
+  const response = await axios.get(`${BASE_URL}/list`, {
+    params: {
+      userId,
+    },
+  });
   return response;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  *
@@ -18,8 +82,8 @@ export async function getList() {
  * @param {String} list_id   It is unique id of list
  * @returns task list and list name based of list unique id
  */
-export async function getListData(list_id) {
-  const response = await axios.get(`${BASE_URL}/list/${list_id}`);
+export async function getListData(listId) {
+  const response = await axios.get(`${BASE_URL}/list/${listId}`);
   return response;
 }
 
@@ -28,8 +92,9 @@ export async function getListData(list_id) {
  * sends a post request to backend to add a list
  * @param {String} sidebarTaskListName  it is the name of sidebar list to add
  */
-export async function addSidebarList(sidebarTaskListName) {
+export async function addSidebarList(userId, sidebarTaskListName) {
   await axios.post(`${BASE_URL}/add_list`, {
+    userId,
     sidebarTaskListName,
   });
   return;
@@ -40,10 +105,11 @@ export async function addSidebarList(sidebarTaskListName) {
  * sends a delete request to backend to delete a particular list based of list unique id
  * @param {String} list_id   It is unique id of list
  */
-export async function deleteSidebarList(list_id) {
+export async function deleteSidebarList(listId, userId) {
   await axios.delete(`${BASE_URL}/delete_list`, {
     params: {
-      list_id,
+      listId,
+      userId,
     },
   });
   return;
@@ -82,10 +148,11 @@ export async function updateTask(task_id, newInnerText) {
  * sends a delete request to backend to delete a task based on task_id
  * @param {String} task_id  unique id of a task
  */
-export async function deleteTask(task_id) {
+export async function deleteTask(task_id, recycle_bin_list_id) {
   await axios.delete(`${BASE_URL}/delete_task`, {
     params: {
       task_id,
+      recycle_bin_list_id
     },
   });
   return;
@@ -110,10 +177,10 @@ export async function reverseTaskDone(task_id, currentIsDone) {
  * @param {String} task_id  unique id of a task
  * @param {String} root_list_id  unique id of list, the task belongs to
  */
-export async function restoreTaskFromRecycleBin(task_id, root_list_id) {
+export async function restoreTaskFromRecycleBin(task_id, root_list_task_id) {
   await axios.post(`${BASE_URL}/restore_task`, {
     task_id,
-    root_list_id,
+    root_list_task_id,
   });
   return;
 }

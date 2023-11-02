@@ -11,6 +11,7 @@ const TasksContainer = (props) => {
     appBodyTheme,
     modalButtonRef,
     sidebarOpenState,
+    predefinedList,
     currentListUUID,
     taskList,
     getTaskListAndListName,
@@ -27,6 +28,7 @@ const TasksContainer = (props) => {
               key={taskInfo.task_id}
               appBodyTheme={appBodyTheme}
               modalButtonRef={modalButtonRef}
+              predefinedList={predefinedList}
               currentListUUID={currentListUUID}
               taskInfo={taskInfo}
               getTaskListAndListName={getTaskListAndListName}

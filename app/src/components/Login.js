@@ -3,25 +3,34 @@ import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 
 const Login = (props) => {
-  const { appBodyTheme } = props;
+  const {
+    appBodyTheme,
+    credentials,
+    handleMailChange,
+    handleUsernameChange,
+    handlePasswordChange,
+    handleUserLogin,
+  } = props;
 
   return (
-    <div>
+    <>
       <form
         className={`register login-form ${
           appBodyTheme === THEME.DARK.name
             ? THEME.DARK.className
             : THEME.LIGHT.className
         }`}
+        onSubmit={handleUserLogin}
       >
         <div className="mb-3">
           <input
             type="email"
             className="form-control"
             id="email"
-            name="email"
             aria-describedby="emailHelp"
             placeholder="Email address"
+            value={credentials.email}
+            onChange={handleMailChange}
             required
           />
         </div>
@@ -31,6 +40,8 @@ const Login = (props) => {
             className="form-control"
             id="name"
             placeholder="Username"
+            value={credentials.username}
+            onChange={handleUsernameChange}
             required
           />
         </div>
@@ -39,8 +50,9 @@ const Login = (props) => {
             type="password"
             className="form-control"
             id="password"
-            name="password"
             placeholder="Password"
+            value={credentials.password}
+            onChange={handlePasswordChange}
             minLength={6}
             required
           />
@@ -50,10 +62,10 @@ const Login = (props) => {
           <Link to="/signup">sign up</Link>
         </p>
         <button type="submit" className="btn btn-primary">
-          Submit
+          Login
         </button>
       </form>
-    </div>
+    </>
   );
 };
 

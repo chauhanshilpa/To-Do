@@ -13,6 +13,7 @@ const TaskItem = (props) => {
   const {
     appBodyTheme,
     modalButtonRef,
+    predefinedList,
     currentListUUID,
     taskInfo,
     getTaskListAndListName,
@@ -21,6 +22,9 @@ const TaskItem = (props) => {
   const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
   const { task_id } = taskInfo;
   const { text } = taskInfo.metadata;
+  const { RECYCLE_BIN_LIST } = predefinedList;
+
+
   /**
    *
    * calls reverseTaskDone defined in api.js then calls getTaskListAndListName function defined in app.js to get task list and name with updated value of is_done property.
@@ -67,9 +71,8 @@ const TaskItem = (props) => {
    * calls deleteTask defined in db.js then calls getTaskListAndListName defined in app.js which gets all the tasks and name of a particular list
    */
   async function handleTaskDeletion() {
-    const task_id = taskInfo.task_id;
     try {
-      await deleteTask(task_id);
+      await deleteTask(task_id, RECYCLE_BIN_LIST.id);
       await getTaskListAndListName(currentListUUID);
     } catch (error) {
       modalButtonRef.current.click();

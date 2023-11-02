@@ -1,17 +1,63 @@
 import { client } from "./index.js";
 import { v4 as uuidv4 } from "uuid";
-import { taskMetadata } from "./DbClassModels.js";
+import { taskMetadata } from "./dbClassModel.js";
 
 // db.js contains all functions which sends queries to database
 
+export async function checkUserExistence(email){
+  const query = {
+    text: "SELECT email from users where email = $1",
+    values: [email]
+  }
+  const response = await client.query(query);
+  return response.rows;
+}
+
+export async function addUser(newUserId, email, username, password) {
+  const query = {
+    text: "INSERT INTO users (user_id, email, username, password, created) VALUES ($1, $2, $3, $4, $5)",
+    values: [newUserId, email, username, password, new Date().toUTCString()],
+  };
+  await client.query(query);
+  return;
+}
+
+export async function addPredefinedList(newUserId, listName) {
+  let predefined_list_id = uuidv4();
+  const query = {
+    text: "INSERT INTO list (list_id, user_id, list_name, deletable, created, deleted) VALUES ($1, $2, $3, $4, $5, $6)",
+    values: [
+      predefined_list_id,
+      newUserId,
+      listName,
+      false,
+      new Date().toUTCString(),
+      false,
+    ],
+  };
+  await client.query(query);
+  return;
+}
+
+export async function getUserId(email, username, password) { 
+  const query = {
+    text: "SELECT user_id FROM users WHERE email= $1 AND username= $2 AND password= $3",
+    values: [email, username, password],
+  };
+  const response = await client.query(query);
+  return response.rows;
+}
+
+
+
 /**
  *
- * @returns all sidebar lists
+ * @returns all sidebar User generated list lists
  */
-export async function getSidebarList() {
+export async function getSidebarLists(user_id) {
   const query = {
-    text: "SELECT * FROM list WHERE deletable = $1 AND deleted = $2",
-    values: [true, false],
+    text: "SELECT * FROM list WHERE deleted = $1 AND user_id = $2",
+    values: [false, user_id],
   };
   const response = await client.query(query);
   return response.rows;
@@ -26,9 +72,9 @@ export async function getListName(list_id) {
   const query = {
     text: "SELECT list_name FROM list WHERE list_id = $1",
     values: [list_id],
-  };
-  let res = await client.query(query);
-  return res.rows[0].list_name;
+  }; 
+  let response = await client.query(query);
+  return response.rows[0].list_name;
 }
 
 /**
@@ -41,8 +87,8 @@ export async function getTaskList(list_id) {
     text: "SELECT * FROM tasks WHERE list_id = $1 AND deleted = $2 ORDER BY created DESC",
     values: [list_id, false],
   };
-  let res = await client.query(query);
-  return res.rows;
+  let response = await client.query(query);
+  return response.rows;
 }
 
 /**
@@ -73,10 +119,10 @@ export async function addSidebarList(list_id, user_id, list_name) {
  * changes list deleted value to true so that it won't present in sidebar
  * @param {String} list_id   unique id of list
  */
-export async function deleteSidebarList(list_id) {
+export async function deleteSidebarList(list_id, user_id) {
   const query = {
-    text: "UPDATE list SET deleted = $1 WHERE list_id = $2",
-    values: [true, list_id],
+    text: "UPDATE list SET deleted = $1 WHERE list_id = $2 AND user_id = $3",
+    values: [true, list_id, user_id],
   };
   await client.query(query);
   return;
@@ -96,7 +142,7 @@ export async function addTask(list_id, text, task_id) {
       task_id,
       list_id,
       false,
-      new taskMetadata(list_id, text),
+      new taskMetadata(task_id, text),
       new Date().toUTCString(),
       false,
     ],
@@ -169,10 +215,10 @@ export async function reverseIsDone(task_id, currentIsDone) {
  * updates deleted property to false so that it can be seen in that list
  * @param {String} root_list_id   unique id of list with which task belongs to initially
  */
-export async function moveTaskToRootList(root_list_id) {
+export async function moveTaskToRootList(root_list_task_id) {
   const query = {
-    text: "UPDATE tasks SET deleted = $1 WHERE list_id = $2",
-    values: [false, root_list_id],
+    text: "UPDATE tasks SET deleted = $1 WHERE task_id = $2",
+    values: [false, root_list_task_id],
   };
   await client.query(query);
   return;
@@ -184,7 +230,7 @@ export async function moveTaskToRootList(root_list_id) {
  * @param {String} task_id   unique id of task
  * @param {String} root_list_id   unique id of a list to which task belongs initially before deletion
  */
-export async function MoveTaskFromRecycleBin(task_id) {
+export async function removeTaskFromRecycleBin(task_id) {
   const query = {
     text: "UPDATE tasks SET deleted = $1 WHERE task_id = $2",
     values: [true, task_id],

@@ -10,6 +10,7 @@ const RecycleBinTasksContainer = (props) => {
   const {
     appBodyTheme,
     sidebarOpenState,
+    predefinedList,
     modalButtonRef,
     recycleBinTaskList,
     getTaskListAndListName,
@@ -26,6 +27,7 @@ const RecycleBinTasksContainer = (props) => {
           recycleBinTaskList.map((taskInfo, index) => (
             <RecycleBinTaskItem
               key={taskInfo.task_id}
+              predefinedList={predefinedList}
               taskInfo={taskInfo}
               appBodyTheme={appBodyTheme}
               modalButtonRef={modalButtonRef}
