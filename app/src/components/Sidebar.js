@@ -6,7 +6,7 @@ import SidebarList from "./SidebarList";
 /**
  *
  * @param {*} props
- * @returns a sidebar component which contains different list of task items linked to unique paths(there are predefined list and user generated list) and a input in which list name will be entered.
+ * @returns a sidebar which contains different list of task items linked to unique paths(there are predefined list and user generated list) and a input in which list name will be entered.
  */
 const Sidebar = (props) => {
   const {

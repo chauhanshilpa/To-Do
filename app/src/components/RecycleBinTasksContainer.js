@@ -4,7 +4,7 @@ import RecycleBinTaskItem from "./RecycleBinTaskItem";
 /**
  *
  * @param {*} props
- * @returns a container which contains list of tasks in Recycle Bin. If there is no task, a alert will be displayed
+ * @returns a container which contains list of tasks in Recycle Bin. If there is no task, a message will be displayed.
  */
 const RecycleBinTasksContainer = (props) => {
   const {

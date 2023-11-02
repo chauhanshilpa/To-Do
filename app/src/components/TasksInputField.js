@@ -4,7 +4,7 @@ import { THEME } from "../Constants";
 /**
  *
  * @param {*} props
- * @returns a input in which task will be entered
+ * @returns a input in which tasks will be entered.
  */
 const TasksInputField = (props) => {
   const {

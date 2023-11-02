@@ -72,6 +72,15 @@ function App() {
     setCredentials({ ...credentials, confirmPassword: event.target.value });
   }
 
+  /**
+   * 
+   * This function runs first time for a new user. 
+   * handleUserSignUp first checks whether password and confirm password are same, if not it shows an alert. If both are same then it checks whether a user is already registered or not. 
+   *If user is not registered, addNewUser function defined in api.js is called which adds a new user details and make two default lists. 
+   Then it calls getUserId function defined in api.js which gets user id, then set it in a variable.
+   Further sidebarAllLists function is called defined in app.js which will set values of predefined lists so that a user can see it in UI. AT the end, isUserValid variable is set to to true so that user can use the application for maintaining its to dos.
+   * @param {*} event 
+   */
   async function handleUserSignUp(event) {
     event.preventDefault();
     const { email, username, password, confirmPassword } = credentials;
@@ -100,6 +109,12 @@ function App() {
     }
   }
 
+  /**
+   * 
+   * this function runs for already existing users with correct credentials.
+   * first of all this function check user validity and if a user is valid(having correct credentials), it calls getUserId defined in api.js to get user id and calls sidebarAllLists defined in App.js to get all list present in user's account.
+   * @param {*} event 
+   */
   async function handleUserLogin(event) {
     event.preventDefault();
     const { email, username, password } = credentials;
@@ -118,7 +133,8 @@ function App() {
   }
 
   /**
-   * calls getList function defined in api.js which fetches all lists of sidebar from backend and shows on UI.
+   * 
+   * calls getList function defined in api.js which fetches all lists of sidebar including predefined lists and user generated list and set accordingly.If there is failure in API call, a pop up will be shown.
    */
   async function sidebarAllLists(userId) {
     try {
@@ -144,8 +160,8 @@ function App() {
 
   /**
    *
-   * calls getListData function defined in api.js and passes list_id which fetches listName and all tasks of this list from backend.
-   * @param {String} list_id   It is unique id of list
+   * calls getListData function defined in api.js and passes listId which gets name of list and all tasks of this list.
+   * @param {String} listId   It is unique id of list
    */
   async function getTaskListAndListName(listId) {
     try {
@@ -163,8 +179,9 @@ function App() {
   }
 
   /**
+   * 
    * This function runs while a sidebar list is clicked, sets it as current list and shows all the data of that list only(its task list and name of list).
-   * @param {String} list_id   It is unique id of list
+   * @param {String} listId    It is unique id of list
    */
   function onListClick(listId) {
     setCurrentListUUID(listId);
@@ -190,7 +207,8 @@ function App() {
   }
 
   /**
-   * calls a function addTask defined in api.js which sends a post request to add a task and then calls getTaskListAndListName to get the name and task list of that particular list.
+   * 
+   * calls a function addTask defined in api.js which sends a post request to add a task and then calls getTaskListAndListName defined in app.js to get the name and task list of that particular list.
    * If there is a failure in api call, it catches the error and shows a pop up.
    * @param {*} event
    * ENTER_KEY_CODE is the keyCode of enter key defined in Constants.js. Task will be added on pressing enter key. If task has all spaces then it will not be added into the list.
@@ -214,7 +232,8 @@ function App() {
   }
 
   /**
-   * calls a function addSidebarList defined in api.js which sends a post request to add new list data and then calls getSidebarList to get all sidebar list including the new one. It catches the error and shows a pop up if there is a failure in api call.
+   * 
+   * calls a function addSidebarList defined in api.js and then calls getSidebarList to get all sidebar list including the new one. It catches the error and shows a pop up if there is a failure in api call.
    * @param {*} event
     ENTER_KEY_CODE is the keyCode of enter key. List name will be added on pressing enter key with no trailing and leading spaces. If name has all spaces then it will not be added into the list.
    */
@@ -260,9 +279,10 @@ function App() {
   }
 
   /**
-   * Every page has common Navbar, Sidebar and Header.
-   * There is a route set for Recycle Bin separately as its user interface and passed parameters were different from other lists. All other routes are dynamic which changes on the basis of list unique id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
-   * @return navbar, sidebar, header, recycle bin container and other list containers based on path inside a router.
+   * 
+   * When application loads, first a signup form will be open by default or one can go to login form also if user is valid. Once a user form is submitted with valid credentials, tasks managing application can be seen.
+   * If user is valid, there is a route set for Recycle Bin separately as its user interface and passed parameters were different from other lists. All other routes are dynamic which changes on the basis of list unique id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
+   * @return navbar, sidebar, header, recycle bin container and other list containers based on path inside a router, a login and signup form based on a condition.
    */
   return (
     <>

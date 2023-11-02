@@ -2,17 +2,29 @@ import { client } from "./index.js";
 import { v4 as uuidv4 } from "uuid";
 import { taskMetadata } from "./dbClassModel.js";
 
-// db.js contains all functions which sends queries to database
+// db.js contains all functions which send queries to database
 
-export async function checkUserExistence(email){
+/**
+ *
+ * @param {String} email   email of a user
+ * @returns email of user (it may have or may have not)
+ */
+export async function checkUserExistence(email) {
   const query = {
     text: "SELECT email from users where email = $1",
-    values: [email]
-  }
+    values: [email],
+  };
   const response = await client.query(query);
   return response.rows;
 }
 
+/**
+ * queries to add a new user data
+ * @param {String} newUserId    unique id of a new user
+ * @param {String} email        email id of a user
+ * @param {String} username     name of a user
+ * @param {String} password     password of a user
+ */
 export async function addUser(newUserId, email, username, password) {
   const query = {
     text: "INSERT INTO users (user_id, email, username, password, created) VALUES ($1, $2, $3, $4, $5)",
@@ -22,6 +34,11 @@ export async function addUser(newUserId, email, username, password) {
   return;
 }
 
+/**
+ * queries to add predefined list of a new user
+ * @param {String} newUserId    user id of a newly added user
+ * @param {String} listName     name of predefined list
+ */
 export async function addPredefinedList(newUserId, listName) {
   let predefined_list_id = uuidv4();
   const query = {
@@ -39,7 +56,14 @@ export async function addPredefinedList(newUserId, listName) {
   return;
 }
 
-export async function getUserId(email, username, password) { 
+/**
+ *
+ * @param {String} email      email id of a user
+ * @param {String} username   name of a user
+ * @param {String} password   password of a user
+ * @returns user's unique id
+ */
+export async function getUserId(email, username, password) {
   const query = {
     text: "SELECT user_id FROM users WHERE email= $1 AND username= $2 AND password= $3",
     values: [email, username, password],
@@ -48,11 +72,10 @@ export async function getUserId(email, username, password) {
   return response.rows;
 }
 
-
-
 /**
  *
- * @returns all sidebar User generated list lists
+ * @param {String} user_id     user id of a newly added user
+ * @returns all sidebar lists including predefined lists and user generated lists
  */
 export async function getSidebarLists(user_id) {
   const query = {
@@ -65,22 +88,22 @@ export async function getSidebarLists(user_id) {
 
 /**
  *
- * @param {String} list_id   unique id of list
- * @returns name of list having list_id
+ * @param {String} list_id    unique id of a list
+ * @returns name of list
  */
 export async function getListName(list_id) {
   const query = {
     text: "SELECT list_name FROM list WHERE list_id = $1",
     values: [list_id],
-  }; 
+  };
   let response = await client.query(query);
   return response.rows[0].list_name;
 }
 
 /**
  *
- * @param {String} list_id   unique id of list
- * @returns list of tasks having list_id
+ * @param {String} list_id    unique id of list
+ * @returns list of tasks
  */
 export async function getTaskList(list_id) {
   const query = {
@@ -93,9 +116,9 @@ export async function getTaskList(list_id) {
 
 /**
  *
- * add new list into the database having columns list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation of list), deleted(deleted or exists)
- * @param {String} list_id    unique id of list
- * @param {String} user_id    unique id of a user
+ * queries to add new list into the database having columns list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation of list), deleted(deleted or exists)
+ * @param {String} list_id      unique id of list
+ * @param {String} user_id      unique id of a user
  * @param {String} list_name    name of list
  */
 export async function addSidebarList(list_id, user_id, list_name) {
@@ -116,8 +139,9 @@ export async function addSidebarList(list_id, user_id, list_name) {
 
 /**
  *
- * changes list deleted value to true so that it won't present in sidebar
+ * queries to change list deleted value to true so that it is not shown in sidebar anymore
  * @param {String} list_id   unique id of list
+ * @param {String} user_id   unique id of user
  */
 export async function deleteSidebarList(list_id, user_id) {
   const query = {
@@ -130,7 +154,7 @@ export async function deleteSidebarList(list_id, user_id) {
 
 /**
  *
- * Add new task in tasks table of database having columns task_id, list_id, is_done(true or false), metadata(have originated list and its text), created(date of creation of task) and deleted(deleted or exists)
+ * queries to add new task in tasks table of database having columns task_id, list_id, is_done(true or false), metadata(have its text and task_id), created(date of creation of task) and deleted(deleted or exists)
  * @param {String} list_id   unique id of list
  * @param {String} text    text of task
  * @param {String} task_id   unique id of task
@@ -153,7 +177,7 @@ export async function addTask(list_id, text, task_id) {
 
 /**
  *
- * update previous text of a task with updated_text, having task_id
+ * queries to update previous text of a task with updated_text, having task_id
  * @param {String} task_id    unique id of task
  * @param {String} updated_text   updated text of task
  */
@@ -167,7 +191,8 @@ export async function updateTask(task_id, updated_text) {
 }
 
 /**
- * add a particular task into recycle bin list
+ * 
+ * queries to add a particular task into recycle bin list
  * @param {String} task_id   unique id of task
  * @param {String} recycle_bin_list_id   unique id of recycle bin list
  */
@@ -183,7 +208,7 @@ export async function addTaskToRecycleBin(task_id, recycle_bin_list_id) {
 
 /**
  *
- * updates deleted property of task as true so that it won't present in that list
+ * queries to update deleted property of task as true so that it won't appear in that list
  * @param {String} task_id    unique id of a task
  */
 export async function deleteTask(task_id) {
@@ -196,9 +221,10 @@ export async function deleteTask(task_id) {
 }
 
 /**
- * reverse is_done property of task
- * @param {String} task_id
- * @param {Boolean} currentIsDone
+ *
+ * queries to reverse is_done property of task
+ * @param {String} task_id             unique id of task
+ * @param {Boolean} currentIsDone      boolean value of task is_done property before changing
  * @returns
  */
 export async function reverseIsDone(task_id, currentIsDone) {
@@ -213,7 +239,7 @@ export async function reverseIsDone(task_id, currentIsDone) {
 /**
  *
  * updates deleted property to false so that it can be seen in that list
- * @param {String} root_list_id   unique id of list with which task belongs to initially
+ * @param {String} root_list_task_id   unique id of task that present task had before deletion
  */
 export async function moveTaskToRootList(root_list_task_id) {
   const query = {
@@ -227,8 +253,7 @@ export async function moveTaskToRootList(root_list_task_id) {
 /**
  *
  * update deleted property to true so that it won't present in recycle bin anymore
- * @param {String} task_id   unique id of task
- * @param {String} root_list_id   unique id of a list to which task belongs initially before deletion
+ * @param {String} task_id    unique id of task
  */
 export async function removeTaskFromRecycleBin(task_id) {
   const query = {

@@ -3,7 +3,7 @@ import React from "react";
 /**
  *
  * @param {*} props
- * @returns a popup box
+ * @returns a popup box having a button, a title and a body.
  */
 const Modal = (props) => {
   const { modalButtonRef, modalTitle, modalBody } = props;

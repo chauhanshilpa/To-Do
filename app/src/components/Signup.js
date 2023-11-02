@@ -2,6 +2,11 @@ import React from "react";
 import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 
+/**
+ * 
+ * @param {*} props 
+ * @returns a form asking for email, username , password and confirm password fields.
+ */
 const Signup = (props) => {
   const {
     appBodyTheme,

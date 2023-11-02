@@ -7,7 +7,7 @@ import sound from "../audio/taskIsDone.wav";
 /**
  *
  * @param {*} props
- * @returns task item of respective list
+ * @returns task item of respective list.
  */
 const TaskItem = (props) => {
   const {
@@ -20,6 +20,7 @@ const TaskItem = (props) => {
   } = props;
 
   const [isTaskItemEditable, setIsTaskItemEditable] = useState(false);
+
   const { task_id } = taskInfo;
   const { text } = taskInfo.metadata;
   const { RECYCLE_BIN_LIST } = predefinedList;
@@ -27,8 +28,8 @@ const TaskItem = (props) => {
 
   /**
    *
-   * calls reverseTaskDone defined in api.js then calls getTaskListAndListName function defined in app.js to get task list and name with updated value of is_done property.
-   * if task is done, a done audio is played and text decoration of text will be changed to line-through
+   * calls reverseTaskDone function defined in api.js then calls getTaskListAndListName function defined in app.js to get task list and name with updated value of is_done property.
+   * if task is done, a sound is played and text decoration of text will be changed to line-through.
    */
   async function toggleTaskCompletion() {
     try {
@@ -50,8 +51,9 @@ const TaskItem = (props) => {
 
   /**
    *
-   * calls updateTask defined in db.js then it calls getTaskListAndListName defined in app.js which gets all the tasks and name of a particular list
+   * calls updateTask function defined in db.js then it calls getTaskListAndListName function defined in app.js which gets all the tasks and name of a particular list
    * @param {*} event
+   *ENTER_KEY_CODE is the keyCode of enter key. List name will be added on pressing enter key with no trailing and leading spaces. If name has all spaces then it will not be added into the list.
    */
   async function handleTaskUpdate(event) {
     try {
@@ -68,7 +70,7 @@ const TaskItem = (props) => {
 
   /**
    *
-   * calls deleteTask defined in db.js then calls getTaskListAndListName defined in app.js which gets all the tasks and name of a particular list
+   *calls deleteTask function defined in db.js then calls getTaskListAndListName defined in app.js which gets all the tasks and name of a particular list.
    */
   async function handleTaskDeletion() {
     try {
@@ -82,7 +84,7 @@ const TaskItem = (props) => {
 
   /**
    *
-   * taskInfo contains unique id of task, id of list it belongs to, is_done property, metadata which contains text of task and id of list it belongs to initially, date of creation and deleted property to see whether it is deleted or not.
+   *taskInfo contains unique id of task, id of list it belongs to, is_done property, metadata which contains text of task and id of task which will be same even after deletion, date of creation and deleted property to see whether it is deleted or not.
    */
   
   return (

@@ -36,18 +36,20 @@ export const client = new pg.Client({
 
 client.connect();
 
+// calls checkUserExistence defined in db.js which queries for userId get boolean value whether a user is registered or not
 app.get("/user_registered", async (req, res) => {
   const { email } = req.query;
   const response = await checkUserExistence(email);
   let registered;
-  if(response.length === 0){
-    registered = false
-  }else{
-    registered = true
+  if (response.length === 0) {
+    registered = false;
+  } else {
+    registered = true;
   }
-  res.send({registered})
+  res.send({ registered });
 });
 
+// calls addUser defined in db.js which queries to add a new user and some other details, then calls addPredefinedList defined in db.js which queries to add predefined list into user's account
 app.post("/sign_up", async (req, res) => {
   const { email, username, password } = req.body;
   const newUserId = uuidv4();
@@ -59,20 +61,7 @@ app.post("/sign_up", async (req, res) => {
   res.send();
 });
 
-app.get("/user_id", async (req, res) => {
-  const { email, username, password } = req.query;
-  const response = await getUserId(email, username, password);
-  const userId = response[0].user_id;
-  res.send({ userId });
-});
-
-// gets all user generated list and sends to frontend
-app.get("/list", async (req, res) => {
-  const { userId } = req.query;
-  const lists = await getSidebarLists(userId);
-  res.send({ lists });
-});
-
+// calls getUserId defined in db.js defined in db.js which queries to get if a user with these credentials exists or not. if user exists it has some value in response so if its length is not equal to zero isValid is true else false.
 app.get("/valid_user", async (req, res) => {
   const { email, username, password } = req.query;
   const response = await getUserId(email, username, password);
@@ -85,7 +74,22 @@ app.get("/valid_user", async (req, res) => {
   res.send({ isValid });
 });
 
-// get the name and task list of a particular list based on its unique id and sends them to frontend. For getting name, getListName function(Defined in db.js) is called which gets name of list and for getting tasks, getTaskList(Defined in db.js) is called which gets list of tasks from database.
+// calls getUserId defined in db.js which queries to get id of user with which credentials belongs to
+app.get("/user_id", async (req, res) => {
+  const { email, username, password } = req.query;
+  const response = await getUserId(email, username, password);
+  const userId = response[0].user_id;
+  res.send({ userId });
+});
+
+// calls getSidebarLists defined in db.js which queries to get all list of sidebar(including predefined lists and user generated lists) 
+app.get("/list", async (req, res) => {
+  const { userId } = req.query;
+  const lists = await getSidebarLists(userId);
+  res.send({ lists });
+});
+
+// get the name and task list of a particular list. For getting name, getListName function(Defined in db.js) is called which gets name of list and for getting tasks, getTaskList(Defined in db.js) is called which gets list of tasks from database.
 app.get("/list/:listId", async (req, res) => {
   const { listId } = req.params;
   let listName;
@@ -148,7 +152,7 @@ app.post("/restore_task", async (req, res) => {
   res.send();
 });
 
-//  calls deleteTaskPermanently defined in db.js which deleted task data from database
+// calls deleteTaskPermanently defined in db.js which delete task data from database
 app.delete("/permanent_deletion", async (req, res) => {
   const { task_id } = req.query;
   await deleteTaskPermanently(task_id);

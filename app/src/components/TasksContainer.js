@@ -4,7 +4,7 @@ import TaskItem from "./TaskItem";
 /**
  *
  * @param {*} props
- * @returns a container containing list of tasks
+ * @returns a container containing list of tasks of respective sidebar lists.
  */
 const TasksContainer = (props) => {
   const {

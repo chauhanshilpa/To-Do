@@ -5,12 +5,12 @@ import { Tooltip } from "react-tooltip";
 /**
  *
  * @param {*} props
- * @returns all list having sidebar list names and unique id or pathName which comes from user generated list
+ * @returns all list have names and unique id(pathName) which comes from user generated list
  */
 const SidebarList = (props) => {
   const { listData, listIndex, onListClick, handleSidebarListDeletion } = props;
 
-  // list contains list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation), deleted(exists or not)
+  // listData contains list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation), deleted(exists or not)
   return (
     <>
       <li onClick={() => onListClick(listData.list_id)}>

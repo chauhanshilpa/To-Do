@@ -12,6 +12,11 @@ const Login = (props) => {
     handleUserLogin,
   } = props;
 
+  /**
+ * 
+ * @param {*} props 
+ * @returns a form asking for email, username and password fields.
+ */
   return (
     <>
       <form
