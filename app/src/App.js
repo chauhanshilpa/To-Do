@@ -74,9 +74,8 @@ function App() {
 
   /**
    * 
-   * This function runs first time for a new user. 
-   * handleUserSignUp first checks whether password and confirm password are same, if not it shows an alert. If both are same then it checks whether a user is already registered or not. 
-   *If user is not registered, addNewUser function defined in api.js is called which adds a new user details and make two default lists. 
+   * This function runs first time when a user registers. 
+   * This function first checks whether password and confirm password are same, if not it shows an alert. If both are same then it checks whether a user is already registered or not. If user is not registered, addNewUser function defined in api.js is called which adds a new user details and make two default lists. 
    Then it calls getUserId function defined in api.js which gets user id, then set it in a variable.
    Further sidebarAllLists function is called defined in app.js which will set values of predefined lists so that a user can see it in UI. AT the end, isUserValid variable is set to to true so that user can use the application for maintaining its to dos.
    * @param {*} event 
@@ -134,7 +133,8 @@ function App() {
 
   /**
    * 
-   * calls getList function defined in api.js which fetches all lists of sidebar including predefined lists and user generated list and set accordingly.If there is failure in API call, a pop up will be shown.
+   * calls getList function defined in api.js which fetches all lists of sidebar including predefined lists and user generated list.Then set the variable accordingly.
+   * If there is failure in API call, a pop up will be shown.
    */
   async function sidebarAllLists(userId) {
     try {
@@ -211,7 +211,8 @@ function App() {
    * calls a function addTask defined in api.js which sends a post request to add a task and then calls getTaskListAndListName defined in app.js to get the name and task list of that particular list.
    * If there is a failure in api call, it catches the error and shows a pop up.
    * @param {*} event
-   * ENTER_KEY_CODE is the keyCode of enter key defined in Constants.js. Task will be added on pressing enter key. If task has all spaces then it will not be added into the list.
+   * ENTER_KEY_CODE is the keyCode of enter key defined in Constants.js. 
+   * Task will be added on pressing enter key. It also removes all trailing and leading space.If task has all spaces then it will not be added into the list.
    */
   async function handleNewTask(event) {
     if (event.keyCode === ENTER_KEY_CODE) {
@@ -253,24 +254,12 @@ function App() {
 
   /**
    *
-   * calls deleteSidebarList defined in api.js, post the request to delete list from database and then calls getSidebarList to get updated list. It catches the error and shows a pop up if there is a failure in api call.
+   * calls deleteSidebarList function defined in api.js for deletion a list and then calls getSidebarList to get updated list. It catches the error and shows a pop up if there is a failure in api call.
    * @param {String} list_id   It is unique id of list
-   * if a current list is deleted, we will move to previous list as current list if current list is the first list, we will move to default list path.
    */
   async function handleSidebarListDeletion(event, listId, listIndex) {
     event.stopPropagation();
     try {
-      // let newListId;
-      // if (currentListUUID === sidebarUserGeneratedList[listIndex].listId) {
-      //   if (listIndex === 0) {
-      //     newListId = DEFAULT_LIST.id;
-      //   } else {
-      //     newListId = sidebarUserGeneratedList[listIndex - 1].listId;
-      //   }
-      //   setCurrentListUUID(newListId);
-      //   await getTaskListAndListName(newListId);
-      // }
-
       await deleteSidebarList(listId, userId);
       await sidebarAllLists(userId);
     } catch (error) {
@@ -280,9 +269,9 @@ function App() {
 
   /**
    * 
-   * When application loads, first a signup form will be open by default or one can go to login form also if user is valid. Once a user form is submitted with valid credentials, tasks managing application can be seen.
-   * If user is valid, there is a route set for Recycle Bin separately as its user interface and passed parameters were different from other lists. All other routes are dynamic which changes on the basis of list unique id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
-   * @return navbar, sidebar, header, recycle bin container and other list containers based on path inside a router, a login and signup form based on a condition.
+   * When application loads, first a signup form will be open by default or one can go to login form also, can login if user is valid. Once a user form is submitted with valid credentials, task managing application can be seen.
+   * If user is valid, there is a route set for Recycle Bin separately as its user interface(no header and different svg logo) is different from other lists. All other routes are dynamic which changes on the basis of list unique id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
+   * @return navbar, sidebar, header, recycle bin container and other list containers based on path inside a router, a login and signup form.
    */
   return (
     <>

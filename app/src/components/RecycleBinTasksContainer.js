@@ -24,7 +24,7 @@ const RecycleBinTasksContainer = (props) => {
     >
       <div className="container tasks-container">
         {recycleBinTaskList.length > 0 ? (
-          recycleBinTaskList.map((taskInfo, index) => (
+          recycleBinTaskList.map((taskInfo) => (
             <RecycleBinTaskItem
               key={taskInfo.task_id}
               predefinedList={predefinedList}

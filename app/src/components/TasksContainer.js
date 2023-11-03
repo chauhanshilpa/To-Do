@@ -23,7 +23,7 @@ const TasksContainer = (props) => {
     >
       <div className={`container tasks-container`}>
         {taskList.length > 0 &&
-          taskList.map((taskInfo, taskIndex) => (
+          taskList.map((taskInfo) => (
             <TaskItem
               key={taskInfo.task_id}
               appBodyTheme={appBodyTheme}

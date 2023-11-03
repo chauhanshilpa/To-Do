@@ -20,7 +20,7 @@ export async function userRegistered(email) {
 
 /**
  * 
- * sends a post request to backend to add new user details.
+ * sends a post request to backend to add new user's details.
  * @param {String} email        email id of user
  * @param {String} username     name of user
  * @param {String} password     password of user
@@ -130,7 +130,7 @@ export async function deleteSidebarList(listId, userId) {
 /**
  *
  * sends a post request to backend to add task in a respective list.
- * @param {String} inputTask  text of task to add(which is typed before pressing enter in input field)
+ * @param {String} inputTask        text of task to add
  * @param {String} currentListUUID  unique id of current open list in which tasks are being added
  */
 export async function addTask(inputTask, currentListUUID) {
@@ -144,7 +144,7 @@ export async function addTask(inputTask, currentListUUID) {
 /**
  *
  * sends a patch request to backend to update text of a particular task based on task_id.
- * @param {String} task_id  unique id of task
+ * @param {String} task_id       unique id of task
  * @param {String} newInnerText  new text of task
  */
 export async function updateTask(task_id, newInnerText) {
@@ -187,8 +187,8 @@ export async function reverseTaskDone(task_id, currentIsDone) {
 
 /**
  *
- * sends a post request to restore a task to its original list before deletion.
- * @param {String} task_id       unique id of a task
+ * sends a post request to restore a task to its original list it was in before deletion.
+ * @param {String} task_id            unique id of a task
  * @param {String} root_list_task_id  unique id of task before deletion
  */
 export async function restoreTaskFromRecycleBin(task_id, root_list_task_id) {

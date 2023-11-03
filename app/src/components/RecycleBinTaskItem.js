@@ -23,7 +23,7 @@ const RecycleBinTaskItem = (props) => {
 
   /**
    *
-   *calls restoreTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated task list of recycle bin.
+   *calls restoreTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated tasks list of recycle bin.
    */
   async function handleTaskRestoration() {
     try {
@@ -36,7 +36,7 @@ const RecycleBinTaskItem = (props) => {
 
   /**
    *
-   * calls deleteTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated task list of recycle bin.
+   * calls deleteTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated tasks list of recycle bin.
    */
   async function handleTaskPermanentDeletion() {
     try {

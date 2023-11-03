@@ -19,6 +19,7 @@ export async function checkUserExistence(email) {
 }
 
 /**
+ * 
  * queries to add a new user data
  * @param {String} newUserId    unique id of a new user
  * @param {String} email        email id of a user
@@ -35,6 +36,7 @@ export async function addUser(newUserId, email, username, password) {
 }
 
 /**
+ * 
  * queries to add predefined list of a new user
  * @param {String} newUserId    user id of a newly added user
  * @param {String} listName     name of predefined list
@@ -191,7 +193,7 @@ export async function updateTask(task_id, updated_text) {
 }
 
 /**
- * 
+ *
  * queries to add a particular task into recycle bin list
  * @param {String} task_id   unique id of task
  * @param {String} recycle_bin_list_id   unique id of recycle bin list
