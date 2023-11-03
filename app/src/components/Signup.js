@@ -26,6 +26,7 @@ const Signup = (props) => {
             : THEME.LIGHT.className
         }`}
         onSubmit={handleUserSignUp}
+        autoComplete="off"
       >
         <h4 className="text-center">Signup</h4>
         <div className="mb-3">

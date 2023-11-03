@@ -66,20 +66,29 @@ function App() {
     }, 1500);
   };
 
-  function handleUsernameChange(event) {
-    setCredentials({ ...credentials, username: event.target.value });
+  function handleMailChange(event) {
+    setCredentials({ ...credentials, email: event.target.value.toLowerCase() });
   }
 
-  function handleMailChange(event) {
-    setCredentials({ ...credentials, email: event.target.value });
+  function handleUsernameChange(event) {
+    setCredentials({
+      ...credentials,
+      username: event.target.value.toLowerCase(),
+    });
   }
 
   function handlePasswordChange(event) {
-    setCredentials({ ...credentials, password: event.target.value });
+    setCredentials({
+      ...credentials,
+      password: event.target.value.toLowerCase(),
+    });
   }
 
   function handleConfirmPasswordChange(event) {
-    setCredentials({ ...credentials, confirmPassword: event.target.value });
+    setCredentials({
+      ...credentials,
+      confirmPassword: event.target.value.toLowerCase(),
+    });
   }
 
   /**

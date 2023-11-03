@@ -26,6 +26,7 @@ const Login = (props) => {
             : THEME.LIGHT.className
         }`}
         onSubmit={handleUserLogin}
+        autoComplete="off"
       >
         <h4 className="text-center">Login</h4>
         <div className="mb-3">
