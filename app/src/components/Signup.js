@@ -3,8 +3,8 @@ import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 
 /**
- * 
- * @param {*} props 
+ *
+ * @param {*} props
  * @returns a form asking for email, username , password and confirm password fields.
  */
 const Signup = (props) => {
@@ -27,6 +27,7 @@ const Signup = (props) => {
         }`}
         onSubmit={handleUserSignUp}
       >
+        <h4 className="text-center">Signup</h4>
         <div className="mb-3">
           <input
             type="email"

@@ -12,11 +12,11 @@ const Login = (props) => {
     handleUserLogin,
   } = props;
 
-/**
- * 
- * @param {*} props 
- * @returns a form asking for email, username and password fields.
- */
+  /**
+   *
+   * @param {*} props
+   * @returns a form asking for email, username and password fields.
+   */
   return (
     <>
       <form
@@ -27,6 +27,7 @@ const Login = (props) => {
         }`}
         onSubmit={handleUserLogin}
       >
+        <h4 className="text-center">Login</h4>
         <div className="mb-3">
           <input
             type="email"

@@ -7,7 +7,7 @@ body {
 }
 
 .register {
-  margin: 30vh auto 0;
+  margin: 5vh auto 0;
   width: 80vh;
   border-radius: 15px;
   background-color: rgb(193, 191, 191);
@@ -28,6 +28,11 @@ body {
 
 .register input {
   background-color: #eeeeee;
+}
+
+.notification{
+  margin-top: 3rem;
+  height: 5.5rem;
 }
 
 .modal {

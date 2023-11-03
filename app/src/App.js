@@ -11,6 +11,7 @@ import Modal from "./components/Modal";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import { THEME, ENTER_KEY_CODE } from "./Constants";
+import Alert from "./components/Alert";
 import {
   userRegistered,
   addNewUser,
@@ -30,7 +31,7 @@ import {
 function App() {
   const [appBodyTheme, setAppBodyTheme] = useState(THEME.LIGHT.name);
   const [inputTask, setInputTask] = useState("");
-
+  const [alert, setAlert] = useState(null);
   const [credentials, setCredentials] = useState({
     email: "",
     username: "",
@@ -43,7 +44,6 @@ function App() {
     DEFAULT_LIST: { id: "", name: "" },
     RECYCLE_BIN_LIST: { id: "", name: "" },
   });
-
   const [sidebarOpenState, setSidebarOpenState] = useState(false);
   const [sidebarTaskListName, setSidebarTaskListName] = useState("");
   const [currentListUUID, setCurrentListUUID] = useState();
@@ -55,6 +55,16 @@ function App() {
   let modalButtonRef = useRef();
 
   const { DEFAULT_LIST, RECYCLE_BIN_LIST } = predefinedList;
+
+  const showAlert = (type, message) => {
+    setAlert({
+      type: type,
+      message: message,
+    });
+    setTimeout(() => {
+      setAlert(null);
+    }, 1500);
+  };
 
   function handleUsernameChange(event) {
     setCredentials({ ...credentials, username: event.target.value });
@@ -91,11 +101,14 @@ function App() {
         const response = await getUserId(email, username, password);
         setUserId(response.data.userId);
         await sidebarAllLists(response.data.userId);
-        setIsUserValid(true);
+        showAlert("success", ": User registered successfully!");
+        setTimeout(() => {
+          setIsUserValid(true);
+        }, 1500);
         // setCurrentListUUID(DEFAULT_LIST.id)
         // getTaskListAndListName(DEFAULT_LIST.id);
       } else {
-        alert("User with this email already exists.");
+        showAlert("warning", ": User with this email already exists.");
       }
       setCredentials({
         email: "",
@@ -104,35 +117,38 @@ function App() {
         confirmPassword: "",
       });
     } else {
-      alert("Confirm password is different from password. Please check it again.");
+      showAlert("warning", ": Confirm password is different from password.");
     }
   }
 
   /**
-   * 
+   *
    * this function runs for already existing users with correct credentials.
    * first of all this function check user validity and if a user is valid(having correct credentials), it calls getUserId defined in api.js to get user id and calls sidebarAllLists defined in App.js to get all list present in user's account.
-   * @param {*} event 
+   * @param {*} event
    */
   async function handleUserLogin(event) {
     event.preventDefault();
     const { email, username, password } = credentials;
     const response = await checkUserValidity(email, username, password);
-    setIsUserValid(response.data.isValid);
+    setTimeout(() => {
+      setIsUserValid(response.data.isValid);
+    }, 1500);
     if (response.data.isValid) {
+      showAlert("success", ": User logged in successfully!");
       const response = await getUserId(email, username, password);
       setUserId(response.data.userId);
       await sidebarAllLists(response.data.userId);
       // setCurrentListUUID(DEFAULT_LIST.id)
       // getTaskListAndListName(DEFAULT_LIST.id);
     } else {
-      alert("Wrong user details.");
+      showAlert("warning", ": Wrong user details.");
     }
     setCredentials({ email: "", username: "", password: "" });
   }
 
   /**
-   * 
+   *
    * calls getList function defined in api.js which fetches all lists of sidebar including predefined lists and user generated list.Then set the variable accordingly.
    * If there is failure in API call, a pop up will be shown.
    */
@@ -179,7 +195,7 @@ function App() {
   }
 
   /**
-   * 
+   *
    * This function runs while a sidebar list is clicked, sets it as current list and shows all the data of that list only(its task list and name of list).
    * @param {String} listId    It is unique id of list
    */
@@ -207,11 +223,11 @@ function App() {
   }
 
   /**
-   * 
+   *
    * calls a function addTask defined in api.js which sends a post request to add a task and then calls getTaskListAndListName defined in app.js to get the name and task list of that particular list.
    * If there is a failure in api call, it catches the error and shows a pop up.
    * @param {*} event
-   * ENTER_KEY_CODE is the keyCode of enter key defined in Constants.js. 
+   * ENTER_KEY_CODE is the keyCode of enter key defined in Constants.js.
    * Task will be added on pressing enter key. It also removes all trailing and leading space.If task has all spaces then it will not be added into the list.
    */
   async function handleNewTask(event) {
@@ -268,7 +284,7 @@ function App() {
   }
 
   /**
-   * 
+   *
    * When application loads, first a signup form will be open by default or one can go to login form also, can login if user is valid. Once a user form is submitted with valid credentials, task managing application can be seen.
    * If user is valid, there is a route set for Recycle Bin separately as its user interface(no header and different svg logo) is different from other lists. All other routes are dynamic which changes on the basis of list unique id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
    * @return navbar, sidebar, header, recycle bin container and other list containers based on path inside a router, a login and signup form.
@@ -285,39 +301,55 @@ function App() {
           modalTitle="Error"
           modalBody="Oops, something went wrong. Please try again later."
         />
+        {sidebarOpenState && (
+          <Sidebar
+            appBodyTheme={appBodyTheme}
+            sidebarOpenState={sidebarOpenState}
+            onListClick={onListClick}
+            predefinedList={predefinedList}
+            sidebarTaskListName={sidebarTaskListName}
+            handleSidebarListChange={handleSidebarListChange}
+            handleNewSidebarList={handleNewSidebarList}
+            sidebarUserGeneratedList={sidebarUserGeneratedList}
+            handleSidebarListDeletion={handleSidebarListDeletion}
+          />
+        )}
         {isUserValid === false ? (
-          <Routes>
-            <Route path="/" element={<Navigate to="/signup" />} />
-            <Route
-              exact
-              path="/login"
-              element={
-                <Login
-                  appBodyTheme={appBodyTheme}
-                  handleUserLogin={handleUserLogin}
-                  credentials={credentials}
-                  handleUsernameChange={handleUsernameChange}
-                  handleMailChange={handleMailChange}
-                  handlePasswordChange={handlePasswordChange}
-                />
-              }
-            />
-            <Route
-              exact
-              path="/signup"
-              element={
-                <Signup
-                  appBodyTheme={appBodyTheme}
-                  handleUserSignUp={handleUserSignUp}
-                  credentials={credentials}
-                  handleUsernameChange={handleUsernameChange}
-                  handleMailChange={handleMailChange}
-                  handlePasswordChange={handlePasswordChange}
-                  handleConfirmPasswordChange={handleConfirmPasswordChange}
-                />
-              }
-            />
-          </Routes>
+          <>
+            <Alert alert={alert} />
+            <Routes>
+              <Route path="/" element={<Navigate to="/signup" />} />
+              <Route
+                exact
+                path="/login"
+                element={
+                  <Login
+                    appBodyTheme={appBodyTheme}
+                    handleUserLogin={handleUserLogin}
+                    credentials={credentials}
+                    handleUsernameChange={handleUsernameChange}
+                    handleMailChange={handleMailChange}
+                    handlePasswordChange={handlePasswordChange}
+                  />
+                }
+              />
+              <Route
+                exact
+                path="/signup"
+                element={
+                  <Signup
+                    appBodyTheme={appBodyTheme}
+                    handleUserSignUp={handleUserSignUp}
+                    credentials={credentials}
+                    handleUsernameChange={handleUsernameChange}
+                    handleMailChange={handleMailChange}
+                    handlePasswordChange={handlePasswordChange}
+                    handleConfirmPasswordChange={handleConfirmPasswordChange}
+                  />
+                }
+              />
+            </Routes>
+          </>
         ) : (
           <>
             <Header
@@ -370,19 +402,6 @@ function App() {
               />
             </Routes>
           </>
-        )}
-        {sidebarOpenState && (
-          <Sidebar
-            appBodyTheme={appBodyTheme}
-            sidebarOpenState={sidebarOpenState}
-            onListClick={onListClick}
-            predefinedList={predefinedList}
-            sidebarTaskListName={sidebarTaskListName}
-            handleSidebarListChange={handleSidebarListChange}
-            handleNewSidebarList={handleNewSidebarList}
-            sidebarUserGeneratedList={sidebarUserGeneratedList}
-            handleSidebarListDeletion={handleSidebarListDeletion}
-          />
         )}
       </BrowserRouter>
     </>
