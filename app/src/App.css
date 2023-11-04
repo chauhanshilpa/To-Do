@@ -30,7 +30,23 @@ body {
   background-color: #eeeeee;
 }
 
-.notification{
+.form-lower {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar-links {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 350;
+}
+
+.navbar-brand:hover,
+.navbar-links:hover {
+  color: rgb(208, 208, 212);
+}
+
+.notification {
   margin-top: 3rem;
   height: 5.5rem;
 }

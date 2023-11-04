@@ -16,6 +16,8 @@ const Signup = (props) => {
     handlePasswordChange,
     handleConfirmPasswordChange,
     handleUserSignUp,
+    checkedClearDataOption,
+    handleClearFormData,
   } = props;
   return (
     <>
@@ -75,10 +77,24 @@ const Signup = (props) => {
             onChange={handleConfirmPasswordChange}
           />
         </div>
-        <p>
-          Already a user?&nbsp;
-          <Link to="/login">log in</Link>
-        </p>
+        <div className="form-lower">
+          <p>
+            Already a user?&nbsp;
+            <Link to="/login">log in</Link>
+          </p>
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="defaultCheck1"
+              checked={checkedClearDataOption}
+              onChange={handleClearFormData}
+            />
+            <label className="form-check-label" for="defaultCheck1">
+              clear field
+            </label>
+          </div>
+        </div>
         <button type="submit" className="btn btn-primary">
           Register
         </button>

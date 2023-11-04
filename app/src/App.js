@@ -38,6 +38,7 @@ function App() {
     password: "",
     confirmPassword: "",
   });
+  const [checkedClearDataOption, setCheckedClearDataOption] = useState(false);
   const [userId, setUserId] = useState("");
   const [isUserValid, setIsUserValid] = useState(false);
   const [predefinedList, setPredefinedList] = useState({
@@ -56,6 +57,12 @@ function App() {
 
   const { DEFAULT_LIST, RECYCLE_BIN_LIST } = predefinedList;
 
+  /**
+   *
+   * This function is setting the value of alert to a object having type of alert and a message.Then there is setTimeout function which set the value of alert after defined  millisecond time.
+   * @param {String} type
+   * @param {String} message
+   */
   const showAlert = (type, message) => {
     setAlert({
       type: type,
@@ -113,7 +120,7 @@ function App() {
         showAlert("success", ": User registered successfully!");
         setTimeout(() => {
           setIsUserValid(true);
-        }, 1500);
+        }, 1000);
         // setCurrentListUUID(DEFAULT_LIST.id)
         // getTaskListAndListName(DEFAULT_LIST.id);
       } else {
@@ -142,7 +149,7 @@ function App() {
     const response = await checkUserValidity(email, username, password);
     setTimeout(() => {
       setIsUserValid(response.data.isValid);
-    }, 1500);
+    }, 1000);
     if (response.data.isValid) {
       showAlert("success", ": User logged in successfully!");
       const response = await getUserId(email, username, password);
@@ -154,6 +161,29 @@ function App() {
       showAlert("warning", ": Wrong user details.");
     }
     setCredentials({ email: "", username: "", password: "" });
+  }
+
+  /**
+   * clears all the field data of form
+   */
+  function handleClearFormData() {
+    setCredentials({
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    });
+    setCheckedClearDataOption(true);
+    setTimeout(() => {
+      setCheckedClearDataOption(false);
+    }, 500);
+  }
+
+  /**
+   * this function runs when a user log out from application.
+   */
+  function handleUserLogout() {
+    setIsUserValid(false);
   }
 
   /**
@@ -294,8 +324,9 @@ function App() {
 
   /**
    *
-   * When application loads, first a signup form will be open by default or one can go to login form also, can login if user is valid. Once a user form is submitted with valid credentials, task managing application can be seen.
-   * If user is valid, there is a route set for Recycle Bin separately as its user interface(no header and different svg logo) is different from other lists. All other routes are dynamic which changes on the basis of list unique id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
+   * When application loads, first a signup form will be open by default or one can go to login form also, can login if user is valid. 
+   * Once a user form is submitted with valid credentials, task managing application can be seen.
+   * If user is valid, navbar has logout option also. In sidebar there is a route set for Recycle Bin separately as its user interface(no header and different svg logo) is different from other lists. All other routes are dynamic which changes on the basis of list unique id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
    * @return navbar, sidebar, header, recycle bin container and other list containers based on path inside a router, a login and signup form.
    */
   return (
@@ -304,25 +335,14 @@ function App() {
         <Navbar
           handleLightAndDarkMode={handleLightAndDarkMode}
           appBodyTheme={appBodyTheme}
+          isUserValid={isUserValid}
+          handleUserLogout={handleUserLogout}
         />
         <Modal
           modalButtonRef={modalButtonRef}
           modalTitle="Error"
           modalBody="Oops, something went wrong. Please try again later."
         />
-        {sidebarOpenState && (
-          <Sidebar
-            appBodyTheme={appBodyTheme}
-            sidebarOpenState={sidebarOpenState}
-            onListClick={onListClick}
-            predefinedList={predefinedList}
-            sidebarTaskListName={sidebarTaskListName}
-            handleSidebarListChange={handleSidebarListChange}
-            handleNewSidebarList={handleNewSidebarList}
-            sidebarUserGeneratedList={sidebarUserGeneratedList}
-            handleSidebarListDeletion={handleSidebarListDeletion}
-          />
-        )}
         {isUserValid === false ? (
           <>
             <Alert alert={alert} />
@@ -339,6 +359,8 @@ function App() {
                     handleUsernameChange={handleUsernameChange}
                     handleMailChange={handleMailChange}
                     handlePasswordChange={handlePasswordChange}
+                    checkedClearDataOption={checkedClearDataOption}
+                    handleClearFormData={handleClearFormData}
                   />
                 }
               />
@@ -354,6 +376,8 @@ function App() {
                     handleMailChange={handleMailChange}
                     handlePasswordChange={handlePasswordChange}
                     handleConfirmPasswordChange={handleConfirmPasswordChange}
+                    checkedClearDataOption={checkedClearDataOption}
+                    handleClearFormData={handleClearFormData}
                   />
                 }
               />
@@ -361,6 +385,19 @@ function App() {
           </>
         ) : (
           <>
+            {sidebarOpenState && (
+              <Sidebar
+                appBodyTheme={appBodyTheme}
+                sidebarOpenState={sidebarOpenState}
+                onListClick={onListClick}
+                predefinedList={predefinedList}
+                sidebarTaskListName={sidebarTaskListName}
+                handleSidebarListChange={handleSidebarListChange}
+                handleNewSidebarList={handleNewSidebarList}
+                sidebarUserGeneratedList={sidebarUserGeneratedList}
+                handleSidebarListDeletion={handleSidebarListDeletion}
+              />
+            )}
             <Header
               appBodyTheme={appBodyTheme}
               toggleSidebarOpenState={toggleSidebarOpenState}
@@ -368,6 +405,7 @@ function App() {
               listName={currentListName}
             />
             <Routes>
+              {/* <Route path="/" element={<Navigate to={DEFAULT_LIST.id} />} */}
               <Route
                 exact
                 path="/:currentListUUID"
