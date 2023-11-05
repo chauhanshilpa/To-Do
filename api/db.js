@@ -84,8 +84,8 @@ export async function getSidebarLists(user_id) {
     text: "SELECT * FROM list WHERE deleted = $1 AND user_id = $2",
     values: [false, user_id],
   };
-  const response = await client.query(query);
-  return response.rows;
+  const response = await client.query(query); 
+  return response.rows; 
 }
 
 /**

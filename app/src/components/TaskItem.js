@@ -88,7 +88,6 @@ const TaskItem = (props) => {
    */
   
   return (
-    <>
       <div
         className={`task-item ${
           appBodyTheme === THEME.DARK.name && THEME.DARK.className
@@ -157,7 +156,6 @@ const TaskItem = (props) => {
           <Tooltip className="tooltip" id="delete-task" />
         </div>
       </div>
-    </>
   );
 };
 
