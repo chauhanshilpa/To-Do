@@ -1,7 +1,6 @@
 import React from "react";
 
 /**
- *
  * @param {*} props
  * @returns a type of alert with a message.
  */

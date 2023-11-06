@@ -112,7 +112,7 @@ app.delete("/delete_list", async (req, res) => {
   const { listId, userId } = req.query;
   await deleteSidebarList(listId, userId);
   res.send();
-});
+}); 
 
 // calls addTask defined in db.js which queries to post a new task into database
 app.post("/create_task", async (req, res) => {

@@ -1,11 +1,10 @@
 import { client } from "./index.js";
 import { v4 as uuidv4 } from "uuid";
-import { taskMetadata } from "./dbClassModel.js";
+import { TaskMetadata } from "./dbClassModel.js";
 
-// db.js contains all functions which send queries to database
+// db.js contains functions which send queries to database
 
 /**
- *
  * @param {String} email   email of a user
  * @returns email of user (it may have or may have not)
  */
@@ -19,7 +18,6 @@ export async function checkUserExistence(email) {
 }
 
 /**
- * 
  * queries to add a new user data
  * @param {String} newUserId    unique id of a new user
  * @param {String} email        email id of a user
@@ -36,7 +34,6 @@ export async function addUser(newUserId, email, username, password) {
 }
 
 /**
- * 
  * queries to add predefined list of a new user
  * @param {String} newUserId    user id of a newly added user
  * @param {String} listName     name of predefined list
@@ -59,7 +56,6 @@ export async function addPredefinedList(newUserId, listName) {
 }
 
 /**
- *
  * @param {String} email      email id of a user
  * @param {String} username   name of a user
  * @param {String} password   password of a user
@@ -75,7 +71,6 @@ export async function getUserId(email, username, password) {
 }
 
 /**
- *
  * @param {String} user_id     user id of a newly added user
  * @returns all sidebar lists including predefined lists and user generated lists
  */
@@ -89,7 +84,6 @@ export async function getSidebarLists(user_id) {
 }
 
 /**
- *
  * @param {String} list_id    unique id of a list
  * @returns name of list
  */
@@ -103,7 +97,6 @@ export async function getListName(list_id) {
 }
 
 /**
- *
  * @param {String} list_id    unique id of list
  * @returns list of tasks
  */
@@ -117,7 +110,6 @@ export async function getTaskList(list_id) {
 }
 
 /**
- *
  * queries to add new list into the database having columns list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation of list), deleted(deleted or exists)
  * @param {String} list_id      unique id of list
  * @param {String} user_id      unique id of a user
@@ -140,7 +132,6 @@ export async function addSidebarList(list_id, user_id, list_name) {
 }
 
 /**
- *
  * queries to change list deleted value to true so that it is not shown in sidebar anymore
  * @param {String} list_id   unique id of list
  * @param {String} user_id   unique id of user
@@ -155,7 +146,6 @@ export async function deleteSidebarList(list_id, user_id) {
 }
 
 /**
- *
  * queries to add new task in tasks table of database having columns task_id, list_id, is_done(true or false), metadata(have its text and task_id), created(date of creation of task) and deleted(deleted or exists)
  * @param {String} list_id   unique id of list
  * @param {String} text    text of task
@@ -168,7 +158,7 @@ export async function addTask(list_id, text, task_id) {
       task_id,
       list_id,
       false,
-      new taskMetadata(task_id, text),
+      new TaskMetadata(task_id, text),
       new Date().toUTCString(),
       false,
     ],
@@ -178,7 +168,6 @@ export async function addTask(list_id, text, task_id) {
 }
 
 /**
- *
  * queries to update previous text of a task with updated_text, having task_id
  * @param {String} task_id    unique id of task
  * @param {String} updated_text   updated text of task
@@ -193,7 +182,6 @@ export async function updateTask(task_id, updated_text) {
 }
 
 /**
- *
  * queries to add a particular task into recycle bin list
  * @param {String} task_id   unique id of task
  * @param {String} recycle_bin_list_id   unique id of recycle bin list
@@ -209,7 +197,6 @@ export async function addTaskToRecycleBin(task_id, recycle_bin_list_id) {
 }
 
 /**
- *
  * queries to update deleted property of task as true so that it won't appear in that list
  * @param {String} task_id    unique id of a task
  */
@@ -223,7 +210,6 @@ export async function deleteTask(task_id) {
 }
 
 /**
- *
  * queries to reverse is_done property of task
  * @param {String} task_id             unique id of task
  * @param {Boolean} currentIsDone      boolean value of task is_done property before changing
@@ -239,7 +225,6 @@ export async function reverseIsDone(task_id, currentIsDone) {
 }
 
 /**
- *
  * updates deleted property to false so that it can be seen in that list
  * @param {String} root_list_task_id   unique id of task that present task had before deletion
  */
@@ -253,7 +238,6 @@ export async function moveTaskToRootList(root_list_task_id) {
 }
 
 /**
- *
  * update deleted property to true so that it won't present in recycle bin anymore
  * @param {String} task_id    unique id of task
  */
@@ -267,7 +251,6 @@ export async function removeTaskFromRecycleBin(task_id) {
 }
 
 /**
- *
  * delete task from recycle bin list
  * @param {String} task_id   unique id of task
  */

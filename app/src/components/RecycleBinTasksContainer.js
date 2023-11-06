@@ -2,11 +2,11 @@ import React from "react";
 import RecycleBinTaskItem from "./RecycleBinTaskItem";
 
 /**
- *
  * @param {*} props
  * @returns a container which contains list of tasks in Recycle Bin. If there is no task, a message will be displayed.
  */
 const RecycleBinTasksContainer = (props) => {
+  
   const {
     appBodyTheme,
     sidebarOpenState,

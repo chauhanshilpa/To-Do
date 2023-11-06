@@ -1,13 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
+import { useNavigate } from "react-router-dom";
 
 /**
- *
  * @param {*} props
  * @returns all list have names and unique id(pathName) which comes from user generated list
  */
 const SidebarList = (props) => {
+  const navigate = useNavigate();
   const { listData, listIndex, onListClick, handleSidebarListDeletion } = props;
 
   // listData contains list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation), deleted(exists or not)
@@ -41,7 +42,7 @@ const SidebarList = (props) => {
           className="bi bi-trash3"
           viewBox="0 0 16 16"
           onClick={(event) =>
-            handleSidebarListDeletion(event, listData.list_id, listIndex)
+            handleSidebarListDeletion(event, listData.list_id, listIndex, navigate)
           }
           data-tooltip-id="delete-list"
           data-tooltip-content="Delete"

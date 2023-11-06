@@ -4,9 +4,8 @@ import { restoreTaskFromRecycleBin, deleteTaskFromRecycleBin } from "../api";
 import { Tooltip } from "react-tooltip";
 
 /**
- *
  * @param {*} props
- * @returns task items which presents in Recycle Bin.
+ * @returns task items which are present in Recycle Bin.
  */
 const RecycleBinTaskItem = (props) => {
   const {
@@ -22,7 +21,6 @@ const RecycleBinTaskItem = (props) => {
   const { RECYCLE_BIN_LIST } = predefinedList;
 
   /**
-   *
    *calls restoreTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated tasks list of recycle bin.
    */
   async function handleTaskRestoration() {
@@ -35,7 +33,6 @@ const RecycleBinTaskItem = (props) => {
   }
 
   /**
-   *
    * calls deleteTaskFromRecycleBin defined in db.js then calls getTaskListAndListName to get name of list and updated tasks list of recycle bin.
    */
   async function handleTaskPermanentDeletion() {
@@ -48,7 +45,6 @@ const RecycleBinTaskItem = (props) => {
   }
 
   /**
-   *
    * taskInfo contains unique id of task, id of list it belongs to, is_done property, metadata which contains text of task and id of task it had initially(before deletion), date of creation and deleted property to see whether it is deleted or not.
    */
   return (

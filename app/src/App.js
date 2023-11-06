@@ -21,7 +21,6 @@ import {
 } from "./api";
 
 /**
- *
  * It is the entry point of To Do application
  */
 function App() {
@@ -34,7 +33,7 @@ function App() {
     password: "",
     confirmPassword: "",
   });
-  const [checkedClearDataOption, setCheckedClearDataOption] = useState(false);
+  const [clearDataOptionChecked, setClearDataOptionChecked] = useState(false);
   const [userId, setUserId] = useState("");
   const [isUserValid, setIsUserValid] = useState(false);
   const [predefinedList, setPredefinedList] = useState({
@@ -49,17 +48,26 @@ function App() {
   const [taskList, setTaskList] = useState([]);
   const [recycleBinTaskList, setRecycleBinTaskList] = useState([]);
 
+  let defaultListId = useRef();
   let modalButtonRef = useRef();
 
   const { DEFAULT_LIST, RECYCLE_BIN_LIST } = predefinedList;
 
-  async function fetchInitialData(userId) {
+  /**
+   * this function fetches data when a user log in or signup.Data like lists of sidebar, taskList and name of default list(we are taking its reference value from sidebarAllLists).
+   * When a user login or signup the default list will be open first and sets its currentListUUID as default list id)
+   * @param {String} userId
+   * @param {Function} navigate
+   */
+  async function fetchInitialData(userId, navigate) {
     await sidebarAllLists(userId);
+    navigate(`/${defaultListId.current}`);
+    await getTaskListAndListName(defaultListId.current);
+    setCurrentListUUID(defaultListId.current);
   }
 
   /**
-   *
-   * This function is setting the value of alert to a object having type of alert and a message.Then there is setTimeout function which set the value of alert after defined  millisecond time.
+   * This function is setting the value of alert to a object having type of alert and a message.Then there is setTimeout function which set the value of alert to null after defined  millisecond time.
    * @param {String} type
    * @param {String} message
    */
@@ -70,7 +78,7 @@ function App() {
     });
     setTimeout(() => {
       setAlert(null);
-    }, 1500);
+    }, 2000);
   };
 
   function handleMailChange(event) {
@@ -80,21 +88,21 @@ function App() {
   function handleUsernameChange(event) {
     setCredentials({
       ...credentials,
-      username: event.target.value.toLowerCase(),
+      username: event.target.value,
     });
   }
 
   function handlePasswordChange(event) {
     setCredentials({
       ...credentials,
-      password: event.target.value.toLowerCase(),
+      password: event.target.value,
     });
   }
 
   function handleConfirmPasswordChange(event) {
     setCredentials({
       ...credentials,
-      confirmPassword: event.target.value.toLowerCase(),
+      confirmPassword: event.target.value,
     });
   }
 
@@ -108,26 +116,21 @@ function App() {
       password: "",
       confirmPassword: "",
     });
-    setCheckedClearDataOption(true);
+    setClearDataOptionChecked(true);
     setTimeout(() => {
-      setCheckedClearDataOption(false);
+      setClearDataOptionChecked(false);
     }, 500);
   }
 
   /**
-   * this function runs when a user log out from application.
+   * this function runs when a user logs out from application.
    */
   function handleUserLogout() {
     setIsUserValid(false);
-    setPredefinedList({
-      DEFAULT_LIST: { id: "", name: "" },
-      RECYCLE_BIN_LIST: { id: "", name: "" },
-    });
-    setUserId("")
+    setUserId("");
   }
 
   /**
-   *
    * calls getList function defined in api.js which fetches all lists of sidebar including predefined lists and user generated list.Then set the variable accordingly.
    * If there is failure in API call, a pop up will be shown.
    */
@@ -136,6 +139,7 @@ function App() {
       const response = await getList(userId);
       const lists = response.data.lists;
       const predefinedLists = lists.slice(0, 2);
+      defaultListId.current = predefinedLists[0].list_id;
       setPredefinedList({
         DEFAULT_LIST: {
           id: predefinedLists[0].list_id,
@@ -154,7 +158,6 @@ function App() {
   }
 
   /**
-   *
    * calls getListData function defined in api.js and passes listId which gets name of list and all tasks of this list.
    * @param {String} listId   It is unique id of list
    */
@@ -174,7 +177,6 @@ function App() {
   }
 
   /**
-   *
    * This function runs while a sidebar list is clicked, sets it as current list and shows all the data of that list only(its task list and name of list).
    * @param {String} listId    It is unique id of list
    */
@@ -202,8 +204,7 @@ function App() {
   }
 
   /**
-   *
-   * calls a function addTask defined in api.js which sends a post request to add a task and then calls getTaskListAndListName defined in app.js to get the name and task list of that particular list.
+   * calls a function addTask defined in api.js to add a task and then calls getTaskListAndListName defined in app.js to get the name and task list of that particular list.
    * If there is a failure in api call, it catches the error and shows a pop up.
    * @param {*} event
    * ENTER_KEY_CODE is the keyCode of enter key defined in Constants.js.
@@ -228,7 +229,6 @@ function App() {
   }
 
   /**
-   * 
    * calls a function addSidebarList defined in api.js and then calls getSidebarList to get all sidebar list including the new one. It catches the error and shows a pop up if there is a failure in api call.
    * @param {*} event
     ENTER_KEY_CODE is the keyCode of enter key. List name will be added on pressing enter key with no trailing and leading spaces. If name has all spaces then it will not be added into the list.
@@ -248,11 +248,11 @@ function App() {
   }
 
   /**
-   *
-   * calls deleteSidebarList function defined in api.js for deletion a list and then calls getSidebarList to get updated list. It catches the error and shows a pop up if there is a failure in api call.
+   *If a current list is deleted, we will move to previous list as current list if current list is the first list, we will move to default list path.
+   * calls deleteSidebarList function defined in api.js to delete a list and then calls getSidebarList to get updated list. It catches the error and shows a pop up if there is a failure in api call.
    * @param {String} list_id   It is unique id of list
    */
-  async function handleSidebarListDeletion(event, listId, listIndex) {
+  async function handleSidebarListDeletion(event, listId, listIndex, navigate) {
     event.stopPropagation();
     try {
       let newListId;
@@ -262,6 +262,7 @@ function App() {
         } else {
           newListId = sidebarUserGeneratedList[listIndex - 1].list_id;
         }
+        navigate(`${newListId}`);
         setCurrentListUUID(newListId);
         await getTaskListAndListName(newListId);
       }
@@ -273,9 +274,8 @@ function App() {
   }
 
   /**
-   *
    * When application loads, first a signup form will be open by default or one can go to login form also, can login if user is valid.
-   * Once a user form is submitted with valid credentials, task managing application can be seen.
+   * Once a user form is submitted with valid credentials or for first time, task managing application can be seen.
    * If user is valid, navbar has logout option also. In sidebar there is a route set for Recycle Bin separately as its user interface(no header and different svg logo) is different from other lists. All other routes are dynamic which changes on the basis of list unique id(which is the pathName). Each route has its own taskInputField and a container having list of tasks.
    * @return navbar, sidebar, header, recycle bin container and other list containers based on path inside a router, a login and signup form.
    */
@@ -311,7 +311,7 @@ function App() {
                   handleUsernameChange={handleUsernameChange}
                   handleMailChange={handleMailChange}
                   handlePasswordChange={handlePasswordChange}
-                  checkedClearDataOption={checkedClearDataOption}
+                  clearDataOptionChecked={clearDataOptionChecked}
                   handleClearFormData={handleClearFormData}
                   fetchInitialData={fetchInitialData}
                 />
@@ -332,7 +332,7 @@ function App() {
                   handleMailChange={handleMailChange}
                   handlePasswordChange={handlePasswordChange}
                   handleConfirmPasswordChange={handleConfirmPasswordChange}
-                  checkedClearDataOption={checkedClearDataOption}
+                  clearDataOptionChecked={clearDataOptionChecked}
                   handleClearFormData={handleClearFormData}
                   fetchInitialData={fetchInitialData}
                 />

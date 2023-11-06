@@ -1,14 +1,14 @@
 import React from "react";
 import { THEME } from "../Constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { checkUserValidity, getUserId } from "../api";
 
 /**
- *
  * @param {*} props
  * @returns a form asking for email, username and password fields.
  */
 const Login = (props) => {
+  const navigate = useNavigate();
   const {
     appBodyTheme,
     credentials,
@@ -19,7 +19,7 @@ const Login = (props) => {
     handleMailChange,
     handleUsernameChange,
     handlePasswordChange,
-    checkedClearDataOption,
+    clearDataOptionChecked,
     handleClearFormData,
     fetchInitialData,
   } = props;
@@ -27,7 +27,7 @@ const Login = (props) => {
   /**
    *
    * this function runs for already existing users with correct credentials.
-   * first of all this function check user validity and if a user is valid(having correct credentials), it calls getUserId defined in api.js to get user id and calls sidebarAllLists defined in App.js to get all list present in user's account.
+   * first of all this function check and set user validity and if a user is valid(having correct credentials), it calls getUserId defined in api.js to get user id, then calls fetchInitialData defined in app.js to get a default page while window moves to main application.
    * @param {*} event
    */
   async function handleUserLogin(event) {
@@ -40,7 +40,7 @@ const Login = (props) => {
       const userId = response.data.userId;
       setUserId(userId);
       setIsUserValid(isValid);
-      await fetchInitialData(userId);
+      await fetchInitialData(userId, navigate);
     } else {
       showAlert("warning", ": Wrong user details.");
     }
@@ -103,7 +103,7 @@ const Login = (props) => {
             className="form-check-input"
             type="checkbox"
             id="defaultCheck1"
-            checked={checkedClearDataOption}
+            checked={clearDataOptionChecked}
             onChange={handleClearFormData}
           />
           <label className="form-check-label" htmlFor="defaultCheck1">

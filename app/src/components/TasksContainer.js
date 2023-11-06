@@ -2,7 +2,6 @@ import React from "react";
 import TaskItem from "./TaskItem";
 
 /**
- *
  * @param {*} props
  * @returns a container containing list of tasks of respective sidebar lists.
  */

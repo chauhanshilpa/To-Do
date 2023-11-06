@@ -4,7 +4,6 @@ import { BASE_URL } from "./Constants";
 // This file contains all api calls from frontend to backend.
 
 /**
- *
  * sends a get request to backend.
  * @param {String} email    email id of a user
  * @returns boolean value whether a user with this email id is already registered or not
@@ -19,7 +18,6 @@ export async function userRegistered(email) {
 }
 
 /**
- * 
  * sends a post request to backend to add new user's details.
  * @param {String} email        email id of user
  * @param {String} username     name of user
@@ -35,7 +33,6 @@ export async function addNewUser(email, username, password) {
 }
 
 /**
- * 
  * sends a get request to backend.
  * @param {String} email       email id of user
  * @param {String} username    name of user
@@ -54,7 +51,6 @@ export async function getUserId(email, username, password) {
 }
 
 /**
- * 
  * sends a get request to backend.
  * @param {String} email       email id of user
  * @param {String} username    name of user
@@ -73,7 +69,6 @@ export async function checkUserValidity(email, username, password) {
 }
 
 /**
- * 
  * sends a get request to backend.
  * @param {String} userId    it is the unique id of user
  * @returns all lists of sidebar(including predefined lists as well as user generated lists)
@@ -88,7 +83,6 @@ export async function getList(userId) {
 }
 
 /**
- *
  * sends a get request to backend.
  * @param {String} listId   It is unique id of list
  * @returns task list and list name based on list's unique id
@@ -99,7 +93,6 @@ export async function getListData(listId) {
 }
 
 /**
- *
  * sends a post request to backend to add a list.
  * @param {String} userId               it is the unique id of a user
  * @param {String} sidebarTaskListName  name of sidebar list to add
@@ -113,7 +106,6 @@ export async function addSidebarList(userId, sidebarTaskListName) {
 }
 
 /**
- *
  * sends a delete request to backend to delete a particular list based on list's unique id.
  * @param {String} listId   It is unique id of list
  */
@@ -128,7 +120,6 @@ export async function deleteSidebarList(listId, userId) {
 }
 
 /**
- *
  * sends a post request to backend to add task in a respective list.
  * @param {String} inputTask        text of task to add
  * @param {String} currentListUUID  unique id of current open list in which tasks are being added
@@ -142,7 +133,6 @@ export async function addTask(inputTask, currentListUUID) {
 }
 
 /**
- *
  * sends a patch request to backend to update text of a particular task based on task_id.
  * @param {String} task_id       unique id of task
  * @param {String} newInnerText  new text of task
@@ -156,7 +146,6 @@ export async function updateTask(task_id, newInnerText) {
 }
 
 /**
- *
  * sends a delete request to backend to delete a task based on task_id
  * @param {String} task_id                unique id of a task
  * @param {String} recycle_bin_list_id    unique id of a recycle bin list
@@ -172,7 +161,6 @@ export async function deleteTask(task_id, recycle_bin_list_id) {
 }
 
 /**
- *
  * sends a patch request to backend to reverse(from true to false and false to true) is_done property of task.
  * @param {String} task_id          unique id of a task
  * @param {String} currentIsDone    boolean value which tells is_done property value
@@ -186,7 +174,6 @@ export async function reverseTaskDone(task_id, currentIsDone) {
 }
 
 /**
- *
  * sends a post request to restore a task to its original list it was in before deletion.
  * @param {String} task_id            unique id of a task
  * @param {String} root_list_task_id  unique id of task before deletion
@@ -200,7 +187,6 @@ export async function restoreTaskFromRecycleBin(task_id, root_list_task_id) {
 }
 
 /**
- *
  * sends a post request to backend to delete a task from recycle_bin based on task's unique id
  * @param {String} task_id  it is the unique id of task
  */

@@ -2,7 +2,6 @@ import React from "react";
 import { THEME } from "../Constants";
 
 /**
- *
  * @param {*} props
  * @returns a input in which tasks will be entered.
  */

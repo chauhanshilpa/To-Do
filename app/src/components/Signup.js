@@ -2,13 +2,14 @@ import React from "react";
 import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 import { userRegistered, addNewUser, getUserId } from "../api";
+import { useNavigate } from "react-router-dom";
 
 /**
- *
  * @param {*} props
  * @returns a form asking for email, username , password and confirm password fields.
  */
 const Signup = (props) => {
+  const navigate = useNavigate();
   const {
     appBodyTheme,
     credentials,
@@ -20,7 +21,7 @@ const Signup = (props) => {
     handleMailChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
-    checkedClearDataOption,
+    clearDataOptionChecked,
     handleClearFormData,
     fetchInitialData,
   } = props;
@@ -30,7 +31,7 @@ const Signup = (props) => {
    * This function runs first time when a user registers. 
    * This function first checks whether password and confirm password are same, if not it shows an alert. If both are same then it checks whether a user is already registered or not. If user is not registered, addNewUser function defined in api.js is called which adds a new user details and make two default lists. 
    Then it calls getUserId function defined in api.js which gets user id, then set it in a variable.
-   Further sidebarAllLists function is called defined in app.js which will set values of predefined lists so that a user can see it in UI. AT the end, isUserValid variable is set to to true so that user can use the application for maintaining its to dos.
+   Finally, userValidity is set to true so that the user can see main application, then calls fetchInitialData defined in app.js to get a default page while window moves to main application.
    * @param {*} event 
    */
   async function handleUserSignUp(event) {
@@ -45,7 +46,7 @@ const Signup = (props) => {
         const userId = response.data.userId;
         setUserId(userId);
         setIsUserValid(true);
-        await fetchInitialData(userId);
+        await fetchInitialData(userId, navigate);
       } else {
         showAlert("warning", ": User with this email already exists.");
       }
@@ -127,7 +128,7 @@ const Signup = (props) => {
             className="form-check-input"
             type="checkbox"
             id="defaultCheck1"
-            checked={checkedClearDataOption}
+            checked={clearDataOptionChecked}
             onChange={handleClearFormData}
           />
           <label className="form-check-label" htmlFor="defaultCheck1">

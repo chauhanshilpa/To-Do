@@ -2,7 +2,6 @@ import React from "react";
 import { THEME } from "../Constants";
 
 /**
- *
  * @param {*} props
  * @returns a button to open or close sidebar and a heading having name of the current open list
  */

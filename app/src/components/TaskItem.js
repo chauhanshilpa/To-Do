@@ -5,7 +5,6 @@ import { Tooltip } from "react-tooltip";
 import sound from "../audio/taskIsDone.wav";
 
 /**
- *
  * @param {*} props
  * @returns task item of respective list.
  */
@@ -27,7 +26,6 @@ const TaskItem = (props) => {
 
 
   /**
-   *
    * calls reverseTaskDone function defined in api.js then calls getTaskListAndListName function defined in app.js to get task list and name with updated value of is_done property.
    * if task is done, a sound is played and text decoration of text will be changed to line-through.
    */
@@ -51,7 +49,7 @@ const TaskItem = (props) => {
 
   /**
    *
-   * calls updateTask function defined in db.js then it calls getTaskListAndListName function defined in app.js which gets all the tasks and name of a particular list
+   * calls updateTask function defined in db.js to update text value.
    * @param {*} event
    *ENTER_KEY_CODE is the keyCode of enter key. List name will be added on pressing enter key with no trailing and leading spaces. If name has all spaces then it will not be added into the list.
    */
@@ -60,7 +58,6 @@ const TaskItem = (props) => {
       if (event.keyCode === ENTER_KEY_CODE) {
         let newInnerText = event.target.innerText;
         await updateTask(task_id, newInnerText);
-        await getTaskListAndListName(currentListUUID);
         setIsTaskItemEditable(false);
       }
     } catch (error) {
@@ -69,7 +66,6 @@ const TaskItem = (props) => {
   }
 
   /**
-   *
    *calls deleteTask function defined in db.js then calls getTaskListAndListName defined in app.js which gets all the tasks and name of a particular list.
    */
   async function handleTaskDeletion() {

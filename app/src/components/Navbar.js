@@ -3,7 +3,6 @@ import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 
 /**
- *
  * @param {*} props
  * @returns navbar having a main content link( which will work when a user is valid) and login, signup, logout links shown based on some conditions and a switch to switch between dark and light mode.
  */
