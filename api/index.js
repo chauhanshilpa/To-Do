@@ -82,7 +82,7 @@ app.get("/user_id", async (req, res) => {
   res.send({ userId });
 });
 
-// calls getSidebarLists defined in db.js which queries to get all list of sidebar(including predefined lists and user generated lists) 
+// calls getSidebarLists defined in db.js which queries to get all list of sidebar(including predefined lists and user generated lists)
 app.get("/list", async (req, res) => {
   const { userId } = req.query;
   const lists = await getSidebarLists(userId);
@@ -112,7 +112,7 @@ app.delete("/delete_list", async (req, res) => {
   const { listId, userId } = req.query;
   await deleteSidebarList(listId, userId);
   res.send();
-}); 
+});
 
 // calls addTask defined in db.js which queries to post a new task into database
 app.post("/create_task", async (req, res) => {

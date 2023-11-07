@@ -1,1 +1,2 @@
-export const connectionString = "postgressql://postgres:password@localhost:5432/To Do";
+export const connectionString =
+  "postgressql://postgres:password@localhost:5432/To Do";

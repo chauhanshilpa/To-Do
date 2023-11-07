@@ -79,8 +79,8 @@ export async function getSidebarLists(user_id) {
     text: "SELECT * FROM list WHERE deleted = $1 AND user_id = $2",
     values: [false, user_id],
   };
-  const response = await client.query(query); 
-  return response.rows; 
+  const response = await client.query(query);
+  return response.rows;
 }
 
 /**
@@ -102,7 +102,7 @@ export async function getListName(list_id) {
  */
 export async function getTaskList(list_id) {
   const query = {
-    text: "SELECT * FROM tasks WHERE list_id = $1 AND deleted = $2 ORDER BY created DESC",
+    text: "SELECT * FROM tasks WHERE list_id = $1 AND deleted = $2 ORDER BY is_done DESC",
     values: [list_id, false],
   };
   let response = await client.query(query);

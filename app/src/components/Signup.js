@@ -92,6 +92,7 @@ const Signup = (props) => {
           placeholder="Username"
           value={credentials.username}
           onChange={handleUsernameChange}
+          maxLength={30}
           required
         />
       </div>
@@ -105,6 +106,7 @@ const Signup = (props) => {
           onChange={handlePasswordChange}
           required
           minLength={6}
+          maxLength={30}
         />
       </div>
       <div className="mb-3">
@@ -116,6 +118,7 @@ const Signup = (props) => {
           placeholder="Confirm password"
           value={credentials.confirmPassword}
           onChange={handleConfirmPasswordChange}
+          maxLength={30}
         />
       </div>
       <div className="form-lower">

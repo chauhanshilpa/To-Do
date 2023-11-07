@@ -11,7 +11,9 @@ const SidebarList = (props) => {
   const navigate = useNavigate();
   const { listData, listIndex, onListClick, handleSidebarListDeletion } = props;
 
-  // listData contains list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation), deleted(exists or not)
+  /**
+   * listData contains list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation), deleted(exists or not)
+   *  */
   return (
     <li onClick={() => onListClick(listData.list_id)}>
       <Link
@@ -42,7 +44,12 @@ const SidebarList = (props) => {
           className="bi bi-trash3"
           viewBox="0 0 16 16"
           onClick={(event) =>
-            handleSidebarListDeletion(event, listData.list_id, listIndex, navigate)
+            handleSidebarListDeletion(
+              event,
+              listData.list_id,
+              listIndex,
+              navigate
+            )
           }
           data-tooltip-id="delete-list"
           data-tooltip-content="Delete"
