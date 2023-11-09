@@ -10,7 +10,19 @@ To use this app, follow these steps:
 2) Open the index.html file in your browser.
 3) add your To Dos.
 
-## how to use after installation
+## Steps to Initialize or Copy the Database
+
+ Go to psql terminal and run below commands-
+
+1) CREATE DATABASE todo;
+
+2) CREATE TABLE users(user_id UUID PRIMARY KEY, email TEXT, username VARCHAR(30), password VARCHAR(30), created TIMESTAMPTZ);
+
+3) CREATE TABLE list(list_id UUID PRIMARY KEY, user_id UUID references users(user_id), list_name VARCHAR(30), deleteable BOOLEAN, created TIMESTAMPTZ, deleted BOOLEAN);
+
+4) CREATE TABLE tasks(task_id UUID PRIMARY KEY, list_id UUID references list(list_id), is_done BOOLEAN, metadata jsonb, created TIMESTAMPTZ, deleted BOOLEAN);
+
+## how to use app
 
 To Do app is simple to use:
 
@@ -26,6 +38,7 @@ This app is created using Javascript's React library .The components style was o
 Future updates to the app may include:
 
 1) sign-in form if already a user and register form id user is new.Only the user would see his/her notes with correct credentials.
+
 ## Author
 
 This app is developed by Shilpa Chauhan. Contact me at chauhanshilpa602@gmail.com for any questions or feedback.
