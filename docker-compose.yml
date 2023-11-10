@@ -7,10 +7,16 @@ services:
       dockerfile: frontend.Dockerfile
     ports:
       - 3001:3000
+    # services:
+    #   depends_on:
+    #     - backend
   backend:
     container_name: backend
     build:
       dockerfile: backend.Dockerfile
+    # services:
+    #   depends_on:
+    #     - postgres
   postgres:
     container_name: postgres
     image: postgres

@@ -3,7 +3,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .register {
@@ -292,5 +292,11 @@ input {
 @media screen and (max-width: 768px) {
   .task-input-field.open-sidebar {
     pointer-events: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .register {
+    width: 100%;
   }
 }
