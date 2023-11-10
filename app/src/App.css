@@ -6,6 +6,11 @@ body {
   overflow: auto;
 }
 
+.theme-icons{
+  color: white;
+  cursor: pointer;
+ }
+ 
 .register {
   margin: 2rem auto 0;
   width: 30rem;
