@@ -1,44 +1,32 @@
-# To Do 
+# To Do
 
-To Do is a task management app where you can set and mark your tasks.
+To Do is a stack web application created using ReactJS and Bootstrap for frontend, express.js for backend and postgreSQL as database. Users can create multiple task lists and add tasks to any list. Tasks can be edited, marked as completed or deleted. The app is fully responsive, so it can be used on any device.
 
-## How you can use
-
-To use this app, follow these steps:
-
-1) Clone this repository to your local machine using git clone https://github.com/chauhanshilpa/To-Do.git
-2) Open the index.html file in your browser.
-3) add your To Dos.
+## how to clone to your local machine
+ 
+  Run this command in terminal-
+ `git clone https://github.com/chauhanshilpa/To-Do.git`
 
 ## Steps to Initialize or Copy the Database
 
- Go to psql terminal and run below commands-
+If don't have docker then manually go to SQL shell(psql) or directly go to pgAdmin 4 then open query tool and start from point number 3.
 
-1) CREATE DATABASE todo;
+If you have docker then, go to exec (in docker) and run following commands
 
-2) CREATE TABLE users(user_id UUID PRIMARY KEY, email TEXT, username VARCHAR(30), password VARCHAR(30), created TIMESTAMPTZ);
+1.  `bash`
 
-3) CREATE TABLE list(list_id UUID PRIMARY KEY, user_id UUID references users(user_id), list_name VARCHAR(30), deleteable BOOLEAN, created TIMESTAMPTZ, deleted BOOLEAN);
+2.  `psql -U postgres`
 
-4) CREATE TABLE tasks(task_id UUID PRIMARY KEY, list_id UUID references list(list_id), is_done BOOLEAN, metadata jsonb, created TIMESTAMPTZ, deleted BOOLEAN);
+3.  `CREATE DATABASE todo;`
 
-## how to use app
+4.  `\c todo;`
 
-To Do app is simple to use:
+5.  `CREATE TABLE users(user_id UUID PRIMARY KEY, email TEXT, username VARCHAR(30), password VARCHAR(30), created TIMESTAMPTZ);`
 
-1) Add a task in input feild then press enter.Now you can see your tasks in My Notes.
-2) When clicking leftmost tick icon you will see task is done having cut text.You can edit by clicking edit icon on right side and you can delete the task by clicking bin icon.
+6.  `CREATE TABLE list(list_id UUID PRIMARY KEY, user_id UUID references users(user_id), list_name VARCHAR(30), deletable BOOLEAN, created TIMESTAMPTZ, deleted BOOLEAN);`
 
-## Credits
-
-This app is created using Javascript's React library .The components style was obtained from bootstrap framework of CSS and some custom CSS is also applied according to need.
-
-## Future Development
-
-Future updates to the app may include:
-
-1) sign-in form if already a user and register form id user is new.Only the user would see his/her notes with correct credentials.
+7.  `CREATE TABLE tasks(task_id UUID PRIMARY KEY, list_id UUID references list(list_id), is_done BOOLEAN, metadata jsonb, created TIMESTAMPTZ, deleted BOOLEAN);`
 
 ## Author
 
-This app is developed by Shilpa Chauhan. Contact me at chauhanshilpa602@gmail.com for any questions or feedback.
+This app is developed by Shilpa Chauhan.

@@ -1,7 +1,7 @@
 // This file contains all the constant values used throughout out the application.
 
 // backend localhost is 4002
-export const BASE_URL = "http://localhost:4002";
+export const BASE_URL = "http://backend:4002";
 
 export const ENTER_KEY_CODE = 13;
 
