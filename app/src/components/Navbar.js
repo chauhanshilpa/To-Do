@@ -48,7 +48,7 @@ const Navbar = (props) => {
                 width="16"
                 height="16"
                 fill="currentColor"
-                class="bi bi-moon-stars-fill"
+                className="bi bi-moon-stars-fill"
                 viewBox="0 0 16 16"
                 onClick={handleLightAndDarkMode}
               >
@@ -63,7 +63,7 @@ const Navbar = (props) => {
                 width="16"
                 height="16"
                 fill="currentColor"
-                class="bi bi-brightness-high"
+                className="bi bi-brightness-high"
                 viewBox="0 0 16 16"
                 onClick={handleLightAndDarkMode}
               >

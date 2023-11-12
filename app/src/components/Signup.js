@@ -14,6 +14,7 @@ const Signup = (props) => {
     appBodyTheme,
     credentials,
     setCredentials,
+    modalButtonRef,
     setUserId,
     setIsUserValid,
     showAlert,
@@ -37,28 +38,32 @@ const Signup = (props) => {
   async function handleUserSignUp(event) {
     event.preventDefault();
     const { email, username, password, confirmPassword } = credentials;
-    const response = await userRegistered(email);
-    const isUserRegistered = response.data.registered;
     if (password === confirmPassword) {
-      if (isUserRegistered === false) {
-        await addNewUser(email, username, password);
-        const response = await getUserId(email, username, password);
-        const userId = response.data.userId;
-        setUserId(userId);
-        setIsUserValid(true);
-        await fetchInitialData(userId, navigate);
-      } else {
-        showAlert("warning", ": User with this email already exists.");
+      try {
+        const response = await userRegistered(email);
+        const isUserRegistered = response.data.registered;
+        if (isUserRegistered === false) {
+          await addNewUser(email, username, password);
+          const response = await getUserId(email, username, password);
+          const userId = response.data.userId;
+          setUserId(userId);
+          setIsUserValid(true);
+          await fetchInitialData(userId, navigate);
+        } else {
+          showAlert("warning", ": User with this email already exists.");
+        }
+      } catch (error) {
+        modalButtonRef.current.click();
       }
-      setCredentials({
-        email: "",
-        username: "",
-        password: "",
-        confirmPassword: "",
-      });
     } else {
       showAlert("warning", ": Confirm password is different from password.");
     }
+    setCredentials({
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    });
   }
 
   return (

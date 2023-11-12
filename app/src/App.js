@@ -305,6 +305,7 @@ function App() {
                   appBodyTheme={appBodyTheme}
                   credentials={credentials}
                   setCredentials={setCredentials}
+                  modalButtonRef={modalButtonRef}
                   setIsUserValid={setIsUserValid}
                   setUserId={setUserId}
                   showAlert={showAlert}
@@ -325,6 +326,7 @@ function App() {
                   appBodyTheme={appBodyTheme}
                   credentials={credentials}
                   setCredentials={setCredentials}
+                  modalButtonRef={modalButtonRef}
                   setIsUserValid={setIsUserValid}
                   setUserId={setUserId}
                   showAlert={showAlert}
@@ -362,7 +364,6 @@ function App() {
             listName={currentListName}
           />
           <Routes>
-            {/* <Route path="/" element={<Navigate to={DEFAULT_LIST.id} />} /> */}
             <Route
               exact
               path="/:currentListUUID"

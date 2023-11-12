@@ -13,6 +13,7 @@ const Login = (props) => {
     appBodyTheme,
     credentials,
     setCredentials,
+    modalButtonRef,
     setIsUserValid,
     setUserId,
     showAlert,
@@ -33,16 +34,20 @@ const Login = (props) => {
   async function handleUserLogin(event) {
     event.preventDefault();
     const { email, username, password } = credentials;
-    const response = await checkUserValidity(email, username, password);
-    const isValid = response.data.isValid;
-    if (isValid) {
-      const response = await getUserId(email, username, password);
-      const userId = response.data.userId;
-      setUserId(userId);
-      setIsUserValid(isValid);
-      await fetchInitialData(userId, navigate);
-    } else {
-      showAlert("warning", ": Wrong user details.");
+    try {
+      const response = await checkUserValidity(email, username, password);
+      const isValid = response.data.isValid;
+      if (isValid) {
+        const response = await getUserId(email, username, password);
+        const userId = response.data.userId;
+        setUserId(userId);
+        setIsUserValid(isValid);
+        await fetchInitialData(userId, navigate);
+      } else {
+        showAlert("warning", ": Wrong user details.");
+      }
+    } catch (error) {
+      modalButtonRef.current.click();
     }
     setCredentials({ email: "", username: "", password: "" });
   }
