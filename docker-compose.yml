@@ -7,16 +7,20 @@ services:
       dockerfile: frontend.Dockerfile
     ports:
       - 3001:3000
-    # depends_on:
-    #   backend:
-    #     condition: service_healthy
+    # healthcheck:
+    #   test: [ "CMD", "curl", "-f", "http://localhost:4002/health" ]
+    #   interval: 1m30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
+    # depends_on: 
+    #    -backend
   backend:
     container_name: backend
     build:
       dockerfile: backend.Dockerfile
-    # services:
-    #   depends_on:
-    #     - postgres
+    depends_on:
+        - postgres
   postgres:
     container_name: postgres
     image: postgres

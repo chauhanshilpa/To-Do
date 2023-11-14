@@ -36,6 +36,11 @@ export const client = new pg.Client({
 
 client.connect();
 
+app.get("/health", async (req, res) => {
+  const health = "Service is healthy";
+  res.send({ health });
+});
+
 // calls checkUserExistence defined in db.js which queries for userId get boolean value whether a user is registered or not
 app.get("/user_registered", async (req, res) => {
   const { email } = req.query;
