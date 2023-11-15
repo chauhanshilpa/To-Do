@@ -19,8 +19,10 @@ services:
     container_name: backend
     build:
       dockerfile: backend.Dockerfile
+    ports:
+      - 4001:4002
     depends_on:
-        - postgres
+      - postgres
   postgres:
     container_name: postgres
     image: postgres

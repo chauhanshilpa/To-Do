@@ -66,6 +66,21 @@ function App() {
   }, []);
 
   /**
+   * This function runs to toggle between themes when a user clicks on the top right corner of screen to change mode (from light to dark and from dark to light).
+   */
+  function handleLightAndDarkMode() {
+    if (appBodyTheme === THEME.LIGHT.name) {
+      setAppBodyTheme(THEME.DARK.name);
+      document.body.style.backgroundColor = THEME.DARK.backgroundColor;
+      localStorage.setItem("theme", THEME.DARK.name);
+    } else {
+      setAppBodyTheme(THEME.LIGHT.name);
+      document.body.style.backgroundColor = THEME.LIGHT.backgroundColor;
+      localStorage.setItem("theme", THEME.LIGHT.name);
+    }
+  }
+
+  /**
    * this function fetches data when a user log in or signup.Data like lists of sidebar, taskList and name of default list(we are taking its reference value from sidebarAllLists).
    * When a user login or signup the default list will be open first and sets its currentListUUID as default list id)
    * @param {String} userId
@@ -195,18 +210,6 @@ function App() {
   function onListClick(listId) {
     setCurrentListUUID(listId);
     getTaskListAndListName(listId);
-  }
-
-  function handleLightAndDarkMode() {
-    if (appBodyTheme === THEME.LIGHT.name) {
-      setAppBodyTheme(THEME.DARK.name);
-      document.body.style.backgroundColor = THEME.DARK.backgroundColor;
-      localStorage.setItem("theme", THEME.DARK.name);
-    } else {
-      setAppBodyTheme(THEME.LIGHT.name);
-      document.body.style.backgroundColor = THEME.LIGHT.backgroundColor;
-      localStorage.setItem("theme", THEME.LIGHT.name);
-    }
   }
 
   function toggleSidebarOpenState() {
