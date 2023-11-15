@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -52,6 +52,18 @@ function App() {
   let modalButtonRef = useRef();
 
   const { DEFAULT_LIST, RECYCLE_BIN_LIST } = predefinedList;
+
+  useEffect(() => {
+    let theme = localStorage.getItem("theme");
+    if (theme) {
+      setAppBodyTheme(theme);
+      if (theme === THEME.DARK.name) {
+        document.body.style.backgroundColor = THEME.DARK.backgroundColor;
+      } else {
+        document.body.style.backgroundColor = THEME.LIGHT.backgroundColor;
+      }
+    }
+  }, []);
 
   /**
    * this function fetches data when a user log in or signup.Data like lists of sidebar, taskList and name of default list(we are taking its reference value from sidebarAllLists).
@@ -189,9 +201,11 @@ function App() {
     if (appBodyTheme === THEME.LIGHT.name) {
       setAppBodyTheme(THEME.DARK.name);
       document.body.style.backgroundColor = THEME.DARK.backgroundColor;
+      localStorage.setItem("theme", THEME.DARK.name);
     } else {
       setAppBodyTheme(THEME.LIGHT.name);
       document.body.style.backgroundColor = THEME.LIGHT.backgroundColor;
+      localStorage.setItem("theme", THEME.LIGHT.name);
     }
   }
 
