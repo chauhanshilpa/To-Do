@@ -53,6 +53,7 @@ function App() {
 
   const { DEFAULT_LIST, RECYCLE_BIN_LIST } = predefinedList;
 
+  // It will change theme which was cached means every time user refreshes the app will get same theme as before refresh.
   useEffect(() => {
     let theme = localStorage.getItem("theme");
     if (theme) {

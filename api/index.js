@@ -36,6 +36,7 @@ export const client = new pg.Client({
 
 client.connect();
 
+//will check if container container is health or not (for docker)
 app.get("/health", async (req, res) => {
   const health = "Service is healthy";
   res.send({ health });

@@ -13,7 +13,7 @@ const SidebarList = (props) => {
 
   /**
    * listData contains list_id, user_id, list_name, deletable(can be deleted or not), created(date of creation), deleted(exists or not)
-   *  */
+   */
   return (
     <li onClick={() => onListClick(listData.list_id)}>
       <Link
