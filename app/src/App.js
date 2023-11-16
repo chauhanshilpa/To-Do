@@ -27,13 +27,6 @@ function App() {
   const [appBodyTheme, setAppBodyTheme] = useState(THEME.LIGHT.name);
   const [inputTask, setInputTask] = useState("");
   const [alert, setAlert] = useState(null);
-  const [credentials, setCredentials] = useState({
-    email: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [clearDataOptionChecked, setClearDataOptionChecked] = useState(false);
   const [userId, setUserId] = useState("");
   const [isUserValid, setIsUserValid] = useState(false);
   const [predefinedList, setPredefinedList] = useState({
@@ -108,47 +101,6 @@ function App() {
       setAlert(null);
     }, 2000);
   };
-
-  function handleMailChange(event) {
-    setCredentials({ ...credentials, email: event.target.value.toLowerCase() });
-  }
-
-  function handleUsernameChange(event) {
-    setCredentials({
-      ...credentials,
-      username: event.target.value,
-    });
-  }
-
-  function handlePasswordChange(event) {
-    setCredentials({
-      ...credentials,
-      password: event.target.value,
-    });
-  }
-
-  function handleConfirmPasswordChange(event) {
-    setCredentials({
-      ...credentials,
-      confirmPassword: event.target.value,
-    });
-  }
-
-  /**
-   * clears all the field data of form
-   */
-  function handleClearFormData() {
-    setCredentials({
-      email: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-    });
-    setClearDataOptionChecked(true);
-    setTimeout(() => {
-      setClearDataOptionChecked(false);
-    }, 500);
-  }
 
   /**
    * this function runs when a user logs out from application.
@@ -321,17 +273,10 @@ function App() {
               element={
                 <Login
                   appBodyTheme={appBodyTheme}
-                  credentials={credentials}
-                  setCredentials={setCredentials}
                   modalButtonRef={modalButtonRef}
                   setIsUserValid={setIsUserValid}
                   setUserId={setUserId}
                   showAlert={showAlert}
-                  handleUsernameChange={handleUsernameChange}
-                  handleMailChange={handleMailChange}
-                  handlePasswordChange={handlePasswordChange}
-                  clearDataOptionChecked={clearDataOptionChecked}
-                  handleClearFormData={handleClearFormData}
                   fetchInitialData={fetchInitialData}
                 />
               }
@@ -342,18 +287,10 @@ function App() {
               element={
                 <Signup
                   appBodyTheme={appBodyTheme}
-                  credentials={credentials}
-                  setCredentials={setCredentials}
                   modalButtonRef={modalButtonRef}
                   setIsUserValid={setIsUserValid}
                   setUserId={setUserId}
                   showAlert={showAlert}
-                  handleUsernameChange={handleUsernameChange}
-                  handleMailChange={handleMailChange}
-                  handlePasswordChange={handlePasswordChange}
-                  handleConfirmPasswordChange={handleConfirmPasswordChange}
-                  clearDataOptionChecked={clearDataOptionChecked}
-                  handleClearFormData={handleClearFormData}
                   fetchInitialData={fetchInitialData}
                 />
               }

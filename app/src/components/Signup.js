@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 import { userRegistered, addNewUser, getUserId } from "../api";
@@ -12,20 +12,28 @@ const Signup = (props) => {
   const navigate = useNavigate();
   const {
     appBodyTheme,
-    credentials,
-    setCredentials,
     modalButtonRef,
     setUserId,
     setIsUserValid,
     showAlert,
-    handleUsernameChange,
-    handleMailChange,
-    handlePasswordChange,
-    handleConfirmPasswordChange,
-    clearDataOptionChecked,
-    handleClearFormData,
     fetchInitialData,
   } = props;
+
+  const [signupCredentials, setSignupCredentials] = useState({
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [clearDataOptionChecked, setClearDataOptionChecked] = useState(false);
+
+  function handleSignupCredentialsChange(event) {
+    const { name, value } = event.target;
+    setSignupCredentials({
+      ...signupCredentials,
+      [name]: value,
+    });
+  }
 
   /**
    * 
@@ -37,7 +45,7 @@ const Signup = (props) => {
    */
   async function handleUserSignUp(event) {
     event.preventDefault();
-    const { email, username, password, confirmPassword } = credentials;
+    const { email, username, password, confirmPassword } = signupCredentials;
     if (password === confirmPassword) {
       try {
         const response = await userRegistered(email);
@@ -58,12 +66,28 @@ const Signup = (props) => {
     } else {
       showAlert("warning", ": Confirm password is different from password.");
     }
-    setCredentials({
+    setSignupCredentials({
       email: "",
       username: "",
       password: "",
       confirmPassword: "",
     });
+  }
+
+  /**
+   * clears all the field data of signup form
+   */
+  function handleClearFormData() {
+    setSignupCredentials({
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    });
+    setClearDataOptionChecked(true);
+    setTimeout(() => {
+      setClearDataOptionChecked(false);
+    }, 500);
   }
 
   return (
@@ -74,7 +98,6 @@ const Signup = (props) => {
           : THEME.LIGHT.className
       }`}
       onSubmit={handleUserSignUp}
-      autoComplete="off"
     >
       <h4 className="text-center">Signup</h4>
       <div className="mb-3">
@@ -84,8 +107,9 @@ const Signup = (props) => {
           id="email"
           aria-describedby="emailHelp"
           placeholder="Email address"
-          value={credentials.email}
-          onChange={handleMailChange}
+          name="email"
+          value={signupCredentials.email}
+          onChange={handleSignupCredentialsChange}
           required
         />
       </div>
@@ -95,8 +119,9 @@ const Signup = (props) => {
           className="form-control"
           id="name"
           placeholder="Username"
-          value={credentials.username}
-          onChange={handleUsernameChange}
+          name="username"
+          value={signupCredentials.username}
+          onChange={handleSignupCredentialsChange}
           maxLength={30}
           required
         />
@@ -107,8 +132,10 @@ const Signup = (props) => {
           className="form-control"
           id="password"
           placeholder="Password"
-          value={credentials.password}
-          onChange={handlePasswordChange}
+          autoComplete="off"
+          name="password"
+          value={signupCredentials.password}
+          onChange={handleSignupCredentialsChange}
           required
           minLength={6}
           maxLength={30}
@@ -119,10 +146,11 @@ const Signup = (props) => {
           type="password"
           className="form-control"
           id="confirm-password"
-          name="confirm-password"
           placeholder="Confirm password"
-          value={credentials.confirmPassword}
-          onChange={handleConfirmPasswordChange}
+          autoComplete="off"
+          name="confirmPassword"
+          value={signupCredentials.confirmPassword}
+          onChange={handleSignupCredentialsChange}
           maxLength={30}
         />
       </div>
@@ -136,7 +164,8 @@ const Signup = (props) => {
             className="form-check-input"
             type="checkbox"
             id="defaultCheck1"
-            checked={clearDataOptionChecked}
+            defaultValue="Initial value"
+            checked={clearDataOptionChecked || false}
             onChange={handleClearFormData}
           />
           <label className="form-check-label" htmlFor="defaultCheck1">

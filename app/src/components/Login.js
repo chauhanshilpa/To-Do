@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { THEME } from "../Constants";
 import { Link, useNavigate } from "react-router-dom";
 import { checkUserValidity, getUserId } from "../api";
@@ -11,19 +11,27 @@ const Login = (props) => {
   const navigate = useNavigate();
   const {
     appBodyTheme,
-    credentials,
-    setCredentials,
     modalButtonRef,
     setIsUserValid,
     setUserId,
     showAlert,
-    handleMailChange,
-    handleUsernameChange,
-    handlePasswordChange,
-    clearDataOptionChecked,
-    handleClearFormData,
     fetchInitialData,
   } = props;
+
+  const [loginCredentials, setLoginCredentials] = useState({
+    email: "",
+    username: "",
+    password: "",
+  });
+  const [clearDataOptionChecked, setClearDataOptionChecked] = useState(false);
+
+  function handleLoginCredentialsChange(event) {
+    const { name, value } = event.target;
+    setLoginCredentials({
+      ...loginCredentials,
+      [name]: value,
+    });
+  }
 
   /**
    *
@@ -33,7 +41,7 @@ const Login = (props) => {
    */
   async function handleUserLogin(event) {
     event.preventDefault();
-    const { email, username, password } = credentials;
+    const { email, username, password } = loginCredentials;
     try {
       const response = await checkUserValidity(email, username, password);
       const isValid = response.data.isValid;
@@ -49,7 +57,22 @@ const Login = (props) => {
     } catch (error) {
       modalButtonRef.current.click();
     }
-    setCredentials({ email: "", username: "", password: "" });
+    setLoginCredentials({ email: "", username: "", password: "" });
+  }
+
+  /**
+   * clears all the field data of login form
+   */
+  function handleClearFormData() {
+    setLoginCredentials({
+      email: "",
+      username: "",
+      password: "",
+    });
+    setClearDataOptionChecked(true);
+    setTimeout(() => {
+      setClearDataOptionChecked(false);
+    }, 500);
   }
 
   return (
@@ -60,7 +83,6 @@ const Login = (props) => {
           : THEME.LIGHT.className
       }`}
       onSubmit={handleUserLogin}
-      autoComplete="off"
     >
       <h4 className="text-center">Login</h4>
       <div className="mb-3">
@@ -70,8 +92,9 @@ const Login = (props) => {
           id="email"
           aria-describedby="emailHelp"
           placeholder="Email address"
-          value={credentials.email}
-          onChange={handleMailChange}
+          name="email"
+          value={loginCredentials.email}
+          onChange={handleLoginCredentialsChange}
           required
         />
       </div>
@@ -81,8 +104,9 @@ const Login = (props) => {
           className="form-control"
           id="name"
           placeholder="Username"
-          value={credentials.username}
-          onChange={handleUsernameChange}
+          name="username"
+          value={loginCredentials.username}
+          onChange={handleLoginCredentialsChange}
           required
         />
       </div>
@@ -92,8 +116,10 @@ const Login = (props) => {
           className="form-control"
           id="password"
           placeholder="Password"
-          value={credentials.password}
-          onChange={handlePasswordChange}
+          autoComplete="off"
+          name="password"
+          value={loginCredentials.password}
+          onChange={handleLoginCredentialsChange}
           minLength={6}
           required
         />
@@ -108,7 +134,8 @@ const Login = (props) => {
             className="form-check-input"
             type="checkbox"
             id="defaultCheck1"
-            checked={clearDataOptionChecked}
+            defaultValue="Initial value"
+            checked={clearDataOptionChecked || false}
             onChange={handleClearFormData}
           />
           <label className="form-check-label" htmlFor="defaultCheck1">
