@@ -62,3 +62,6 @@ Marking a to-do item as done triggers a sound and visually updates the text deco
 ## Credits
 
  To Do is created using [ReactJS](https://react.dev/), [Bootstrap](https://getbootstrap.com/) for frontend styling, [express.js](https://expressjs.com/) for backend and [postgreSQL](https://www.postgresql.org/) as database. 
+
+
+ To Do is created using [ReactJS](https://react.dev/), [Bootstrap](https://getbootstrap.com/) for frontend styling, [express.js](https://expressjs.com/) for backend and [postgreSQL](https://www.postgresql.org/) as database. 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { THEME } from "../Constants";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { checkUserValidity, getUserId } from "../api";
 
 /**
@@ -8,7 +8,6 @@ import { checkUserValidity, getUserId } from "../api";
  * @returns a form asking for email, username and password fields.
  */
 const Login = (props) => {
-  const navigate = useNavigate();
   const {
     appBodyTheme,
     modalButtonRef,
@@ -50,7 +49,8 @@ const Login = (props) => {
         const userId = response.data.userId;
         setUserId(userId);
         setIsUserValid(isValid);
-        await fetchInitialData(userId, navigate);
+        localStorage.setItem("userId", userId);
+        await fetchInitialData(userId);
       } else {
         showAlert("warning", ": Wrong user details.");
       }

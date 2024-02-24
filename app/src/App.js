@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -43,11 +43,21 @@ function App() {
 
   let defaultListId = useRef();
   let modalButtonRef = useRef();
+  const navigate = useNavigate();
 
   const { DEFAULT_LIST, RECYCLE_BIN_LIST } = predefinedList;
 
   // It will change theme which was cached means every time user refreshes the app will get same theme as before refresh.
   useEffect(() => {
+    async function stayLoginAfterRefresh() {
+      if ("userId" in localStorage) {
+        let userLoginId = localStorage.getItem("userId");
+        setIsUserValid(true);
+        setUserId(userLoginId);
+        await fetchInitialData(userLoginId);
+      }
+    }
+    stayLoginAfterRefresh();
     let theme = localStorage.getItem("theme");
     if (theme) {
       setAppBodyTheme(theme);
@@ -57,6 +67,7 @@ function App() {
         document.body.style.backgroundColor = THEME.LIGHT.backgroundColor;
       }
     }
+    // eslint-disable-next-line
   }, []);
 
   /**
@@ -80,7 +91,7 @@ function App() {
    * @param {String} userId
    * @param {Function} navigate
    */
-  async function fetchInitialData(userId, navigate) {
+  async function fetchInitialData(userId) {
     await sidebarAllLists(userId);
     navigate(`/${defaultListId.current}`);
     await getTaskListAndListName(defaultListId.current);
@@ -108,6 +119,7 @@ function App() {
   function handleUserLogout() {
     setIsUserValid(false);
     setUserId("");
+    localStorage.removeItem("userId");
   }
 
   /**
@@ -250,7 +262,7 @@ function App() {
    * @return navbar, sidebar, header, recycle bin container and other list containers based on path inside a router, a login and signup form.
    */
   return (
-    <BrowserRouter>
+    <>
       <Navbar
         handleLightAndDarkMode={handleLightAndDarkMode}
         appBodyTheme={appBodyTheme}
@@ -361,7 +373,7 @@ function App() {
           </Routes>
         </>
       )}
-    </BrowserRouter>
+    </>
   );
 }
 

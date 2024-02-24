@@ -35,6 +35,10 @@ body {
   background-color: #eeeeee;
 }
 
+form {
+  max-width: 90vw;
+}
+
 .form-lower {
   display: flex;
   justify-content: space-between;
@@ -297,11 +301,5 @@ input {
 @media screen and (max-width: 768px) {
   .task-input-field.open-sidebar {
     pointer-events: none;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .register {
-    width: 100%;
   }
 }

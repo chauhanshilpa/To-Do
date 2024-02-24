@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { THEME } from "../Constants";
 import { Link } from "react-router-dom";
 import { userRegistered, addNewUser, getUserId } from "../api";
-import { useNavigate } from "react-router-dom";
 
 /**
  * @param {*} props
  * @returns a form asking for email, username , password and confirm password fields.
  */
 const Signup = (props) => {
-  const navigate = useNavigate();
   const {
     appBodyTheme,
     modalButtonRef,
@@ -56,7 +54,8 @@ const Signup = (props) => {
           const userId = response.data.userId;
           setUserId(userId);
           setIsUserValid(true);
-          await fetchInitialData(userId, navigate);
+          localStorage.setItem("userId", userId);
+          await fetchInitialData(userId);
         } else {
           showAlert("warning", ": User with this email already exists.");
         }
