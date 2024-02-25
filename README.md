@@ -4,6 +4,11 @@
 
 To Do is a full stack web application. Users can create multiple task lists and add tasks to any list. Tasks can be edited, marked as completed or deleted. The app is fully responsive, so it can be used on any device.
 
+## To-Do UI walkthrough
+
+https://github.com/chauhanshilpa/To-Do/assets/101130846/35addce8-ee5e-4f8f-8469-9847ae1f9f63
+
+
 ## How to run the application?
 
 Clone repository, go to file directory and then, 
