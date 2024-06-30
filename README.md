@@ -4,6 +4,9 @@
 
 To Do is a full stack web application. Users can create multiple task lists and add tasks to any list. Tasks can be edited, marked as completed or deleted. The app is fully responsive, so it can be used on any device.
 
+<p float="center"><img width=49% alt="to-do-light-theme" src="https://github.com/chauhanshilpa/To-Do/assets/101130846/e9e87e63-321d-4283-a6c2-d6bef013f067"> <img width=49% alt="image" src="https://github.com/chauhanshilpa/To-Do/assets/101130846/67ed720f-6e1f-4052-82a0-ceba42e3eac8"></p>
+
+
 ## To-Do UI walkthrough
 
 https://github.com/chauhanshilpa/To-Do/assets/101130846/35addce8-ee5e-4f8f-8469-9847ae1f9f63
@@ -53,9 +56,6 @@ After successful signup, users are directed to the To-Do main application. The d
 
 Upon logging in with correct credentials, users gain access to their personalized to-do items, providing a seamless and intuitive experience for task management.
 
-<img width="960" alt="image" src="https://github.com/chauhanshilpa/To-Do/assets/101130846/67ed720f-6e1f-4052-82a0-ceba42e3eac8">
-
-
 ## Usage Instructions
 
 Upon successful login or signup, users gain the ability to create and manage different to-do lists. They can seamlessly switch between lists and delete them as needed. Items created within a list remain exclusive to that list.
@@ -65,8 +65,5 @@ Within each list, users can perform various actions on to-do items, such as dele
 Marking a to-do item as done triggers a sound and visually updates the text decoration with a line-through. If a done item is subsequently deleted, it is permanently removed, bypassing the recycle bin.
 
 ## Credits
-
- To Do is created using [ReactJS](https://react.dev/), [Bootstrap](https://getbootstrap.com/) for frontend styling, [express.js](https://expressjs.com/) for backend and [postgreSQL](https://www.postgresql.org/) as database. 
-
 
  To Do is created using [ReactJS](https://react.dev/), [Bootstrap](https://getbootstrap.com/) for frontend styling, [express.js](https://expressjs.com/) for backend and [postgreSQL](https://www.postgresql.org/) as database. 
