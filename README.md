@@ -7,9 +7,9 @@ To Do is a full stack web application. Users can create multiple task lists and 
 <p float="center"><img width=49% alt="to-do-light-theme" src="https://github.com/chauhanshilpa/To-Do/assets/101130846/e9e87e63-321d-4283-a6c2-d6bef013f067"> <img width=49% alt="image" src="https://github.com/chauhanshilpa/To-Do/assets/101130846/67ed720f-6e1f-4052-82a0-ceba42e3eac8"></p>
 
 
-## To-Do UI walkthrough
+[//]: # (## To-Do UI walkthrough)
 
-https://github.com/chauhanshilpa/To-Do/assets/101130846/35addce8-ee5e-4f8f-8469-9847ae1f9f63
+[//]: # (https://github.com/chauhanshilpa/To-Do/assets/101130846/35addce8-ee5e-4f8f-8469-9847ae1f9f63)
 
 
 ## How to run the application?
